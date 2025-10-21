@@ -1,1 +1,3 @@
 # kuriloomsk
+
+### Installation
