@@ -97,14 +97,119 @@
   line-height: 1;
 }
 
-/*
-     FILE ARCHIVED ON 15:51:24 Apr 01, 2022 AND RETRIEVED FROM THE
-     INTERNET ARCHIVE ON 12:02:48 Oct 16, 2025.
-     JAVASCRIPT APPENDED BY WAYBACK MACHINE, COPYRIGHT INTERNET ARCHIVE.
+/* --- fix блока, центрирование --- */
+.footer__inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  text-align: left;
+}
 
-     ALL OTHER CONTENT MAY ALSO BE PROTECTED BY COPYRIGHT (17 U.S.C.
-     SECTION 108(a)(3)).
-*/
+.footer__block {
+  flex: 1;
+}
+
+.footer__block:nth-child(2) {
+  text-align: center; /* центрируем блок "Троицкое" */
+}
+
+.footer__block:nth-child(3) {
+  text-align: right; /* выравниваем "Красный Яр" */
+}
+/* --- end fix --- */
+
+
+/* Фото в галерее: уменьшение, зависимость от изменения размера страницы */
+.section.photogallery .photogallery-slider__img {
+  max-width: clamp(320px, 70vw, 1300px); 
+  margin: 0 auto;
+}
+
+.section.photogallery .photogallery-slider__img .slick-list {
+  max-width: 100%;
+  margin: 0 auto;
+  overflow: hidden;
+}
+
+
+
+/* сами картинки — на всю ширину своего контейнера, высота по пропорциям */
+.section.photogallery .photogallery-slider__img img {
+  width: 100% !important;    /* оставляем 100%, чтобы подстроиться под контейнер */
+  height: auto !important;   /* сохраняем пропорции */
+  object-fit: cover;         /* если где-то зададут фиксированную высоту — не тянуть */
+  display: block;
+}
+
+/* На очень узких экранах ещё сильнее уменшил правую колонку с текстом */
+@media (max-width: 992px) {
+  .section.photogallery .col-lg-7 { /* левая колонка со слайдером */
+    order: 0;                       /* пусть остаётся первой */
+  }
+  .section.photogallery .col-lg-5 { /* правая колонка с заголовками/кнопкой */
+    margin-top: 24px;
+  }
+}
+
+
+/* Фотогалерея: гарантированный верхний и нижний отступы */
+.section.photogallery{
+  background: linear-gradient(180deg, #f9f9f9 0%, #ececec 100%);
+  padding-top: 60px !important;   /* верхний отступ внутри секции */
+  padding-bottom: 80px !important;/* нижний отступ внутри секции */
+  padding-left: 80px;
+  padding-right: 80px;
+  margin-top: 120px !important;    /* внешнее расстояние от блока с логотипами сверху */
+  margin-bottom: 220px;            /* внешнее расстояние до "Сертификатов" снизу */
+  border-radius: 8px;
+  position: relative;             /* нужно для ::before */
+}
+
+/* Если у первого дочернего элемента был отрицательный margin-top — обнулим */
+.section.photogallery > *:first-child{
+  margin-top: 0 !important;
+}
+
+/* Ряд/контейнеры внутри — без «выпирающего» верха */
+.section.photogallery .row,
+.section.photogallery .container,
+.section.photogallery .container-fluid{
+  margin-top: 0 !important;
+  padding-top: 0;
+}
+
+/* Запасной «страховочный» спейсер сверху на фоне (если что-то всё ещё давит вверх) */
+.section.photogallery::before{
+  content: "";
+  display: block;
+  height: 20px;   /* при желании поменяй величину */
+}
+
+/* Ширина и центрирование фото — оставляем, как делали ранее */
+.section.photogallery .photogallery-slider__img{
+  max-width: clamp(360px, 75vw, 1150px);
+  margin: 0 auto;
+}
+.section.photogallery .photogallery-slider__img img{
+  width: 100% !important;
+  height: auto !important;
+  display: block;
+  border-radius: 6px;
+  box-shadow: 0 4px 16px rgba(0,0,0,.1);
+}
+
+/* Секция с логотипами — убираем лишний отступ снизу */
+.section.logos,
+.section.partners,
+.logos,
+.partners {
+  margin-bottom: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+
+
+
 /*
 playback timings (ms):
   captures_list: 0.505

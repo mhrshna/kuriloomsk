@@ -1,23 +1,145 @@
 <!DOCTYPE html>
 <html class="bx-core bx-no-touch bx-no-retina bx-chrome" lang="ru" xml:lang="ru">
  <head>
+  
+  <!-- Масштабный фикс подгрузки курсора и зума, почему-то не подгружает с серверов яндекса, вырезал их полностью -->
+  <script>
+    (() => {
+      const desc = Object.getOwnPropertyDescriptor(Image.prototype, 'src');
+      if (!desc || !desc.set || !desc.get) return;
+
+      const origGet = desc.get;
+      const origSet = desc.set;
+
+      // Гашу все курсоры Яндекс.Карт, включая zoom_in.cur
+      const CURSOR_RE = /\/build\/release\/images\/cursor\/(grab|grabbing|help|zoom_in)\.cur(?:[?#].*)?$/i;
+      const EMPTY_ICON = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==';
+
+      const rules = [
+        { re: /^\/?tiles\?l=map/i, prefix: 'https://vec.maps.yandex.net/' },
+        { re: /^\/?tiles\?l=(sat|sat,skl)/i, prefix: 'https://sat01.maps.yandex.net/' }
+      ];
+
+      function rewrite(value) {
+        try {
+          if (value == null) return value;
+          let v = String(value);
+          if (/^(data:|blob:|about:)/i.test(v)) return value;
+          if (CURSOR_RE.test(v)) return EMPTY_ICON;
+          for (const r of rules) {
+            if (r.re.test(v)) {
+              if (v.startsWith('/')) v = v.slice(1);
+              return r.prefix + v;
+            }
+          }
+          return value;
+        } catch {
+          return value;
+        }
+      }
+
+      Object.defineProperty(Image.prototype, 'src', {
+        configurable: true,
+        enumerable: desc.enumerable,
+        get() { return origGet.call(this); },
+        set(value) { return origSet.call(this, rewrite(value)); }
+      });
+    })();
+  </script>
+
+
+  <style id="ymaps-cursor-fix">
+    /* классы актуальны для ветки 2.1.7x–2.1.8x */
+    .ymaps-2-1-79-cursor-grab,
+    .ymaps-2-1-79-map {
+      cursor: grab !important;
+    }
+  
+    .ymaps-2-1-79-cursor-grabbing {
+      cursor: grabbing !important;
+    }
+  
+    .ymaps-2-1-79-cursor-help {
+      cursor: help !important;
+    }
+  
+    /* запасной вариант — если версия классов другая,
+       вырежем любые url-курсоры от Яндекса */
+    [class*="ymaps-"][style*="cursor: url"] {
+      cursor: auto !important;
+    }
+  </style>
+
+
+    <!-- Фикс maps-and-flags.svg, переписан любой источник, который пытается поставить src c img/svg/maps-and-flags.svg, в том числе через new Image(), через setAttribute('src', ...) -->
+  <script>
+    (function () {
+      // что считаем «плохим» и чем заменяем
+      const BAD = /(^|\/)img\/svg\/maps-and-flags\.svg(\?|#|$)/i;
+      const GOOD = './KuriloOmsk_files/maps-and-flags.svg';
+
+      // 1) перехват Image.src (даже если ставят напрямую: n.image.src = e)
+      const imgDesc = Object.getOwnPropertyDescriptor(Image.prototype, 'src');
+      Object.defineProperty(Image.prototype, 'src', {
+        set(value) {
+          if (typeof value === 'string' && BAD.test(value)) value = GOOD;
+          return imgDesc.set.call(this, value);
+        },
+        get: imgDesc.get
+      });
+
+      // 2) перехват setAttribute('src', '...')
+      const nativeSetAttribute = Element.prototype.setAttribute;
+      Element.prototype.setAttribute = function (name, value) {
+        if ((name + '').toLowerCase() === 'src'
+          && typeof value === 'string' && BAD.test(value)) {
+          value = GOOD;
+        }
+        return nativeSetAttribute.call(this, name, value);
+      };
+
+      // 3) перехват new Image(...) — оставляем сигнатуру, но контроль у нас
+      const NativeImage = window.Image;
+      function PatchedImage(width, height) {
+        const img = new NativeImage(width, height);
+        return img; // src всё равно пойдёт через патч выше
+      }
+      PatchedImage.prototype = NativeImage.prototype;
+      window.Image = PatchedImage;
+
+      // 4) на всякий случай — переписать уже существующие <img>
+      function fixExisting() {
+        document.querySelectorAll('img[src]').forEach(img => {
+          const s = img.getAttribute('src');
+          if (s && BAD.test(s)) img.setAttribute('src', GOOD);
+        });
+      }
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', fixExisting);
+      } else {
+        fixExisting();
+      }
+    })();
+  </script>
+
+
+
   <meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
   <script async="" src="./KuriloOmsk_files/ba.js.загрузка" type="text/javascript">
   </script>
-  <!-- End Wayback Rewrite JS Include -->
   <meta content="IE=edge" http-equiv="X-UA-Compatible"/>
   <meta content="index, follow" name="robots"/>
   <meta content="1С-Битрикс, CMS, PHP, bitrix, система управления контентом" name="keywords"/>
   <meta content="1С-Битрикс: Управление сайтом" name="description"/>
-  <link href="./KuriloOmsk_files/core.css" rel="stylesheet" type="text/css"/>
+  <!-- <link href="./KuriloOmsk_files/core.css" rel="stylesheet" type="text/css"> --> <!-- Админ панель битрикс вне доступа, смысла подключать core нету -->
   <link rel="stylesheet" href="./KuriloOmsk_files/css/themify-icons.css">
   <script type="text/javascript">
    if (!window.BX) window.BX = {}; if (!window.BX.message) window.BX.message = function (mess) { if (typeof mess === 'object') { for (let i in mess) { BX.message[i] = mess[i]; } return true; } };
   </script>
-  <script src="./KuriloOmsk_files/core.js.загрузка" type="text/javascript">
+  <!--<script src="./KuriloOmsk_files/core.js.загрузка" type="text/javascript">
   </script>
   <script src="./KuriloOmsk_files/core_fx.js.загрузка" type="text/javascript">
-  </script>
+  </script>-->
   <script src="./KuriloOmsk_files/jquery-1.8.3.min.js.загрузка" type="text/javascript">
   </script>
   <title>
@@ -47,6 +169,9 @@
   <link href="./KuriloOmsk_files/custom.css" rel="stylesheet"/>
   <script async="" data-ymaps-api-ns="__ymaps_ymaps_1648624424380" data-ymaps-api-version="2.1.79" src="./KuriloOmsk_files/full-6341f0c1e121ed8c4cbf1c6d8dc350380d538a9a.js.загрузка">
   </script>
+  
+
+  
  </head>
  <body>
   <div id="panel">
@@ -479,8 +604,6 @@
         linear-gradient(90deg, rgba(0,0,0,.7) 0%, rgba(0,0,0,0) 100%),
         /* тёплый дым поверх */
         linear-gradient(0deg, rgba(28,29,24,.4) 0%, rgba(28,29,24,.4) 100%),
-        /* паттерн точек (если есть файл, иначе убери строку) */
-        url('./KuriloOmsk_files/dot-pattern.png') left top / auto no-repeat,
         /* само фото самый нижний слой */
         url('./KuriloOmsk_files/hero1bg.jpg?v=2') center / cover no-repeat;
     "></div>
@@ -1879,7 +2002,7 @@
      <div class="row justify-content-center">
       <div class="col-12 subtitle text-center">
        <h2>
-        20 лет на рынке
+        Более 20 лет на рынке
        </h2>
       </div>
       <div class="col-12 col-lg-10">
@@ -2370,7 +2493,7 @@
         <p>
          Автокомплекс “Курилотрансавто”
          <br/>
-         2014 - 2020. Все права защищены
+         2014 - 2025. Все права защищены
         </p>
         <p>
          <a href="http://kuriloomsk.ru/policy/">
@@ -2384,12 +2507,12 @@
          Троицкое, ул. Омская, 14
         </p>
         <p>
-         <a href="https://web.archive.org/web/20220330071257/tel:+79136765555">
-          8 913 676 55 55
+         <a href="tel:+79136765555">
+          8 913 669 55 55
          </a>
         </p>
         <p>
-         <a href="https://web.archive.org/web/20220330071257/mailto:info@kurilotransavto.ru">
+         <a href="mailto:info@kurilotransavto.ru">
           info@kurilotransavto.ru
          </a>
         </p>
@@ -2399,26 +2522,17 @@
          Красный Яр, ул. Дорожная, 19
         </p>
         <p>
-         <a href="https://web.archive.org/web/20220330071257/tel:+79136695555">
-          8 913 669 55 55
+         <a href="tel:+79136695555">
+          8 913 676 55 55
          </a>
         </p>
         <p>
-         <a href="https://web.archive.org/web/20220330071257/mailto:info@kurilotransavto.ru">
+         <a href="mailto:info@kurilotransavto.ru">
           info@kurilotransavto.ru
          </a>
         </p>
        </div>
-       <div class="footer__block">
-        <a class="footer__author" href="https://albaweb.ru/" target="_blank">
-         <img alt="albaweb-logo" src="./KuriloOmsk_files/albaweb-logo.svg"/>
-         <span>
-          Создание
-          <br/>
-          сайта - AlbaWeb
-         </span>
-        </a>
-       </div>
+       
       </div>
      </div>
     </div>
@@ -2859,7 +2973,7 @@
          <h2>
           Записаться на ремонт
          </h2>
-         <form action="https://web.archive.org/web/20220330071257/http://kuriloomsk.ru/" class="js-repair-form" method="post">
+         <form action="https://kuriloomsk.ru/" class="js-repair-form" method="post">
           <input name="PAGE_URL" type="hidden" value="http://kuriloomsk.ru/"/>
           <div class="row">
            <div class="col-12 col-md-6 pb-0">
@@ -3038,5 +3152,8 @@
   <!-- User script-->
   <script src="./KuriloOmsk_files/script.js.загрузка">
   </script>
+
+
+
  </body>
 </html>
