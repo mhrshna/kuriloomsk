@@ -64,7 +64,7 @@
     }
   
     /* запасной вариант — если версия классов другая,
-       вырежем любые url-курсоры от Яндекса */
+       вырезал любые url-курсоры от Яндекса */
     [class*="ymaps-"][style*="cursor: url"] {
       cursor: auto !important;
     }
@@ -778,25 +778,33 @@
         <li>
          <details open="">
           <summary>
-           Ремонт
+            Ремонт
           </summary>
-          <div class="tabs-nav__link is-active" data-bg="./KuriloOmsk_files/broken-semi-truck.jpg" data-price=".js-price-tab-10" data-tab-name="tab-10">
-           Тягач
+          <div class="tabs-nav__link is-active" data-bg="./KuriloOmsk_files/broken-semi-truck.jpg"
+            data-price=".js-price-tab-kuzov" data-tab-name="tab-11">
+            Кузовной ремонт
           </div>
-          <div class="tabs-nav__link" data-bg="./KuriloOmsk_files/broken-semi-truck.jpg" data-price=".js-price-tab-11" data-tab-name="tab-11">
-           Прицеп
+          <div class="tabs-nav__link" data-bg="./KuriloOmsk_files/broken-semi-truck.jpg" data-price=".js-price-tab-tgch"
+            data-tab-name="tab-10">
+            Тягач
           </div>
-         </details>
-        </li>
-        <li>
-         <div class="tabs-nav__link" data-bg="/upload/iblock/bcb/cost-bg-3.jpg" data-price=".js-price-tab-13" data-tab-name="tab-13">
-          Шиномонтаж
-         </div>
-        </li>
-        <li>
-         <div class="tabs-nav__link" data-bg="/upload/iblock/118/cost-bg-2.jpg" data-price=".js-price-tab-12" data-tab-name="tab-12">
-          Автомойка
-         </div>
+          <div class="tabs-nav__link" data-bg="./KuriloOmsk_files/broken-semi-truck.jpg" data-price=".js-price-tab-pric"
+            data-tab-name="tab-11">
+            Прицеп
+          </div>
+          </details>
+          </li>
+          <li>
+            <div class="tabs-nav__link" data-bg="./KuriloOmsk_files/broken-semi-truck.jpg" data-price=".js-price-tab-shin"
+              data-tab-name="tab-13">
+              Шиномонтаж
+            </div>
+          </li>
+          <li>
+            <div class="tabs-nav__link" data-bg="./KuriloOmsk_files/broken-semi-truck.jpg" data-price=".js-price-tab-avt"
+              data-tab-name="tab-12">
+              Автомойка
+            </div>
         </li>
        </ul>
       </div>
@@ -1089,108 +1097,145 @@
         </div>
        </div>
       </div>
-      <div class="col-12 col-lg-10 cost-price__wrap js-price-tab-10" style="opacity: 1;">
-       <div class="row cost-price">
-        <div class="col-12 col-md-6 col-lg-3">
-         <p class="cost-price__number">
-          <span>
-           1250
-          </span>
-          Руб
-         </p>
-         <p class="cost-price__info">
-          Норма час
-         </p>
+
+      <div class="cost-panels" id="price-panels">
+        <div class="row cost-price justify-content-center g-4 cost-price__wrap js-price-tab-kuzov _show">
+          <div class="">
+            <p class="cost-price__number"><span>1250</span> Руб</p>
+            <p class="cost-price__info">Норма час</p>
+          </div>
+          <div class="">
+            <p class="cost-price__number"><span>1500</span> Руб</p>
+            <p class="cost-price__info">Токарные работы</p>
+          </div>
+          <div class="">
+            <p class="cost-price__number"><span>1500</span> Руб</p>
+            <p class="cost-price__info">Сварочные работы</p>
+          </div>
+          <div class="">
+            <p class="cost-price__number"><span>100</span> Руб</p>
+            <p class="cost-price__info">Аргон за 1 см</p>
+          </div>
+          <div class="">
+            <p class="cost-price__number"><span>500</span> Руб</p>
+            <p class="cost-price__info">Покраска детали</p>
+          </div>
+          <div class="">
+            <p class="cost-price__number"><span>700</span> Руб</p>
+            <p class="cost-price__info">Полировка</p>
+          </div>
         </div>
-        <div class="col-12 col-md-6 col-lg-3">
-         <p class="cost-price__number">
-          <span>
-           1500
-          </span>
-          Руб
-         </p>
-         <p class="cost-price__info">
-          Токарные работы
-         </p>
+
+        <div class="row cost-price justify-content-center g-4 cost-price__wrap js-price-tab-tgch">
+          <div class="">
+            <p class="cost-price__number"><span>1250</span> Руб</p>
+            <p class="cost-price__info">Норма час</p>
+          </div>
+          <div class="">
+            <p class="cost-price__number"><span>1500</span> Руб</p>
+            <p class="cost-price__info">Токарные работы</p>
+          </div>
+          <div class="">
+            <p class="cost-price__number"><span>1500</span> Руб</p>
+            <p class="cost-price__info">Тест</p>
+          </div>
+          <div class="">
+            <p class="cost-price__number"><span>100</span> Руб</p>
+            <p class="cost-price__info">Аргон за 1 см</p>
+          </div>
+          <div class="">
+            <p class="cost-price__number"><span>500</span> Руб</p>
+            <p class="cost-price__info">Покраска детали</p>
+          </div>
+          <div class="">
+            <p class="cost-price__number"><span>700</span> Руб</p>
+            <p class="cost-price__info">Полировка</p>
+          </div>
         </div>
-        <div class="col-12 col-md-6 col-lg-3">
-         <p class="cost-price__number">
-          <span>
-           1500
-          </span>
-          Руб
-         </p>
-         <p class="cost-price__info">
-          Сварочные работы
-         </p>
+
+        <div class="row cost-price justify-content-center g-4 cost-price__wrap js-price-tab-pric">
+          <div class="">
+            <p class="cost-price__number"><span>1250</span> Руб</p>
+            <p class="cost-price__info">Норма час</p>
+          </div>
+          <div class="">
+            <p class="cost-price__number"><span>1500</span> Руб</p>
+            <p class="cost-price__info">Токарные работы нового типа</p>
+          </div>
+          <div class="">
+            <p class="cost-price__number"><span>1500</span> Руб</p>
+            <p class="cost-price__info">Тест</p>
+          </div>
+          <div class="">
+            <p class="cost-price__number"><span>10022</span> Руб</p>
+            <p class="cost-price__info">Тест</p>
+          </div>
+          <div class="">
+            <p class="cost-price__number"><span>500</span> Руб</p>
+            <p class="cost-price__info">Покраска детали</p>
+          </div>
+          <div class="">
+            <p class="cost-price__number"><span>700</span> Руб</p>
+            <p class="cost-price__info">Полировка</p>
+          </div>
         </div>
-        <div class="col-12 col-md-6 col-lg-3">
-         <p class="cost-price__number">
-          <span>
-           100
-          </span>
-          Руб
-         </p>
-         <p class="cost-price__info">
-          Аргон за 1 см
-         </p>
+
+        <div class="row cost-price justify-content-center g-4 cost-price__wrap js-price-tab-shin">
+          <div class="">
+            <p class="cost-price__number"><span>1250</span> Руб</p>
+            <p class="cost-price__info">Норма час</p>
+          </div>
+          <div class="">
+            <p class="cost-price__number"><span>1500</span> Руб</p>
+            <p class="cost-price__info">Токарные работы</p>
+          </div>
+          <div class="">
+            <p class="cost-price__number"><span>1500</span> Руб</p>
+            <p class="cost-price__info">Сварочные работы</p>
+          </div>
+          <div class="">
+            <p class="cost-price__number"><span>100</span> Руб</p>
+            <p class="cost-price__info">Аргон за 1 см</p>
+          </div>
+          <div class="">
+            <p class="cost-price__number"><span>500</span> Руб</p>
+            <p class="cost-price__info">Покраска детали</p>
+          </div>
+          <div class="">
+            <p class="cost-price__number"><span>700</span> Руб</p>
+            <p class="cost-price__info">Тест</p>
+          </div>
         </div>
-       </div>
+
+        <div class="row cost-price justify-content-center g-4 cost-price__wrap js-price-tab-avt">
+          <div class="">
+            <p class="cost-price__number"><span>1250</span> Руб</p>
+            <p class="cost-price__info">Норма час</p>
+          </div>
+          <div class="">
+            <p class="cost-price__number"><span>1500</span> Руб</p>
+            <p class="cost-price__info">Токарные работы</p>
+          </div>
+          <div class="">
+            <p class="cost-price__number"><span>1500</span> Руб</p>
+            <p class="cost-price__info">Сварочные работы</p>
+          </div>
+          <div class="">
+            <p class="cost-price__number"><span>100</span> Руб</p>
+            <p class="cost-price__info">Аргон за 1 см</p>
+          </div>
+          <div class="">
+            <p class="cost-price__number"><span>5000</span> Руб</p>
+            <p class="cost-price__info">Тест</p>
+          </div>
+          <div class="">
+            <p class="cost-price__number"><span>700</span> Руб</p>
+            <p class="cost-price__info">Полировка</p>
+          </div>
+        </div>
       </div>
-      <div class="col-12 col-lg-10 cost-price__wrap js-price-tab-11" style="opacity: 0;">
-       <div class="row cost-price">
-        <div class="col-12 col-md-6 col-lg-3">
-         <p class="cost-price__number">
-          <span>
-           1250
-          </span>
-          Руб
-         </p>
-         <p class="cost-price__info">
-          Норма час
-         </p>
-        </div>
-        <div class="col-12 col-md-6 col-lg-3">
-         <p class="cost-price__number">
-          <span>
-           1500
-          </span>
-          Руб
-         </p>
-         <p class="cost-price__info">
-          Токарные работы
-         </p>
-        </div>
-        <div class="col-12 col-md-6 col-lg-3">
-         <p class="cost-price__number">
-          <span>
-           1500
-          </span>
-          Руб
-         </p>
-         <p class="cost-price__info">
-          Сварочные работы
-         </p>
-        </div>
-        <div class="col-12 col-md-6 col-lg-3">
-         <p class="cost-price__number">
-          <span>
-           100
-          </span>
-          Руб
-         </p>
-         <p class="cost-price__info">
-          Аргон за 1 см
-         </p>
-        </div>
-       </div>
-      </div>
-      <div class="col-12 col-lg-10 cost-price__wrap js-price-tab-13" style="opacity: 0;">
-      </div>
-      <div class="col-12 col-lg-10 cost-price__wrap js-price-tab-12" style="opacity: 0;">
-      </div>
-     </div>
-    </div>
+
+
    </section>
    <section class="section partners">
     <div class="container">
@@ -2168,9 +2213,12 @@
             Трасса Р402 Тюмень —
                                             Омск, 575км
            </h5>
-           <a class="button button--primary scrollto location__btn" data-goto="Дорожная улица, 19 рабочий посёлок Красный Яр, Любинский район, Омская область, Россия, 646176" href="http://kuriloomsk.ru/#map" title="Поселок “Красный Яр”">
+          <!-- Посёлок Красный Яр -->
+          <a class="button button--primary scrollto location__btn" href="#map" data-lat="55.230492" data-lng="72.900109"
+            data-name="Посёлок «Красный Яр»">
             Показать на карте
-           </a>
+          </a>
+
           </div>
          </div>
         </div>
@@ -2213,9 +2261,11 @@
             Трасса М51 Омск —
                                             Новосибирск, 657км
            </h5>
-           <a class="button button--primary scrollto location__btn" data-goto="Омская улица, 14 село Троицкое, Омский район, Омская область, Россия, 644520" href="http://kuriloomsk.ru/#map" title="Село “Троицкое”">
+          <!-- Село Троицкое -->
+          <a class="button button--primary scrollto location__btn" href="#map" data-lat="54.863114" data-lng="73.297955"
+            data-name="Село «Троицкое»">
             Показать на карте
-           </a>
+          </a>
           </div>
          </div>
         </div>
@@ -3130,6 +3180,116 @@
   <!-- Yandex map-->
   <script src="./KuriloOmsk_files/custom-yandex-map.js">
   </script>
+
+  <script>
+    (function () {
+      // ---------- функция надёжного докрута карты (оставлена как у тебя) ----------
+      function ensureMapInView(mode = 'center') {
+        const el = document.getElementById('map');
+        if (!el) return Promise.resolve();
+
+        const MAX_TRIES = 8;
+        const PAUSE_MS = 120;
+
+        return new Promise(resolve => {
+          let tries = 0;
+          (function step() {
+            const vh = (window.visualViewport && window.visualViewport.height) || window.innerHeight;
+            const rect = el.getBoundingClientRect();
+            const pageY = window.pageYOffset;
+            const header = document.querySelector('.header');
+            const HEADER_OFFSET = header ? header.offsetHeight : 0;
+            const SAFETY = 12;
+
+            let targetTop;
+            if (mode === 'bottom') {
+              targetTop = rect.top + pageY + rect.height - vh - SAFETY;
+            } else if (mode === 'top') {
+              targetTop = rect.top + pageY - HEADER_OFFSET - SAFETY;
+            } else {
+              targetTop = rect.top + pageY - (vh - rect.height) / 2 - HEADER_OFFSET;
+            }
+            if (targetTop < 0) targetTop = 0;
+
+            const topVisible = rect.top >= HEADER_OFFSET + SAFETY;
+            const bottomVisible = rect.bottom <= vh - SAFETY;
+            const centerVisible = rect.top < (vh / 2) && rect.bottom > (vh / 2);
+
+            const ok =
+              (mode === 'bottom' && bottomVisible) ||
+              (mode === 'top' && topVisible) ||
+              (mode === 'center' && centerVisible);
+
+            if (ok || tries >= MAX_TRIES) return resolve();
+
+            tries++;
+            window.scrollTo({ top: Math.round(targetTop), behavior: 'smooth' });
+            setTimeout(step, PAUSE_MS);
+          })();
+        });
+      }
+
+      // ---------- вспомогательные ----------
+      function getMapInstance() {
+        return window.myMap || window.map || window.ymap || null;
+      }
+
+      function waitMapReady(ms = 4000) {
+        const t0 = Date.now();
+        return new Promise(res => {
+          (function tick() {
+            if (window.ymaps && getMapInstance()) return res();
+            if (Date.now() - t0 > ms) return res();
+            requestAnimationFrame(tick);
+          })();
+        });
+      }
+
+      // ВАЖНО: старую функцию centerAndMark НЕ используем и не вызываем
+
+      // ---------- обработчик клика по "Показать на карте" ----------
+      document.addEventListener('click', function (e) {
+        const btn = e.target.closest('.location__btn');
+        if (!btn) return;
+
+        // глушим старые обработчики
+        e.preventDefault();
+        e.stopPropagation();
+        if (typeof e.stopImmediatePropagation === 'function') e.stopImmediatePropagation();
+
+        const lat = parseFloat(btn.dataset.lat);
+        const lng = parseFloat(btn.dataset.lng);
+        if (Number.isNaN(lat) || Number.isNaN(lng)) return;
+
+        (async () => {
+          // прокрутка к карте
+          await ensureMapInView('bottom');
+          await waitMapReady();
+
+          const map = getMapInstance();
+          if (!map || !window.ymaps) return;
+
+          const target = [lat, lng];
+
+          // Плавный перелёт к уже существующей метке (ничего не удаляем/не создаём)
+          try {
+            await map.panTo(target, { flying: true, delay: 0 }); // сохранит текущий zoom
+          } catch (_) {
+            try {
+              map.setCenter(target, map.getZoom(), { duration: 500 });
+            } catch (_) {
+              map.setCenter(target, map.getZoom());
+            }
+          }
+        })();
+      }, true);
+    })();
+  </script>
+
+
+
+
+
   <!-- Slick Slider-->
   <script src="./KuriloOmsk_files/slick.js.загрузка">
   </script>
@@ -3151,6 +3311,185 @@
   </script>
   <!-- User script-->
   <script src="./KuriloOmsk_files/script.js.загрузка">
+  </script>
+
+
+  <!-- Не нашел теги яндекса, чтобы грамотно отрегулировать скролл в коде, сделал отдельно перезаписью-->
+  <style>
+    /* якорь, в который будем скроллить */
+    .js-map-focus {
+      position: absolute;
+      bottom: 140px;
+      left: 0;
+      width: 1px;
+      height: 1px;
+      pointer-events: none;
+      scroll-margin-top: 80px;
+      /* высота фикс. шапки */
+    }
+  </style>
+  
+  <script>
+    (function () {
+      // Пытаемся найти контейнер карты и вставить внутрь якорь .js-map-focus
+      function findMapContainer() {
+        // 1) Если у тебя есть явные контейнеры с id — пробуем их первыми:
+        let el = document.querySelector('#map, #yamap, #yandex-map');
+        if (el) return el;
+
+        // 2) Частые кастомные классы/обёртки
+        el = document.querySelector('.map, .map-block, .map-wrapper');
+        if (el) return el;
+
+        // 3) Если ничего не нашли — входим внутрь карты Яндекса и поднимаемся к адекватному контейнеру
+        //   .ymaps-2-1-79-map — внутренний узел карты, он точно есть после инициализации
+        const inner = document.querySelector('.ymaps-2-1-79-map');
+        if (!inner) return null;
+
+        // поднимаемся вверх, пока не найдём блок с адекватной высотой (сам контейнер карты)
+        let cur = inner;
+        while (cur && cur !== document.body) {
+          const cs = getComputedStyle(cur);
+          const h = cur.getBoundingClientRect().height;
+          if (h >= 240 && (cs.position === 'relative' || cs.position === 'absolute' || cs.position === 'fixed' || cs.position === 'sticky')) {
+            return cur;
+          }
+          cur = cur.parentElement;
+        }
+        return null;
+      }
+
+      function ensureFocusAnchor() {
+        const host = findMapContainer();
+        if (!host) return false;
+
+        // если якорь уже есть — используем его
+        let focus = host.querySelector('.js-map-focus');
+        if (!focus) {
+          // гарантируем position для контейнера
+          const cs = getComputedStyle(host);
+          if (cs.position === 'static') host.style.position = 'relative';
+
+          focus = document.createElement('div');
+          focus.className = 'js-map-focus';
+          focus.setAttribute('aria-hidden', 'true');
+          host.appendChild(focus);
+        }
+        // сохраним глобально
+        window.__mapFocusEl = focus;
+        return true;
+      }
+
+      // Надёжный скролл к якорю: двойной вызов + догонка
+      async function scrollToMapFocus(mode = 'center') {
+        // если по каким-то причинам не нашли ещё — попробуем создать
+        if (!window.__mapFocusEl) {
+          ensureFocusAnchor();
+        }
+        const focus = window.__mapFocusEl;
+        if (!focus) return;
+
+        // Можно менять логику позиционирования: center/bottom/top
+        // Для якоря это не критично он же уже стоит ближе к низу карты
+        focus.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        await new Promise(r => setTimeout(r, 280));
+        focus.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+        await new Promise(r => {
+          const done = () => { window.removeEventListener('scrollend', done); r(); };
+          if ('onscrollend' in window) window.addEventListener('scrollend', done, { once: true });
+          else setTimeout(done, 450);
+        });
+      }
+
+      // Попытка воткнуть якорь сейчас и повторяем пару раз на случай,
+      // если карта дорисуется позже (ленивая инициализация/мобильные браузеры)
+      ensureFocusAnchor();
+      let tries = 0;
+      const iv = setInterval(() => {
+        if (window.__mapFocusEl || tries++ > 12) { clearInterval(iv); return; }
+        ensureFocusAnchor();
+      }, 250);
+
+      // Делаем функцию доступной снаружи
+      window.scrollToMapFocus = scrollToMapFocus;
+
+      // Если уже где-то зовётся ensureMapInView('center'|'bottom'),
+      // просто перехватим её и направим на скролл, чтобы НИЧЕГО в другом коде не менять:
+      window.ensureMapInView = scrollToMapFocus;
+
+    })();
+  </script>
+
+
+  <script>
+    (function () {
+      // защита от двойной инициализации, если скрипт подключён дважды
+      if (window.__priceTabsInit) return;
+      window.__priceTabsInit = true;
+
+      const root = document.getElementById('price-panels');
+      if (!root) return;
+
+      const panels = Array.from(root.querySelectorAll('.cost-price__wrap'));
+      const tabs = Array.from(document.querySelectorAll('.tabs-nav__link'));
+
+      // --- фиксируем высоту контейнера один раз (off-screen, без мерцаний)
+      function fixContainerHeightOnce() {
+        const ghost = document.createElement('div');
+        ghost.style.cssText = 'position:fixed;left:-99999px;top:-99999px;visibility:hidden;pointer-events:none;';
+        document.body.appendChild(ghost);
+
+        let maxH = 0;
+        panels.forEach(p => {
+          const clone = p.cloneNode(true);
+          // имитируем отображение, но вне экрана; важно не absolute, чтобы высота считалась корректно
+          clone.style.position = 'static';
+          clone.style.opacity = '1';
+          clone.style.pointerEvents = 'none';
+          // на случай, если показ завязан на _show
+          clone.classList.add('_show');
+          ghost.appendChild(clone);
+
+          const h = clone.scrollHeight || clone.offsetHeight || 0;
+          if (h > maxH) maxH = h;
+          ghost.removeChild(clone);
+        });
+
+        document.body.removeChild(ghost);
+        root.style.height = maxH + 'px';
+      }
+
+      // --- переключение: держим только одну панель с классом _show
+      let current = panels.find(p => p.classList.contains('_show')) || panels[0];
+      function switchTo(selector) {
+        const next = document.querySelector(selector);
+        if (!next || next === current) return;
+        if (current) current.classList.remove('_show');
+        next.classList.add('_show');
+        current = next;
+      }
+
+      // старт: фиксируем высоту и показываем нужную панель
+      fixContainerHeightOnce();
+      const startBtn = document.querySelector('.tabs-nav__link.is-active') || tabs[0];
+      if (startBtn) switchTo(startBtn.dataset.price);
+
+      // единый обработчик кликов (теперь он один-единственный)
+      document.addEventListener('click', (e) => {
+        const btn = e.target.closest('.tabs-nav__link');
+        if (!btn) return;
+        tabs.forEach(b => b.classList.toggle('is-active', b === btn));
+        switchTo(btn.dataset.price);
+      });
+
+      // подстройка высоты после загрузки медиа и при ресайзе
+      window.addEventListener('load', fixContainerHeightOnce);
+      window.addEventListener('resize', () => {
+        cancelAnimationFrame(window.__priceSyncRAF);
+        window.__priceSyncRAF = requestAnimationFrame(fixContainerHeightOnce);
+      });
+    })();
   </script>
 
 

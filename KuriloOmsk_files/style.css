@@ -4974,14 +4974,191 @@ a[data-fancybox="gallery"]::before {
 
 /*# sourceMappingURL=../maps/style.css.map */
 
-/*
-     FILE ARCHIVED ON 15:50:43 Apr 01, 2022 AND RETRIEVED FROM THE
-     INTERNET ARCHIVE ON 12:02:40 Oct 16, 2025.
-     JAVASCRIPT APPENDED BY WAYBACK MACHINE, COPYRIGHT INTERNET ARCHIVE.
+    /* --- Блок цен, выравнивание и расстояния --- */
+    .cost-price__wrap {
+      max-width: 1250px;
+      position: relative;
+      clear: both;
+      z-index: 1;
+    }
+  
+    /* Ровная сетка с одинаковыми промежутками */
+    .row.cost-price {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      /* одинаковая ширина у всех карточек */
+      column-gap: 100px;
+      /* расстояние между колонками */
+      row-gap: 60px;
+      /* расстояние между рядами */
+      justify-items: center;
+      align-items: start;
+    }
+  
+    /* карточка */
+    .row.cost-price>div {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      /* центрирует текст и числа */
+      text-align: center;
+    }
+  
+    /* число + "Руб" в одну строку */
+    .cost-price__number {
+      display: inline-flex;
+      align-items: baseline;
+      justify-content: center;
+      gap: 10px;
+      /* расстояние между числом и "Руб" */
+      margin: 0 0 4px;
+      line-height: 1;
+      white-space: nowrap;
+    }
+  
+    /* само число */
+    .cost-price__number span {
+      font-size: clamp(42px, 3.8vw, 58px);
+      font-weight: 600;
+      line-height: 1;
+    }
+  
+    /* "Руб" */
+    .cost-price__number {
+      font-size: clamp(24px, 1.8vw, 28px);
+      font-weight: 700;
+    }
+  
+    /* подпись под ценой */
+    .cost-price__info {
+      margin-top: 6px;
+      /* ближе к цене */
+      font-size: clamp(22px, 1.8vw, 26px);
+      opacity: 0.97;
+      white-space: normal;
+      /* чтобы не ломалось на слова */
+      text-align: center;
+      max-width: 350px;
+      min-width: 230px;
+    }
+  
+    /* адаптив: планшет / телефон */
+    @media (max-width: 1024px) {
+      .row.cost-price {
+        grid-template-columns: repeat(3, 1fr);
+        column-gap: 60px;
+        row-gap: 50px;
+      }
+    }
+  
+    @media (max-width: 600px) {
+      .row.cost-price {
+        grid-template-columns: repeat(2, 1fr);
+        column-gap: 40px;
+        row-gap: 40px;
+      }
+  
+      .cost-price__info {
+        white-space: normal;
+      }
+    }
 
-     ALL OTHER CONTENT MAY ALSO BE PROTECTED BY COPYRIGHT (17 U.S.C.
-     SECTION 108(a)(3)).
-*/
+        /* Скрываем все блоки цен кроме первого */
+        .js-price-tab-tgch,
+        .js-price-tab-pric,
+        .js-price-tab-shin,
+        .js-price-tab-avt {
+          display: none !important;
+        }
+    
+        /* Активная панель цен — показываем её поверх любых !important */
+        .cost-price__wrap._show {
+          display: grid !important;
+          /* именно grid, т.к. сетка на этом элементе */
+        }
+
+
+
+    /* контейнер под панели */
+    .cost-panels {
+      position: relative;
+      width: 100%;
+    }
+  
+    /* все панели кладём друг на друга */
+    .cost-panels .cost-price__wrap {
+      position: absolute;
+      /* вынимаем из потока, убираем «прыжки» */
+      inset: 0;
+      /* растянуть на весь контейнер */
+      display: none;
+      /* по умолчанию скрыты */
+    }
+  
+    /* только активную */
+    .cost-panels .cost-price__wrap._show {
+      display: grid;
+      /* сетка остаётся */
+    }
+  
+    /* на всякий случай, если где-то было скрытие через !important */
+    .cost-panels .cost-price__wrap._show {
+      display: grid !important;
+    }
+  
+  
+
+
+
+
+    #price-panels {
+      position: relative;
+    }
+  
+    /* все панели — одна над другой */
+    .cost-price__wrap {
+      position: absolute;
+      inset: 0;
+      display: grid !important;
+      /* перебиваем bootstrap .row {display:flex} */
+      grid-template-columns: repeat(6, 1fr);
+      column-gap: 100px;
+      row-gap: 60px;
+      justify-items: center;
+      align-items: start;
+  
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.15s ease-out;
+      z-index: 1;
+    }
+  
+    /* активная панель */
+    .cost-price__wrap._show {
+      opacity: 1;
+      pointer-events: auto;
+      z-index: 2;
+    }
+  
+    @media (max-width: 1024px) {
+      .cost-panels .cost-price__wrap {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        column-gap: 60px;
+        row-gap: 50px;
+      }
+    }
+  
+    @media (max-width: 600px) {
+      .cost-panels .cost-price__wrap {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        column-gap: 40px;
+        row-gap: 40px;
+      }
+    }
+
+  
+
+
 /*
 playback timings (ms):
   captures_list: 0.734
