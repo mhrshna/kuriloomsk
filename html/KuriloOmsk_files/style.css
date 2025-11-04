@@ -2324,7 +2324,7 @@ td {
 
 td {
   padding: 24px 10px;
-  font-size: 16px
+  font-size: 17.2px
 }
 
 .icon-box {
@@ -5156,7 +5156,552 @@ a[data-fancybox="gallery"]::before {
       }
     }
 
+
+   /* Ограничиваем ширину фона дропдауна только на широких экранах. Колоночная раскладка .nav-dropdown остаётся как в исходном CSS. */ 
+   @media (min-width: 1366px) {
+    .header .nav-dropdown__wrap {
+      max-width: min(90vw, 590px) !important;
+      /* потолок: не шире 1200px и не шире экрана */
+    }
+  }
+
+
+
+
+
+/* Вкладки типа "Кузовной ремонт" */
+  /* показываем .popup при активации */ .popup.active {
+    display: block;
+  }
   
+  /* фон и блюр задника для сервисной панели */
+  .popup.service-panel {
+    background: rgba(0, 0, 0, .45);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    z-index: 999;
+    /* выше хедера */
+  }
+  
+  /* контейнер панели */
+  .service-panel__content {
+    position: relative;
+    margin: 6vh auto 4vh;
+    width: min(1100px, 92vw);
+    height: calc(100vh - 10vh);
+    /* ← замена max-height на height */
+    background: rgba(20, 20, 20, .88);
+    color: #fff;
+    border-radius: 16px;
+    padding: 28px 28px 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, .35);
+    display: flex;
+    /* добавили flex для распределения высоты */
+    flex-direction: column;
+    overflow: hidden;
+    /* скролл внутри body */
+  }
+  
+  /* шапка панели */
+  .service-panel__header h2 {
+    margin: 0 0 .25em;
+    font-size: 28px;
+    font-weight: 700;
+  }
+  
+  .service-panel__lead {
+    margin: 0 0 16px;
+    opacity: .9;
+  }
+  
+  .service-panel__body {
+    flex: 1 1 auto;
+    /* занимает всё оставшееся место */
+    min-height: 0;
+    /* обязательно, чтобы flex не "обрезал" */
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 0 10px 18px 0;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(221, 185, 111, .4) transparent;
+    scrollbar-gutter: stable both-edges;
+  }
+
+  /* убираем лишний отступ у последнего блока контента */ 
+  .service-panel__body> :last-child {
+     margin-bottom: 0 !important;
+     padding-bottom: 0 !important;
+   }
+  
+  /* контент внутри */
+  .service-section {
+    margin-bottom: 22px;
+  }
+  
+  .service-section h3 {
+    margin: 0 0 .5em;
+    font-size: 20px;
+  }
+  
+  .service-list {
+    margin: 0;
+    padding-left: 1.2em;
+  }
+  
+  .service-list li {
+    margin: .25em 0;
+  }
+
+  
+  .price {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .price td {
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, .08);
+  }
+  
+  .price td:last-child {
+    text-align: right;
+    font-weight: 600;
+  }
+  
+  /* контейнер панели создаёт свой контекст наложения */ .service-panel__content {
+    position: relative;
+    z-index: 1;
+  }
+  
+  
+  /* крестик закрытия — финальная версия */ 
+  .popup-close {
+    position: fixed;
+    top: 32px !important;;
+    right: 32px !important;;
+  
+    width: 44px;
+    height: 44px;
+  
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  
+    background: transparent;
+    border: none;
+    color: #DDB96F;
+    font-size: 24px;
+    line-height: 1;
+    cursor: pointer;
+  
+    z-index: 100000;
+    border-radius: 50%;
+    transition: background 0.2s ease;
+  }
+  
+  .popup-close:hover {
+    background: rgba(255, 255, 255, 0.1);
+  }
+  
+
+  
+  
+  /* мобильная адаптация */
+  @media (max-width: 768px) {
+    .service-panel__content {
+      width: 100vw;
+      margin: 0;
+      min-height: 100vh;
+      max-height: 100vh;
+      border-radius: 0;
+      padding: 20px 16px 16px;
+    }
+  
+    .service-panel__body {
+      max-height: calc(100vh - 70px);
+    }
+  }
+
+/* Фографии-примеры внутри вкладок */
+  /* Типографика и отступы внутри панели */ .service-panel__header h2 {
+    font-size: 30px;
+    line-height: 1.25;
+  }
+  
+  .service-panel__lead {
+    margin-top: 4px;
+    margin-bottom: 18px;
+    opacity: .9;
+  }
+  
+  .service-section {
+    margin: 20px 0 22px;
+  }
+  
+  .service-section h3 {
+    margin: 0 0 10px;
+    font-size: 20px;
+    font-weight: 700;
+  }
+  
+  .service-list {
+    margin: 0;
+    padding-left: 1.2em;
+  }
+  
+  .service-list li {
+    margin: .3em 0;
+    line-height: 1.5;
+  }
+  
+  /* Текст-описание после списка */
+  .service-desc p {
+    margin: 0 0 10px;
+    line-height: 1.6;
+    opacity: .95;
+  }
+  
+  .service-bullets {
+    margin: 0;
+    padding-left: 1.2em;
+  }
+  
+  .service-bullets li {
+    margin: .55em 0;
+  }
+  
+  /* Таблица цен чуть контрастнее */
+  .price {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .price td {
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, .12);
+  }
+  
+  .price td:first-child {
+    opacity: .95;
+  }
+  
+  .price td:last-child {
+    text-align: right;
+    font-weight: 600;
+  }
+  
+  /* Галерея */
+  .gallery {
+    display: grid;
+    gap: 12px;
+  }
+  
+  .gallery__main {
+    width: 100%;
+    aspect-ratio: 16/9;
+    /* аккуратная рамка */
+    background: rgba(255, 255, 255, .04);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  
+  .gallery__main img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  
+  /* --- Галерея: улучшенный и аккуратный стиль превью --- */
+.gallery {
+  display: grid;
+  gap: 14px;
+}
+
+.gallery__main {
+  width: 100%;
+  aspect-ratio: 16/9;
+  border-radius: 14px;
+  overflow: hidden;
+  background: rgba(255,255,255,.04);
+  box-shadow: 0 4px 16px rgba(0,0,0,.3);
+}
+
+.gallery__main img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform .3s ease;
+}
+
+
+
+.gallery__thumbs {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin-top: 6px;
+}
+
+.gallery__thumbs img {
+  width: 80px;
+  height: 54px;
+  /* соотношение 4:3 */
+  object-fit: cover;
+  border-radius: 8px;
+  opacity: 0.7;
+  cursor: pointer;
+  transition: transform .2s ease, opacity .2s ease, box-shadow .2s ease;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.gallery__thumbs img:hover {
+  opacity: 1;
+  transform: translateY(-2px) scale(1.03);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.35);
+}
+
+.gallery__thumbs img.is-active {
+  opacity: 1;
+  border-color: #DDB96F;
+  box-shadow: 0 0 0 2px rgba(221, 185, 111, 0.5);
+}
+
+/* мобильная версия — делаем чуть крупнее для кликов пальцем */
+@media (max-width: 768px) {
+  .gallery__thumbs img {
+    width: 64px;
+    height: 44px;
+  }
+}
+
+
+
+  /* --- аккуратный скролл внутри панели --- */ .service-panel__body {
+    scrollbar-width: thin;
+    /* Firefox */
+    scrollbar-color: rgba(221, 185, 111, .4) transparent;
+  }
+  
+  /* Chrome, Edge, Safari */
+  .service-panel__body::-webkit-scrollbar {
+    width: 10px;
+    /* ширина скролла */
+  }
+  
+  .service-panel__body::-webkit-scrollbar-track {
+    background: transparent;
+    /* фон дорожки */
+  }
+  
+  .service-panel__body::-webkit-scrollbar-thumb {
+    background-color: rgba(221, 185, 111, .4);
+    /* цвет "ползунка" под крестик */
+    border-radius: 4px;
+    border: 2px solid transparent;
+    /* делает аккуратным */
+    background-clip: padding-box;
+    transition: background-color .2s ease;
+  }
+  
+  .service-panel__body::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(221, 185, 111, .6);
+    /* немного ярче при наведении */
+  }
+  
+  /* чтобы не появлялся горизонтальный */
+  .service-panel__body::-webkit-scrollbar-corner {
+    background: transparent;
+  }
+
+  
+
+
+
+
+  /* фон под заголовком внутри панели */ .service-panel__header {
+    position: sticky;
+    /* “прилипает” при прокрутке */
+    top: 0;
+    /* закрепляем у верхнего края панели */
+    z-index: 5;
+    /* выше контента, ниже крестика */
+    background: rgba(0, 0, 0, 0.4);
+    /* мягкий прозрачный фон */
+    backdrop-filter: blur(8px);
+    /* лёгкий блюр, под стиль панели */
+    -webkit-backdrop-filter: blur(8px);
+    padding: 16px 20px 12px;
+    /* внутренние отступы */
+    border-bottom: 2px solid rgba(221, 185, 111, 0.08);
+    border-radius: 12px 12px 0 0;
+    /* красиво закругляет верх */
+  }
+  
+  /* оформление текста в шапке */
+  .service-panel__header h2 {
+    margin: 0;
+    font-size: 28px;
+    font-weight: 700;
+    color: #fff;
+  }
+  
+  .service-panel__lead {
+    margin: 4px 0 0;
+    font-size: 17px;
+    color: rgba(255, 255, 255, 0.9);
+  }
+
+
+
+  /* === Оверлей: только fade, без transform === */
+.popup.service-panel{
+  display:block !important;
+  position:fixed; inset:0;          /* перекрываем весь экран */
+  opacity:0; visibility:hidden; pointer-events:none;
+  transition:opacity .35s ease, visibility 0s linear .35s;
+  z-index:999;
+}
+
+/* блюр и затемнение — отдельным слоем, не анимируем transform на родителе */
+.popup.service-panel::before{
+  content:"";
+  position:absolute; inset:0;
+  background:rgba(0,0,0,0.25);
+  backdrop-filter:blur(12px);
+  -webkit-backdrop-filter:blur(12px);
+  will-change:opacity;
+}
+
+.popup.service-panel.active{
+  opacity:1; visibility:visible; pointer-events:auto;
+  transition:opacity .35s ease, visibility 0s;
+}
+
+/* === Контент: анимируем его (въезд), не оверлей === */
+.service-panel__content{
+  position:relative;
+  margin:6vh auto 4vh;
+  width:min(1100px,92vw);
+  max-height:calc(100vh - 10vh);
+  background:rgba(20,20,20,.88);
+  color:#fff;
+  border-radius:16px;
+  padding:28px 28px 20px;
+  box-shadow:0 10px 30px rgba(0,0,0,.35);
+  overflow:hidden;
+
+  /* стартовое состояние */
+  opacity:0;
+  transform:translateY(14px) scale(.995);
+  transition:opacity .45s ease, transform .45s ease;
+
+  /* хинты рендереру */
+  backface-visibility:hidden;
+  will-change:opacity, transform;
+}
+
+.popup.service-panel.active .service-panel__content{
+  opacity:1;
+  transform:translateY(0) scale(1);
+}
+
+/* уважение системных настроек */
+@media (prefers-reduced-motion: reduce){
+  .popup.service-panel,
+  .popup.service-panel.active,
+  .popup.service-panel .service-panel__content{
+    transition:none !important;
+    transform:none !important;
+  }
+}
+
+  
+   
+
+
+
+   .gallery__main {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    /* можно 4/3, 3/2 — подбери формат, который у тебя был */
+    overflow: hidden;
+  }
+  
+  .gallery__main img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+
+  /* Лайтбокс */ .lightbox {
+     position: fixed;
+     inset: 0;
+     display: flex;
+     align-items: center;
+     justify-content: center;
+     background: rgba(0, 0, 0, .8);
+     backdrop-filter: blur(6px);
+     -webkit-backdrop-filter: blur(6px);
+     opacity: 0;
+     visibility: hidden;
+     pointer-events: none;
+     transition: opacity .35s ease, visibility 0s linear .35s;
+     z-index: 9999;
+   }
+  
+   .lightbox.active {
+     opacity: 1;
+     visibility: visible;
+     pointer-events: auto;
+     transition: opacity .35s ease, visibility 0s;
+   }
+  
+   .lightbox img {
+     max-width: 90vw;
+     max-height: 85vh;
+     border-radius: 10px;
+     box-shadow: 0 0 30px rgba(0, 0, 0, .6);
+     transform: scale(.96);
+     transition: transform .35s ease;
+     cursor: zoom-out;
+     /* клик по фото — закрыть */
+   }
+  
+   .lightbox.active img {
+     transform: scale(1);
+   }
+  
+   /* Курсор над основной картинкой галереи */
+   .gallery__main img {
+     cursor: zoom-in;
+   }
+
+   /* Контейнер главного фото — чтобы зум не “вылезал” */ .gallery__main {
+    position: relative;
+    overflow: hidden;
+    /* важное: обрезает края при scale */
+  }
+  
+  /* Курсор и плавный зум при наведении */
+  .gallery__main img {
+    cursor: zoom-in;
+    transition: transform .25s ease, filter .25s ease;
+    transform-origin: center center;
+    will-change: transform;
+  }
+  
+  .gallery__main img:hover {
+    transform: scale(1.02);
+    /* аккуратный намёк, что кликабельно */
+    /* при желании можно добавить лёгкий контраст/тень:
+       filter: saturate(1.02) contrast(1.02); */
+  }
 
 
 /*

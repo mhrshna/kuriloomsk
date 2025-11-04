@@ -259,6 +259,213 @@ jQuery(document).ready(function ($) {
 }(jQuery));
 
 
+
+
+// === Панель: скроллим только .service-panel__body, фон не листается ===
+jQuery(function ($) {
+  let touchStartY = 0;
+
+  // утилита: можно ли дальше скроллить этот элемент?
+  function canScroll(el, deltaY) {
+    if (!el) return false;
+    const t = el.scrollTop;
+    const h = el.scrollHeight;
+    const ch = el.clientHeight;
+    if (deltaY > 0) return t + ch < h; // вниз
+    if (deltaY < 0) return t > 0;      // вверх
+    return true;
+  }
+
+  function getPanelBody() {
+    const p = document.querySelector('.popup.service-panel.active .service-panel__body');
+    return p || null;
+  }
+
+  // --- открыть/закрыть панель (без фиксации body) ---
+  function openPanel($panel) {
+    if (!$panel.length || $panel.hasClass('active')) return;
+    $panel.addClass('active').attr('aria-hidden', 'false');
+  }
+  function closePanel($panel) {
+    if (!$panel.length || !$panel.hasClass('active')) return;
+    $panel.removeClass('active').attr('aria-hidden', 'true');
+  }
+
+  // открыть по клику
+  $(document).on('click', '.js-open-panel', function (e) {
+    e.preventDefault();
+    openPanel($($(this).data('panel')));
+  });
+
+  // закрыть
+  $(document).on('click', '.popup.service-panel .popup-close', function () {
+    closePanel($(this).closest('.popup.service-panel'));
+  });
+  $(document).on('click', '.popup.service-panel', function (e) {
+    if (e.target === this) closePanel($(this));
+  });
+  $(document).on('keydown', function (e) {
+    if (e.key === 'Escape') closePanel($('.popup.service-panel.active'));
+  });
+
+  // === Блокируем прокрутку фона, но разрешаем прокрутку внутри панели ===
+
+  // колесо мыши / трекпад
+  window.addEventListener('wheel', function (e) {
+    const bodyEl = getPanelBody();
+    if (!bodyEl) return; // панель не открыта — даём странице крутиться
+
+    // если крутим не над телом панели — блокируем
+    if (!e.target.closest('.service-panel__body')) {
+      e.preventDefault();
+      return;
+    }
+
+    // крутим над .service-panel__body
+    const dy = e.deltaY || 0;
+    if (!canScroll(bodyEl, dy)) {
+      e.preventDefault(); // край — не отдаём скролл фону
+    }
+  }, { passive: false });
+
+  // тач (мобилки/тачпады)
+  window.addEventListener('touchstart', function (e) {
+    if (!getPanelBody()) return;
+    touchStartY = e.touches && e.touches.length ? e.touches[0].clientY : 0;
+  }, { passive: true });
+
+  window.addEventListener('touchmove', function (e) {
+    const bodyEl = getPanelBody();
+    if (!bodyEl) return;
+
+    // если движемся не над телом панели — блокируем
+    if (!e.target.closest('.service-panel__body')) {
+      e.preventDefault();
+      return;
+    }
+
+    const y = e.touches && e.touches.length ? e.touches[0].clientY : touchStartY;
+    const dy = touchStartY ? (touchStartY - y) : 0; // >0 вниз, <0 вверх
+    if (!canScroll(bodyEl, dy)) {
+      e.preventDefault(); // на краях не отдаём скролл странице
+    }
+  }, { passive: false });
+
+  // клавиши (стрелки, PgUp/Dn, пробел, Home/End)
+  window.addEventListener('keydown', function (e) {
+    const bodyEl = getPanelBody();
+    if (!bodyEl) return;
+
+    const keys = [' ', 'PageDown', 'PageUp', 'End', 'Home', 'ArrowDown', 'ArrowUp'];
+    if (!keys.includes(e.key)) return;
+
+    // если фокус не внутри .service-panel__body — блокируем
+    if (!document.activeElement || !document.activeElement.closest('.service-panel__body')) {
+      e.preventDefault();
+      return;
+    }
+
+    // внутри тела панели — проверяем можно ли скроллить
+    const dy = (e.key === 'ArrowDown' || e.key === 'PageDown' || e.key === 'End' || e.key === ' ')
+      ? 1 : -1;
+    if (!canScroll(bodyEl, dy)) {
+      e.preventDefault();
+    }
+  }, true);
+});
+
+
+
+// Галерея: плавная, но быстрая смена главного фото по клику на превью
+jQuery(function ($) {
+  $(document).on('click', '.gallery__thumbs img', function () {
+    var $thumb = $(this);
+    var full = $thumb.data('full') || $thumb.attr('src');
+    var $gallery = $thumb.closest('.gallery');
+    var $mainWrap = $gallery.find('.gallery__main');
+    var $current = $mainWrap.find('img');
+
+    if ($current.attr('src') === full) return;
+
+    // обновляем активную миниатюру
+    $thumb.addClass('is-active').siblings().removeClass('is-active');
+
+    // создаём новое изображение поверх старого
+    var $next = $('<img>', {
+      src: full,
+      alt: $current.attr('alt'),
+      css: {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        width: '100%',
+        height: '100%',
+        objectFit: 'cover',
+        opacity: 0
+      }
+    });
+
+    $mainWrap.append($next);
+
+    // ускоренный fade-переход
+    $next.animate({ opacity: 1 }, 350, 'swing', function () {
+      $current.remove();
+      $next.css({ position: '', top: '', left: '', objectFit: '' });
+    });
+  });
+});
+
+
+
+// Лайтбокс: открыть по клику на большое фото, закрыть по клику на фото/фон/ESC
+jQuery(function ($) {
+  // создаем один лайтбокс на страницу
+  var $lightbox = $(`
+    <div class="lightbox" aria-hidden="true">
+      <img src="" alt="Фото">
+    </div>
+  `);
+  $('body').append($lightbox);
+
+  // открыть из галереи
+  $(document).on('click', '.gallery__main img', function () {
+    var src = $(this).attr('src');
+    $lightbox.find('img').attr('src', src);
+    $lightbox.addClass('active').attr('aria-hidden', 'false');
+  });
+
+  // закрыть по клику на фон
+  $(document).on('click', '.lightbox', function (e) {
+    if (e.target === this) {
+      $lightbox.removeClass('active').attr('aria-hidden', 'true');
+    }
+  });
+
+  // закрыть по клику на изображение (как просили)
+  $(document).on('click', '.lightbox img', function () {
+    $lightbox.removeClass('active').attr('aria-hidden', 'true');
+  });
+
+  // закрыть по ESC
+  $(document).on('keydown', function (e) {
+    if (e.key === 'Escape') {
+      $lightbox.removeClass('active').attr('aria-hidden', 'true');
+    }
+  });
+
+  // не даем колесом/тачем прокручивать фон, когда открыт лайтбокс
+  $(document).on('wheel touchmove', '.lightbox.active', function (e) {
+    e.preventDefault();
+  }, { passive: false });
+});
+
+
+
+
+
+
+
+
 // tabs
 
 jQuery(document).ready(function ($) {
