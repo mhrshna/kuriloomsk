@@ -351,6 +351,7 @@ jQuery(function ($) {
     }
   }, { passive: false });
 
+
   // клавиши (стрелки, PgUp/Dn, пробел, Home/End)
   window.addEventListener('keydown', function (e) {
     const bodyEl = getPanelBody();
@@ -460,7 +461,114 @@ jQuery(function ($) {
 });
 
 
+// Галерея: плавная смена + подписи (фиксим сравнение src)
+jQuery(function ($) {
 
+  function normSrc(u) {
+    if (!u) return '';
+    // убираем origin, хэши и query, приводим к единому виду
+    try {
+      // если абсолютный — приведём к pathname
+      var abs = new URL(u, window.location.href);
+      return abs.pathname.replace(/\/+/g, '/');
+    } catch (e) {
+      // относительный — просто уберём лишнее
+      return u.split('#')[0].split('?')[0];
+    }
+  }
+
+  function updateGalleryCaption($thumb){
+    var $section = $thumb.closest('.service-section');
+    var title = $thumb.data('title') || '';
+    var desc  = $thumb.data('desc')  || '';
+    $section.find('[data-role="gtitle"]').text(title);
+    $section.find('[data-role="gdesc"]').text(desc);
+    $thumb.closest('.gallery').find('.gallery__main img').attr('alt', title || 'Фото');
+  }
+
+  $(document).on('click', '.gallery__thumbs img', function () {
+    var $thumb    = $(this);
+    var full      = $thumb.data('full') || $thumb.attr('src');
+    var $gallery  = $thumb.closest('.gallery');
+    var $mainWrap = $gallery.find('.gallery__main');
+    var $current  = $mainWrap.find('img');
+
+    // Нормализуем пути перед сравнением
+    var cur = normSrc($current.attr('src'));
+    var nxt = normSrc(full);
+
+    // Обновим активное состояние превью
+    $thumb.addClass('is-active').siblings('img').removeClass('is-active');
+
+    // Даже если браузер считает пути «одинаковыми» — всё равно обновим подпись
+    updateGalleryCaption($thumb);
+
+    // Если реально то же изображение — просто выходим
+    if (cur === nxt) return;
+
+    // Гарантируем позиционирование обёртки
+    if ($mainWrap.css('position') === 'static') {
+      $mainWrap.css('position', 'relative');
+    }
+
+    // Создаём новое изображение поверх старого с fade
+    var $next = $('<img>', {
+      src: full,
+      alt: $thumb.data('title') || $current.attr('alt') || '',
+      css: {
+        position: 'absolute',
+        inset: 0,
+        width: '100%',
+        height: '100%',
+        objectFit: 'cover',
+        opacity: 0
+      }
+    });
+
+    $mainWrap.append($next);
+    $next.stop(true, true).animate({ opacity: 1 }, 300, 'swing', function () {
+      $current.remove();
+      $next.css({ position: '', inset: '', objectFit: '' });
+    });
+  });
+
+  // Инициализация подписи (на случай, если активная не помечена)
+  $('.gallery').each(function(){
+    var $g = $(this);
+    var $active = $g.find('.gallery__thumbs img.is-active').first();
+    if (!$active.length) $active = $g.find('.gallery__thumbs img').first();
+    if ($active.length) updateGalleryCaption($active);
+  });
+});
+
+
+// клик по "Ремонт" — открыть/закрыть выпадашку (как hover)
+jQuery(function ($) {
+  // по ссылке "Ремонт"
+  $(document).on('click', '.nav-menu__item.has-dropdown > .nav-menu__link', function (e) {
+    e.preventDefault();           // не переходим на /remont/
+    e.stopPropagation();          // чтобы глобальный обработчик не закрыл сразу
+    const $li = $(this).closest('.has-dropdown');
+
+    $('.nav-menu__item.has-dropdown').not($li).removeClass('is-open');
+    $li.toggleClass('is-open');
+  });
+
+  // по стрелочке (если есть кнопка)
+  $(document).on('click', '.nav-menu__item.has-dropdown > .nav-dropdown__btn', function (e) {
+    e.preventDefault();
+    e.stopPropagation();
+    const $li = $(this).closest('.has-dropdown');
+
+    $('.nav-menu__item.has-dropdown').not($li).removeClass('is-open');
+    $li.toggleClass('is-open');
+  });
+
+  // клик вне — закрыть
+  $(document).on('click', function () {
+    $('.nav-menu__item.has-dropdown').removeClass('is-open');
+  });
+});
 
 
 

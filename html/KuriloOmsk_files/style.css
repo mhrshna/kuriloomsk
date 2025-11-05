@@ -2633,7 +2633,7 @@ td {
   position: relative;
   margin-right: 46px;
   font-family: Roboto, sans-serif;
-  font-size: 16px;
+  font-size: 18px;
   white-space: nowrap
 }
 
@@ -4564,71 +4564,70 @@ a[data-fancybox="gallery"]::before {
     margin-right: 0
   }
 
-  .nav-menu__item.has-dropdown {
-    flex-wrap: wrap
+  /* ===МОБИЛЬНАЯ ВЕРСИЯ (<=991px): аккордеон,
+  без фона и с position:static)===*/ @media (max-width: 991px) {
+    .nav-menu__item.has-dropdown {
+      flex-wrap: wrap;
+    }
+  
+    .nav-menu__item.has-dropdown:hover .nav-dropdown__wrap {
+      opacity: 0;
+    }
+  
+    .nav-menu__item.has-dropdown:hover .nav-dropdown__btn {
+      transform: none;
+    }
+  
+    .nav-menu__item.has-dropdown.dropdown .nav-dropdown__wrap {
+      opacity: 1;
+      max-height: initial;
+    }
+  
+    .nav-menu__item.has-dropdown.dropdown .nav-dropdown__btn {
+      transform: scaleY(-1);
+    }
+  
+    .nav-menu__item .nav-dropdown {
+      position: static;
+      transform: none;
+      max-width: initial;
+      max-height: initial;
+      display: block;
+      background: none;
+    }
+  
+    .nav-menu__item .nav-dropdown__wrap {
+      position: static;
+      overflow: hidden;
+      padding: 0;
+      opacity: 1;
+      max-height: 0;
+      transform: none;
+      background: none;
+      z-index: auto;
+      flex-basis: 100%;
+      transition: none;
+      backdrop-filter: none;
+    }
+  
+    .nav-menu__item .nav-dropdown__wrap::before {
+      display: none;
+    }
+  
+    .nav-menu__item .nav-dropdown>.nav-menu__item {
+      padding-right: 0;
+      padding-bottom: .3em;
+      padding-top: .3em;
+      font-size: 14px;
+    }
+  
+    .nav-menu__item .nav-dropdown__btn {
+      font-size: 12px;
+      padding-right: 5px;
+    }
   }
 
-  .nav-menu__item.has-dropdown:hover .nav-dropdown__wrap {
-    opacity: 0
-  }
 
-  .nav-menu__item.has-dropdown:hover .nav-dropdown__btn {
-    -webkit-transform: none;
-    transform: none
-  }
-
-  .nav-menu__item.has-dropdown.dropdown .nav-dropdown__wrap {
-    opacity: 1;
-    max-height: initial
-  }
-
-  .nav-menu__item.has-dropdown.dropdown .nav-dropdown__btn {
-    -webkit-transform: scaleY(-1);
-    transform: scaleY(-1)
-  }
-
-  .nav-menu__item .nav-dropdown {
-    position: static;
-    -webkit-transform: none;
-    transform: none;
-    max-width: initial;
-    max-height: initial;
-    display: block;
-    background: none
-  }
-
-  .nav-menu__item .nav-dropdown__wrap {
-    position: static;
-    overflow: hidden;
-    padding: 0;
-    opacity: 1;
-    max-height: 0;
-    -webkit-transform: none;
-    transform: none;
-    background: none;
-    z-index: auto;
-    flex-basis: 100%;
-    -webkit-transition: none;
-    transition: none;
-    -webkit-backdrop-filter: none;
-    backdrop-filter: none
-  }
-
-  .nav-menu__item .nav-dropdown__wrap::before {
-    display: none
-  }
-
-  .nav-menu__item .nav-dropdown>.nav-menu__item {
-    padding-right: 0;
-    padding-bottom: .3em;
-    padding-top: .3em;
-    font-size: 14px
-  }
-
-  .nav-menu__item .nav-dropdown__btn {
-    font-size: 12px;
-    padding-right: 5px
-  }
 
   .nav-menu__link {
     padding: .5vh 0
@@ -5074,7 +5073,7 @@ a[data-fancybox="gallery"]::before {
         /* Активная панель цен — показываем её поверх любых !important */
         .cost-price__wrap._show {
           display: grid !important;
-          /* именно grid, т.к. сетка на этом элементе */
+          /* именно grid, сетка на этом элементе вроде*/
         }
 
 
@@ -5218,7 +5217,7 @@ a[data-fancybox="gallery"]::before {
     flex: 1 1 auto;
     /* занимает всё оставшееся место */
     min-height: 0;
-    /* обязательно, чтобы flex не "обрезал" */
+    /* обязательно, чтобы flex не обрезал */
     overflow-y: auto;
     overflow-x: hidden;
     padding: 0 10px 18px 0;
@@ -5523,7 +5522,7 @@ a[data-fancybox="gallery"]::before {
 
   /* фон под заголовком внутри панели */ .service-panel__header {
     position: sticky;
-    /* “прилипает” при прокрутке */
+    /* прилипает при прокрутке */
     top: 0;
     /* закрепляем у верхнего края панели */
     z-index: 5;
@@ -5619,15 +5618,13 @@ a[data-fancybox="gallery"]::before {
 }
 
   
-   
-
 
 
    .gallery__main {
     position: relative;
     width: 100%;
     aspect-ratio: 16 / 9;
-    /* можно 4/3, 3/2 — подбери формат, который у тебя был */
+    /* можно 4/3, 3/2 если что */
     overflow: hidden;
   }
   
@@ -5682,7 +5679,7 @@ a[data-fancybox="gallery"]::before {
      cursor: zoom-in;
    }
 
-   /* Контейнер главного фото — чтобы зум не “вылезал” */ .gallery__main {
+   /* Контейнер главного фото — чтобы зум не вылезал */ .gallery__main {
     position: relative;
     overflow: hidden;
     /* важное: обрезает края при scale */
@@ -5703,6 +5700,69 @@ a[data-fancybox="gallery"]::before {
        filter: saturate(1.02) contrast(1.02); */
   }
 
+  .gallery-caption {
+    margin-bottom: 14px;
+    /* расстояние от описания фото до фото */
+  }
+
+  /* было: .nav-menu__item.has-dropdown:hover .nav-dropdown__wrap {
+    ...
+  }
+  
+  */ .nav-menu__item.has-dropdown.is-open .nav-dropdown__wrap {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  
+  /* если крутили стрелочку при hover — повторим */
+  .nav-menu__item.has-dropdown.is-open .nav-dropdown__btn {
+    transform: scaleY(-1);
+  }
+  
+  .nav-menu__item.has-dropdown>.nav-menu__link:hover {
+    cursor: pointer;
+  }
+
+
+  /* список карточек магазина */ .shop-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 14px;
+  }
+  
+  .shop-card {
+    display: grid;
+    grid-template-columns: 64px 1fr;
+    gap: 12px;
+    align-items: start;
+  }
+  
+  .shop-card img {
+    width: 64px;
+    height: 64px;
+    object-fit: cover;
+    border-radius: 10px;
+    display: block;
+  }
+  
+  .shop-card__title {
+    font-weight: 600;
+    margin: 0 0 2px;
+  }
+  
+  .shop-card__desc {
+    font-size: 14px;
+    line-height: 1.5;
+    opacity: .9;
+  }
+  
+  .shop-cta {
+    margin-top: 14px;
+  }
+
+ 
 
 /*
 playback timings (ms):

@@ -202,7 +202,7 @@
        <div class="nav-dropdown__wrap">
         <ul class="nav-dropdown">
           <li class="nav-menu__item">
-          <a class="nav-menu__link js-open-panel" href="./kuzovnoy-remont.html" data-panel="#panel-kuzov">
+          <a class="nav-menu__link js-open-panel" href="./remont/kuzovnoy-remont.html" data-panel="#panel-kuzov">
            Кузовной
                                         ремонт
           </a>
@@ -361,7 +361,7 @@
        </div>
       </li>
       <li class="nav-menu__item">
-       <a class="nav-menu__link" href="../magazin/magazin.html">
+       <a class="nav-menu__link js-open-panel" href="../magazin/magazin.html" data-panel="#panel-shop">
         Магазин
        </a>
       </li>
@@ -673,8 +673,8 @@
         </li>
        </ul>
        <button class="button button--primary button--popup" data-popup="request">
-        Записаться на
-                            ремонт
+        Задать
+                            вопрос
        </button>
        <p>
         <a class="button button--link" href="http://kuriloomsk.ru/catalog/">
@@ -2802,7 +2802,7 @@
        </div>
       </li>
       <li class="nav-menu__item">
-       <a class="nav-menu__link" href="../magazin/magazin.html">
+       <a class="nav-menu__link js-open-panel" href="../magazin/magazin.html" data-panel="#panel-shop">
         Магазин
        </a>
       </li>
@@ -3097,7 +3097,7 @@
        <div id="popup-request">
         <div class="form--alt">
          <h2>
-          Записаться на ремонт
+          Задать вопрос
          </h2>
          <form action="https://kuriloomsk.ru/" class="js-repair-form" method="post">
           <input name="PAGE_URL" type="hidden" value="http://kuriloomsk.ru/"/>
@@ -3668,6 +3668,74 @@
             </div>
         </div>
     </div>
+
+
+    <!-- Полноэкранная панель "Магазин" -->
+<div id="panel-shop" class="popup service-panel" role="dialog" aria-modal="true" aria-hidden="true">
+  <div class="popup__content service-panel__content">
+    <button type="button" class="popup-close" aria-label="Закрыть">✕</button>
+
+    <header class="service-panel__header">
+      <h2>Магазин</h2>
+      <p class="service-panel__lead">
+        Оригинальные и проверенные аналоги. Подбор по VIN, гарантия, быстрая поставка.
+      </p>
+    </header>
+
+    <div class="service-panel__body">
+      <!-- микро-описание -->
+      <section class="service-section">
+        <h3>Почему у нас</h3>
+        <p>
+          Прямые поставки без посредников, входной контроль качества и понятные цены.
+          Подберём деталь по VIN и при желании установим в нашем сервисе.
+        </p>
+      </section>
+
+      <!-- ходовые позиции -->
+      <section class="service-section">
+        <h3>Ходовые позиции</h3>
+
+        <ul class="shop-list">
+          <!-- Карточка 1 -->
+          <li class="shop-card">
+            <img src="../KuriloOmsk_files/bumper.jpg" alt="Бампер передний">
+            <div class="shop-card__body">
+              <div class="shop-card__title">Бампер передний</div>
+              <div class="shop-card__desc">
+                Точная геометрия и заводские точки крепления. Поставляется в грунте — готов к покраске.
+              </div>
+            </div>
+          </li>
+
+          <!-- Карточка 2 -->
+          <li class="shop-card">
+            <img src="../KuriloOmsk_files/headlight-left.jpg" alt="Фара левая">
+            <div class="shop-card__body">
+              <div class="shop-card__title">Фара левая</div>
+              <div class="shop-card__desc">
+                Галоген/LED/ксенон. Корректор, герметичность, регулировка по ГОСТ. Гарантия 12 месяцев.
+              </div>
+            </div>
+          </li>
+
+          <!-- Карточка 3 -->
+          <li class="shop-card">
+            <img src="../KuriloOmsk_files/fender.jpg" alt="Крыло переднее">
+            <div class="shop-card__body">
+              <div class="shop-card__title">Крыло переднее</div>
+              <div class="shop-card__desc">
+                Сталь/пластик. Стабильные зазоры без доработок по месту. Антикоррозионное покрытие.
+              </div>
+            </div>
+          </li>
+        </ul>
+
+    
+      </section>
+    </div>
+  </div>
+</div>
 
 
 
