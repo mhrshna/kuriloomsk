@@ -144,7 +144,7 @@
 /* На очень узких экранах ещё сильнее уменшил правую колонку с текстом */
 @media (max-width: 992px) {
   .section.photogallery .col-lg-7 { /* левая колонка со слайдером */
-    order: 0;                       /* пусть остаётся первой */
+    order: 0;                       
   }
   .section.photogallery .col-lg-5 { /* правая колонка с заголовками/кнопкой */
     margin-top: 24px;
@@ -206,6 +206,10 @@
   margin-bottom: 0 !important;
   padding-bottom: 0 !important;
 }
+
+
+
+
 
 
 

@@ -1966,6 +1966,12 @@ video {
   margin-left: 17px
 }
 
+.button.button--primary.button--popup {
+  padding-left: 4.5em;
+  padding-right: 4.5em;
+}
+
+
 .divider {
   height: 1px;
   display: block;
@@ -5724,45 +5730,89 @@ a[data-fancybox="gallery"]::before {
   }
 
 
-  /* список карточек магазина */ .shop-list {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    display: grid;
-    gap: 14px;
-  }
-  
-  .shop-card {
-    display: grid;
-    grid-template-columns: 64px 1fr;
-    gap: 12px;
-    align-items: start;
-  }
-  
-  .shop-card img {
-    width: 64px;
-    height: 64px;
-    object-fit: cover;
-    border-radius: 10px;
-    display: block;
-  }
-  
-  .shop-card__title {
-    font-weight: 600;
-    margin: 0 0 2px;
-  }
-  
-  .shop-card__desc {
-    font-size: 14px;
-    line-height: 1.5;
-    opacity: .9;
-  }
-  
-  .shop-cta {
-    margin-top: 14px;
-  }
+  /* список карточек магазина */
+.shop-list {
+  list-style: none;
+  margin: 18px 0 0; 
+  padding: 0;
+  display: grid;
+  gap: 18px; 
+}
+
+/* карточка товара */
+.shop-card {
+  display: grid;
+  grid-template-columns: 96px 1fr; 
+  gap: 16px; 
+  align-items: center;
+}
+
+/* фото детали */
+.shop-card img {
+  width: 96px; 
+  height: 96px;
+  object-fit: cover;
+  border-radius: 12px;
+  display: block;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3); 
+}
+
+/* заголовок товара */
+.shop-card__title {
+  font-weight: 600;
+  margin: 0 0 4px;
+  font-size: 18px; 
+}
+
+/* описание */
+.shop-card__desc {
+  font-size: 16px;
+  line-height: 1.6;
+  opacity: .9;
+}
+
 
  
+
+
+  /* Заголовок формы + кнопка справа */
+.form-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 4px;
+}
+
+/* Немного уменьшим кнопку под заголовок */
+.form-header .button.button--secondary {
+  font-size: 16px;
+  font-weight: 600;
+  color: #DDB96F;
+  border: 1px solid #DDB96F;
+  background: transparent;
+  padding: 0.5em 1.4em;
+  transition: all 0.25s ease;
+}
+
+.form-header .button.button--secondary:hover {
+  background-color: #DDB96F;
+  color: #1C1D18;
+}
+
+
+/* Полоса прокрутки всегда на месте — без скачка макета */
+html { overflow-y: scroll; }
+
+/* Когда открыт любой наш попап — фон не листается */
+body.modal-open { overflow: hidden; }
+
+/* (на всякий) не прокидывать скролл за пределы модалок */
+.popup.service-panel, .service-panel__body { overscroll-behavior: contain; }
+
+
+
+
+
 
 /*
 playback timings (ms):

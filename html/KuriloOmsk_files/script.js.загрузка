@@ -308,23 +308,45 @@ jQuery(function ($) {
     if (e.key === 'Escape') closePanel($('.popup.service-panel.active'));
   });
 
-  // === Блокируем прокрутку фона, но разрешаем прокрутку внутри панели ===
+  
+
+	// === Блокируем прокрутку фона, разрешаем скролл только внутри .service-panel__body ===
+(function () {
+  let touchStartY = 0;
+
+  function getPanelBody() {
+    return document.querySelector('.popup.service-panel.active .service-panel__body');
+  }
+
+  // можно ли прокручивать текущий контейнер в сторону deltaY
+  function canScroll(el, deltaY) {
+    if (!el) return false;
+    const top = el.scrollTop;
+    const max = el.scrollHeight - el.clientHeight;
+
+    if (deltaY > 0) {            // вниз
+      return top < max - 1;      // оставляем ~1px на неточность
+    } else if (deltaY < 0) {     // вверх
+      return top > 0;
+    }
+    return false;
+  }
 
   // колесо мыши / трекпад
   window.addEventListener('wheel', function (e) {
     const bodyEl = getPanelBody();
-    if (!bodyEl) return; // панель не открыта — даём странице крутиться
+    if (!bodyEl) return; // панель закрыта — ничего не трогаем
 
-    // если крутим не над телом панели — блокируем
+    // если крутим НЕ над .service-panel__body — запрещаем
     if (!e.target.closest('.service-panel__body')) {
       e.preventDefault();
       return;
     }
 
-    // крутим над .service-panel__body
+    // крутим над .service-panel__body — проверяем края
     const dy = e.deltaY || 0;
     if (!canScroll(bodyEl, dy)) {
-      e.preventDefault(); // край — не отдаём скролл фону
+      e.preventDefault(); // на краях не отдаём скролл фону
     }
   }, { passive: false });
 
@@ -338,7 +360,6 @@ jQuery(function ($) {
     const bodyEl = getPanelBody();
     if (!bodyEl) return;
 
-    // если движемся не над телом панели — блокируем
     if (!e.target.closest('.service-panel__body')) {
       e.preventDefault();
       return;
@@ -347,9 +368,40 @@ jQuery(function ($) {
     const y = e.touches && e.touches.length ? e.touches[0].clientY : touchStartY;
     const dy = touchStartY ? (touchStartY - y) : 0; // >0 вниз, <0 вверх
     if (!canScroll(bodyEl, dy)) {
-      e.preventDefault(); // на краях не отдаём скролл странице
+      e.preventDefault();
     }
   }, { passive: false });
+
+  // клавиатурная прокрутка (стрелки/Space/PageUp/PageDown/Home/End)
+  window.addEventListener('keydown', function (e) {
+    const bodyEl = getPanelBody();
+    if (!bodyEl) return;
+
+    const tag = (e.target.tagName || '').toLowerCase();
+    if (/(input|textarea|select)/.test(tag) || e.target.isContentEditable) return;
+
+    const keys = ['ArrowUp','ArrowDown','PageUp','PageDown','Home','End',' ','Spacebar'];
+    if (!keys.includes(e.key)) return;
+
+    // если фокус не внутри .service-panel__body — блокируем
+    if (!e.target.closest('.service-panel__body')) {
+      e.preventDefault();
+      return;
+    }
+
+    // внутри контейнера — дополнительно защищаемся на краях
+    const dyMap = {
+      ArrowDown: 40, PageDown: 200, ' ': 200, Spacebar: 200,
+      ArrowUp: -40, PageUp: -200, Home: -99999, End: 99999
+    };
+    const dy = dyMap[e.key] ?? 0;
+    if (!canScroll(bodyEl, dy)) {
+      e.preventDefault();
+    }
+  }, { passive: false });
+})();
+
+
 
 
   // клавиши (стрелки, PgUp/Dn, пробел, Home/End)
@@ -668,6 +720,23 @@ jQuery(document).ready(function ($) {
 	}
 }(jQuery));
 
+// глобально гасим "fill gap" у scrollLock, чтобы не добавлял правые паддинги/маргины
+try {
+  if (window.scrollLock) {
+    // для новых версий: пустим методы-заглушки
+    if (typeof scrollLock.setFillGapMethod === 'function') {
+      scrollLock.setFillGapMethod('none');
+    }
+    // подстраховка для других реализаций:
+    scrollLock.fillGaps = function() {};
+    scrollLock.unfillGaps = function() {};
+    scrollLock.clearQueueScrollLocks && scrollLock.clearQueueScrollLocks();
+  }
+} catch (e) {}
+
+
+
+
 // mobile menu
 
 jQuery(document).ready(function ($) {
@@ -771,6 +840,8 @@ jQuery(document).ready(function ($) {
 }(jQuery));
 
 
+
+
 // slick photogallery
 
 jQuery(document).ready(function ($) {
@@ -795,6 +866,10 @@ jQuery(document).ready(function ($) {
 		sliderParent.find('.slider-nav__pagination .total').html(sliderItemsNum);
 	}
 }(jQuery));
+
+
+
+
 
 
 // slick certificates

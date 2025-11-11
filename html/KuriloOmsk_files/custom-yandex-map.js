@@ -14,7 +14,7 @@ window.onload = function() {
       searchControlProvider: 'yandex#search'
     });
 
-    // Дадим доступ к карте снаружи (важно!)
+    // Дадим доступ к карте снаружи
     window.myMap = myMap;
     window.ymap = myMap; // дубликат, на всякий случай
 
@@ -27,7 +27,7 @@ window.onload = function() {
     });
     var organizationID = '';
 
-    // Рисуем PNG-метки как у тебя
+    // Рисуем PNG-метки
     for (var i = 0; i < shopList.length; i++) {
       var shopInfo = shopList[i];
       objectManager.add({
@@ -45,67 +45,87 @@ window.onload = function() {
     myMap.geoObjects.add(objectManager);
 
     // --- Обработчик кнопок "Показать на карте" ---
+    // мягкая последовательность: scroll -> settle -> pan
     function clickGoto(e) {
       if (e && e.preventDefault) e.preventDefault();
 
-      // 1) Плавно докручиваем к карте (надёжно)
       var mapEl = document.getElementById('map');
-      if (mapEl) {
-        // два вызова — для мобильных, где прыгает адресная строка
-        mapEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        setTimeout(function(){ mapEl.scrollIntoView({ behavior: 'smooth', block: 'center' }); }, 250);
-      }
+      if (!mapEl || !window.myMap) return;
 
-      // 2) Берём координаты из data-атрибутов, если есть
-      var lat = parseFloat(this.getAttribute('data-lat'));
-      var lng = parseFloat(this.getAttribute('data-lng'));
+      // 1) Скроллим к карте один раз 
+      mapEl.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'nearest' });
 
-      // функция перелёта
-      function flyTo(coords) {
-        try {
-          var p = myMap.panTo(coords, { flying: true, delay: 50 });
-          // В старых версиях panTo может не возвращать thenable — сделаем fallback
-          if (p && typeof p.then === 'function') {
-            p.catch(function(){ myMap.setCenter(coords, myMap.getZoom()); });
-          }
-        } catch (err) {
-          myMap.setCenter(coords, myMap.getZoom());
-        }
-      }
+      // 2) Ждём, пока прокрутка успокоится
+      waitForScrollSettle(280).then(function () {
+        // 3) Панорамируем карту плавно
+        var lat = parseFloat(e.currentTarget.getAttribute('data-lat'));
+        var lng = parseFloat(e.currentTarget.getAttribute('data-lng'));
+        var coords = (!isNaN(lat) && !isNaN(lng)) ? [lat, lng] : null;
 
-      if (!isNaN(lat) && !isNaN(lng)) {
-        // координаты заданы — просто перелетаем
-        flyTo([lat, lng]);
-        return false;
-      }
+        if (!coords) return; // если координат нет — просто остановимся у карты
 
-      // 3) Fallback: геокод по строке из data-goto (если координаты не заданы)
-      var city = this.getAttribute('data-goto');
-      if (city && window.ymaps) {
-        ymaps.geocode(city).then(
-          function(res) {
-            var first = res.geoObjects.get(0);
-            if (!first) return;
-            var coords = first.geometry.getCoordinates();
-            flyTo(coords);
-          },
-          function() {
-            // без alert — просто молча не двигаем
-            console.warn('Geocode failed for:', city);
-          }
-        );
-      }
+        smoothPanTo(window.myMap, coords, 5000);
+      });
+
       return false;
     }
 
-    // Навешиваем обработчик на все .location__btn
-    var mapLink = document.querySelectorAll('.location__btn');
-    for (var j = 0; j < mapLink.length; j++) {
-      mapLink[j].onclick = clickGoto;
-      // на всякий случай перепишем href, чтобы страница не перезагружалась
-      if (mapLink[j].getAttribute('href') && mapLink[j].getAttribute('href') !== '#map') {
-        mapLink[j].setAttribute('href', '#map');
+    // ждём «затухание» скролла окна 
+    function waitForScrollSettle(quietMs) {
+      return new Promise(function (resolve) {
+        var lastY = window.scrollY, idle = 0, raf;
+        (function loop() {
+          var y = window.scrollY;
+          idle = (y === lastY) ? idle + 16 : 0;
+          lastY = y;
+          if (idle >= quietMs) return resolve();
+          raf = requestAnimationFrame(loop);
+        })();
+      });
+    }
+
+    // плавный panTo с защитой + блок колёсика на время полёта
+    function smoothPanTo(map, coords, durationMs) {
+      var unwheel = lockWheelTemporarily(durationMs + 80);
+
+      try {
+        var p = map.panTo(coords, { flying: true, duration: durationMs, delay: 0 });
+        if (p && typeof p.then === 'function') {
+          p.finally(unwheel).catch(function () {
+            map.setCenter(coords, map.getZoom(), { duration: durationMs });
+            setTimeout(unwheel, durationMs + 10);
+          });
+        } else {
+          // старые сборки без thenable
+          setTimeout(unwheel, durationMs + 10);
+        }
+      } catch (_) {
+        map.setCenter(coords, map.getZoom(), { duration: durationMs });
+        setTimeout(unwheel, durationMs + 10);
       }
     }
+
+    // временно блокируем wheel/trackpad, чтобы пользователь не сбивал анимацию
+    function lockWheelTemporarily(ms) {
+      function stop(e) { e.preventDefault(); }
+      window.addEventListener('wheel', stop, { passive: false });
+      var t = setTimeout(function () {
+        window.removeEventListener('wheel', stop, { passive: false });
+      }, ms);
+      return function () {
+        clearTimeout(t);
+        window.removeEventListener('wheel', stop, { passive: false });
+      };
+    }
+
+    // Навешиваем обработчик на все .location__btn
+    var mapBtns = document.querySelectorAll('.location__btn');
+    for (var j = 0; j < mapBtns.length; j++) {
+      mapBtns[j].onclick = clickGoto;
+      if (mapBtns[j].getAttribute('href') && mapBtns[j].getAttribute('href') !== '#map') {
+        mapBtns[j].setAttribute('href', '#map');
+      }
+    }
+
   }
 };
