@@ -1945,11 +1945,11 @@ video {
 
 .button.button--secondary {
   margin-bottom: 1em;
-  color: #DDB96F
+  color: #dbad49
 }
 
 .button.button--secondary:hover {
-  color: #fff;
+  color: #000000;
   background-color: #DDB96F
 }
 
@@ -2809,7 +2809,7 @@ td {
   right: 2vw;
   padding: 5px;
   font-size: 24px;
-  color: #DDB96F
+  color: #df9d14
 }
 
 .popup__content>.popup-close i {
@@ -5137,7 +5137,7 @@ a[data-fancybox="gallery"]::before {
 
 
    /* Ограничиваем ширину фона дропдауна только на широких экранах. Колоночная раскладка .nav-dropdown остаётся как в исходном CSS. */ 
-   @media (min-width: 1366px) {
+   @media (max-width: 1366px) {
     .header .nav-dropdown__wrap {
       max-width: min(90vw, 590px) !important;
       /* потолок: не шире 1200px и не шире экрана */
@@ -5175,7 +5175,7 @@ a[data-fancybox="gallery"]::before {
     padding: 28px 28px 20px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, .35);
     display: flex;
-    /* добавили flex для распределения высоты */
+    /* добавил flex для распределения высоты */
     flex-direction: column;
     overflow: hidden;
     /* скролл внутри body */
@@ -5279,7 +5279,7 @@ a[data-fancybox="gallery"]::before {
   }
   
   .popup-close:hover {
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(134, 134, 134, 0.1);
   }
   
 
@@ -5357,7 +5357,7 @@ a[data-fancybox="gallery"]::before {
   
   .price td {
     padding: 10px 0;
-    border-bottom: 1px solid rgba(255, 255, 255, .12);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.12);
   }
   
   .price td:first-child {
@@ -5461,7 +5461,7 @@ a[data-fancybox="gallery"]::before {
   /* --- аккуратный скролл внутри панели --- */ .service-panel__body {
     scrollbar-width: thin;
     /* Firefox */
-    scrollbar-color: rgba(221, 185, 111, .4) transparent;
+    scrollbar-color: rgb(229 197 128) transparent;
   }
   
   /* Chrome, Edge, Safari */
@@ -5501,20 +5501,21 @@ a[data-fancybox="gallery"]::before {
 
 
   /* фон под заголовком внутри панели */ .service-panel__header {
+  
     position: sticky;
     /* прилипает при прокрутке */
     top: 0;
     /* закрепляем у верхнего края панели */
     z-index: 5;
     /* выше контента, ниже крестика */
-    background: rgba(0, 0, 0, 0.4);
+    background: rgba(151, 151, 151, 0.4);
     /* мягкий прозрачный фон */
     backdrop-filter: blur(8px);
     /* лёгкий блюр, под стиль панели */
     -webkit-backdrop-filter: blur(8px);
     padding: 16px 20px 12px;
     /* внутренние отступы */
-    border-bottom: 2px solid rgba(221, 185, 111, 0.08);
+    border-bottom: 2px solid rgba(0, 0, 0, 0.08);
     border-radius: 12px 12px 0 0;
     /* красиво закругляет верх */
   }
@@ -5524,13 +5525,13 @@ a[data-fancybox="gallery"]::before {
     margin: 0;
     font-size: 28px;
     font-weight: 700;
-    color: #fff;
+    color: #000000;
   }
   
   .service-panel__lead {
     margin: 4px 0 0;
     font-size: 17px;
-    color: rgba(255, 255, 255, 0.9);
+    color: rgba(0, 0, 0, 0.9);
   }
 
 
@@ -5565,8 +5566,8 @@ a[data-fancybox="gallery"]::before {
   margin:6vh auto 4vh;
   width:min(1100px,92vw);
   max-height:calc(100vh - 10vh);
-  background:rgba(20,20,20,.88);
-  color:#fff;
+  background:rgba(255, 255, 255, 0.88);
+  color:#000000;
   border-radius:16px;
   padding:28px 28px 20px;
   box-shadow:0 10px 30px rgba(0,0,0,.35);
@@ -5891,6 +5892,147 @@ body.modal-open { overflow: hidden; }
 @media (max-width: 991.98px){
   .section.photogallery .col-lg-5{ margin-top:24px; }
 }
+
+
+
+
+/* === Универсальная шапка с двумя вкладками === */
+.popup.service-panel .split-header{
+  position: sticky;
+  top: 0;
+  z-index: 5;
+
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+
+  cursor: pointer;
+
+  /* настраиваемые переменные */
+  --pad-x: 20px;              /* горизонтальные паддинги шапки */
+
+  padding: 16px var(--pad-x) 12px;
+  border-bottom: 2px solid rgb(0 0 0 / 8%); /* вернули border-bottom */
+  border-radius: 12px 12px 0 0;
+  position: relative;         /* нужно для абсолютного индикатора */
+}
+
+/* типографика (как у старых панелей) */
+.popup.service-panel .split-header .split-half{
+  text-align: center;
+  padding: 0 12px;
+}
+.popup.service-panel .split-header .split-half h2{
+  margin: 0;
+  font-size: 28px;
+  font-weight: 700;
+  color: #000000;
+}
+.popup.service-panel .split-header .split-half p{
+  margin: 2px 0 0;
+  font-size: 17px;
+  color: rgba(0, 0, 0, 0.9);
+}
+
+/* приглушаем неактивную половину */
+.popup.service-panel .split-header[data-active="left"]  .right{ opacity: .6; }
+.popup.service-panel .split-header[data-active="right"] .left { opacity: .6; }
+
+/* нижний индикатор активной вкладки — поверх border-bottom, от края до края половины */
+.popup.service-panel .split-header .indicator{
+  position: absolute;
+  left: 0;          /* от самого левого края панели */
+  bottom: -2px;     /* опускаем так, чтобы лечь поверх border-bottom (2px) */
+  width: 50%;       /* половина ширины шапки */
+  height: 3px;
+  border-radius: 0;
+  background: rgb(229 191 108);
+  transition: left .25s ease;
+}
+
+/* правая активна — сдвигаем индикатор на вторую половину */
+.popup.service-panel .split-header[data-active="right"] .indicator{
+  left: 50%;
+}
+
+/* плавная смена панелей */
+.popup.service-panel .tab-pane{
+  transition: opacity .25s ease;
+}
+.popup.service-panel .tab-pane[hidden]{
+  display: none !important;
+}
+
+
+
+
+
+
+/* Контейнер из 3 колонок */
+.popup.service-panel .contact-note{
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  padding-top: 14px;
+  border-top: 1px solid rgba(0, 0, 0, 0.15);
+  margin-top: 24px;
+}
+
+/* Левая/правая стороны */
+.popup.service-panel .contact-note__item{
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.popup.service-panel .contact-note__title{
+  font-weight: 700;
+  font-size: 16px;
+  color: #000000;
+}
+
+.popup.service-panel .contact-note__phone{
+  font-size: 16px;
+  color: rgba(0, 0, 0, 0.9);
+  text-decoration: none;
+}
+
+.popup.service-panel .contact-note__item--right{
+  text-align: right;
+  align-items: flex-end;
+}
+
+/* компактная кнопка в блоке контактов */
+.popup.service-panel .contact-note__center .button{
+  padding: 8px 16px;        /* было ~12–16px */
+  font-size: 16px;          /* уменьшили шрифт */
+  line-height: 1.2;
+  border-radius: 8px;       /* чуть компактнее */
+  white-space: nowrap;
+}
+
+/* Адаптив */
+@media (max-width: 560px){
+  .popup.service-panel .contact-note{
+    grid-template-columns: 1fr;
+    row-gap: 14px;
+    text-align: left;
+  }
+  .popup.service-panel .contact-note__item--right{
+    align-items: flex-start;
+    text-align: left;
+  }
+  .popup.service-panel .contact-note__center .button{
+    padding: 6px 14px;
+    font-size: 14px;
+  }
+}
+
+
+
 
 
 

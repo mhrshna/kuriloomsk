@@ -202,7 +202,7 @@
        <div class="nav-dropdown__wrap">
         <ul class="nav-dropdown">
           <li class="nav-menu__item">
-          <a class="nav-menu__link js-open-panel" href="./remont/kuzovnoy-remont.html" data-panel="#panel-kuzov">
+          <a class="nav-menu__link js-open-panel" href="../remont/kuzovnoy-remont.html" data-panel="#panel-kuzov">
            Кузовной
                                         ремонт
           </a>
@@ -366,7 +366,7 @@
        </a>
       </li>
       <li class="nav-menu__item has-dropdown">
-       <a class="nav-menu__link" href="http://kuriloomsk.ru/vidy-avtomobiley/">
+       <a class="nav-menu__link js-toggle-dropdown" role="button">
         Виды
                             автомобилей
        </a>
@@ -377,7 +377,7 @@
        <div class="nav-dropdown__wrap">
         <ul class="nav-dropdown" style="min-width: 100px;">
          <li class="nav-menu__item" style="padding-right: 0px;">
-          <a class="nav-menu__link" href="http://kuriloomsk.ru/vidy-avtomobiley/pritsepy-i-polupritsepy/">
+          <a class="nav-menu__link" href="../vidy-avtomobiley/pritsepy-i-polupritsepy.html"  data-panel="#panel-pritsepy"> 
            Прицепы
                                         и полуприцепы
           </a>
@@ -2539,7 +2539,7 @@
        </a>
       </li>
       <li class="nav-menu__item has-dropdown">
-       <a class="nav-menu__link" href="http://kuriloomsk.ru/vidy-avtomobiley/">
+       <a class="nav-menu__link js-toggle-dropdown" role="button">
         Виды
                             автомобилей
        </a>
@@ -2550,7 +2550,7 @@
        <div class="nav-dropdown__wrap">
         <ul class="nav-dropdown">
          <li class="nav-menu__item">
-          <a class="nav-menu__link" href="http://kuriloomsk.ru/vidy-avtomobiley/pritsepy-i-polupritsepy/">
+          <a class="nav-menu__link" href="../vidy-avtomobiley/pritsepy-i-polupritsepy.html"  data-panel="#panel-pritsepy">
            Прицепы
                                         и полуприцепы
           </a>
@@ -3123,7 +3123,7 @@
   <script src="../KuriloOmsk_files/scroll-lock.min.js.загрузка">
   </script>
   <!-- User script-->
-  <script src="../KuriloOmsk_files/script.js.загрузка">
+  <script src="../KuriloOmsk_files/script.js">
   </script>
 
 
@@ -3146,7 +3146,7 @@
     (function () {
       // Пытаемся найти контейнер карты и вставить внутрь якорь .js-map-focus
       function findMapContainer() {
-        // 1) Если у тебя есть явные контейнеры с id — пробуем их первыми:
+        // 1) Если есть явные контейнеры с id — пробуем их первыми:
         let el = document.querySelector('#map, #yamap, #yandex-map');
         if (el) return el;
 

@@ -240,7 +240,8 @@ jQuery(document).ready(function ($) {
 						}
 					}
 					let navStyle = getComputedStyle(item.parentElement);
-					let navPadding = parseInt(navStyle.paddingRight.slice(0, -2) + navStyle.paddingLeft.slice(0, -2));
+					// let navPadding = parseInt(navStyle.paddingRight.slice(0, -2) + navStyle.paddingLeft.slice(0, -2));
+					let navPadding = 0;
 					item.parentElement.style.width = navWidth + navPadding + 'px';
 					navWidth = 0;
 					offTop = 0;
@@ -624,6 +625,64 @@ jQuery(function ($) {
 
 
 
+// Универсальная шапка с двумя вкладками
+jQuery(function ($) {
+  function initSplitHeader($scope) {
+    $scope.find('.popup.service-panel .split-header').each(function () {
+      var $hdr   = $(this);
+      var $panel = $hdr.closest('.popup.service-panel');
+
+      // Селекторы панелей контента
+      var paneLeftSel  = $hdr.attr('data-pane-left');
+      var paneRightSel = $hdr.attr('data-pane-right');
+
+      if (!paneLeftSel || !paneRightSel) {
+        var $panes = $panel.find('.tab-pane');
+        if ($panes.length >= 2) {
+          paneLeftSel  = paneLeftSel  || ('#' + $panes.eq(0).attr('id'));
+          paneRightSel = paneRightSel || ('#' + $panes.eq(1).attr('id'));
+        }
+      }
+
+      function switchTo(side) {
+        if (side !== 'left' && side !== 'right') return;
+
+        $hdr.attr('data-active', side);
+
+        var targetSel = (side === 'left') ? paneLeftSel : paneRightSel;
+        var $show = targetSel ? $panel.find(targetSel) : $();
+        var $all  = $panel.find('.tab-pane');
+
+        if ($show.length) {
+          $all.attr('hidden', true);
+          $show.removeAttr('hidden');
+        }
+
+        $hdr.find('.left').attr('aria-selected', side === 'left');
+        $hdr.find('.right').attr('aria-selected', side === 'right');
+      }
+
+      // Снимаем старые хендлеры и вешаем новые
+      $hdr
+        .off('.splitHdr')
+        .on('click.splitHdr', '.left', function () { switchTo('left'); })
+        .on('click.splitHdr', '.right', function () { switchTo('right'); })
+        .on('keydown.splitHdr', function (e) {
+          if (e.key === 'ArrowLeft')  { e.preventDefault(); switchTo('left');  }
+          if (e.key === 'ArrowRight') { e.preventDefault(); switchTo('right'); }
+        });
+
+      // Стартовое состояние
+      switchTo($hdr.attr('data-active') === 'right' ? 'right' : 'left');
+    });
+  }
+
+  // Инициализация на странице
+  initSplitHeader($(document));
+});
+
+
+
 
 
 // tabs
@@ -844,6 +903,11 @@ jQuery(function ($) {
     $nav.find('.active').text(current + 1);
   });
 });
+
+
+
+
+
 
 
 
