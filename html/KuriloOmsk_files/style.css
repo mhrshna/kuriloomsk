@@ -2635,6 +2635,10 @@ td {
   list-style: none
 }
 
+li.nav-menu__item li.nav-menu__item {
+  text-align: left
+}
+
 .nav-menu__item {
   position: relative;
   margin-right: 46px;
