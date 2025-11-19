@@ -6039,6 +6039,14 @@ body.modal-open { overflow: hidden; }
 
 
 
+/* Курсор руки */
+.nav-menu__link {
+    cursor: pointer;
+}
+
+
+
+
 
 
 /*

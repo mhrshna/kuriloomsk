@@ -192,23 +192,23 @@
        </a>
       </li>
       <li class="nav-menu__item has-dropdown">
-       <a class="nav-menu__link" href="http://kuriloomsk.ru/remont/">
+       <a class="nav-menu__link js-toggle-dropdown" role="button">
         Ремонт
        </a>
        <button class="nav-dropdown__btn">
         <i class="ti-angle-down">
         </i>
        </button>
-       <div class="nav-dropdown__wrap" style="width: 6564px;">
+       <div class="nav-dropdown__wrap">
         <ul class="nav-dropdown">
           <li class="nav-menu__item">
-          <a class="nav-menu__link" href="./remont/kuzovnoy-remont.html">
+          <a class="nav-menu__link js-open-panel" data-panel="#panel-kuzov">
            Кузовной
                                         ремонт
           </a>
          </li>
          <li class="nav-menu__item">
-          <a class="nav-menu__link" href="./remont/remont-dvigatelya.html">
+          <a class="nav-menu__link">
            Ремонт
                                         двигателя
           </a>
@@ -361,12 +361,12 @@
        </div>
       </li>
       <li class="nav-menu__item">
-       <a class="nav-menu__link" href="http://kuriloomsk.ru/catalog/">
+       <a class="nav-menu__link js-open-panel" data-panel="#panel-shop">
         Магазин
        </a>
       </li>
       <li class="nav-menu__item has-dropdown">
-       <a class="nav-menu__link" href="http://kuriloomsk.ru/vidy-avtomobiley/">
+       <a class="nav-menu__link">
         Виды
                             автомобилей
        </a>
@@ -377,7 +377,7 @@
        <div class="nav-dropdown__wrap">
         <ul class="nav-dropdown" style="min-width: 100px;">
          <li class="nav-menu__item" style="padding-right: 0px;">
-          <a class="nav-menu__link" href="http://kuriloomsk.ru/vidy-avtomobiley/pritsepy-i-polupritsepy/">
+          <a class="nav-menu__link js-open-panel"  data-panel="#panel-pritsepy">
            Прицепы
                                         и полуприцепы
           </a>
@@ -405,7 +405,7 @@
         </ul>
        </div>
       </li>
-      <li class="nav-menu__item has-dropdown">
+      <!-- <li class="nav-menu__item has-dropdown">
        <a class="nav-menu__link" href="http://kuriloomsk.ru/brands/">
         Марки
        </a>
@@ -465,11 +465,46 @@
            SHACMAN
           </a>
          </li>
+         <li class="nav-menu__item" style="padding-right: 0px;">
+          <a class="nav-menu__link" href="http://kuriloomsk.ru/brands/shacman/">
+           DONGFENG
+          </a>
+         </li>
+         <li class="nav-menu__item" style="padding-right: 0px;">
+          <a class="nav-menu__link" href="http://kuriloomsk.ru/brands/shacman/">
+           FAW
+          </a>
+         </li>
+         <li class="nav-menu__item" style="padding-right: 0px;">
+          <a class="nav-menu__link" href="http://kuriloomsk.ru/brands/shacman/">
+           SITRAK
+          </a>
+         </li>
+         <li class="nav-menu__item" style="padding-right: 0px;">
+          <a class="nav-menu__link" href="http://kuriloomsk.ru/brands/shacman/">
+           FOTON
+          </a>
+         </li>
+         <li class="nav-menu__item" style="padding-right: 0px;">
+          <a class="nav-menu__link" href="http://kuriloomsk.ru/brands/shacman/">
+           SANY
+          </a>
+         </li>
+         <li class="nav-menu__item" style="padding-right: 0px;">
+          <a class="nav-menu__link" href="http://kuriloomsk.ru/brands/shacman/">
+           HOWO
+          </a>
+         </li>
+         <li class="nav-menu__item" style="padding-right: 0px;">
+          <a class="nav-menu__link" href="http://kuriloomsk.ru/brands/shacman/">
+           JAC
+          </a>
+         </li>
         </ul>
        </div>
-      </li>
+      </li> -->
       <li class="nav-menu__item has-dropdown">
-       <a class="nav-menu__link" href="http://kuriloomsk.ru/uslugi/">
+       <a class="nav-menu__link">
         Услуги
        </a>
        <button class="nav-dropdown__btn">
@@ -479,17 +514,17 @@
        <div class="nav-dropdown__wrap">
         <ul class="nav-dropdown" style="min-width: 100px;">
          <li class="nav-menu__item" style="padding-right: 0px;">
-          <a class="nav-menu__link" href="http://kuriloomsk.ru/uslugi/avtomoyka/">
+          <a class="nav-menu__link" data-panel="#panel-avtomoyka">
            Автомойка
           </a>
          </li>
          <li class="nav-menu__item" style="padding-right: 0px;">
-          <a class="nav-menu__link" href="http://kuriloomsk.ru/uslugi/stoyanka/">
+          <a class="nav-menu__link js-open-panel" data-panel="#panel-stoyanka">
            Стоянка
           </a>
          </li>
          <li class="nav-menu__item" style="padding-right: 0px;">
-          <a class="nav-menu__link" href="http://kuriloomsk.ru/uslugi/shinomontazh/">
+          <a class="nav-menu__link" data-panel="#panel-shinomontaj">
            Шиномонтаж
           </a>
          </li>
@@ -579,7 +614,7 @@
         </ul>
        </div>
       </li>
-      <li class="nav-menu__item">
+      <!-- <li class="nav-menu__item">
        <a class="nav-menu__link" href="http://kuriloomsk.ru/personal/cart/">
         Корзина(
         <span class="js-cart-count">
@@ -587,7 +622,7 @@
         </span>
         )
        </a>
-      </li>
+      </li> -->
      </ul>
     </div>
     <!-- / .navbar-->
@@ -638,11 +673,11 @@
         </li>
        </ul>
        <button class="button button--primary button--popup" data-popup="request">
-        Записаться на
-                            ремонт
+        Задать
+                            вопрос
        </button>
        <p>
-        <a class="button button--link" href="http://kuriloomsk.ru/catalog/">
+        <a class="button button--link js-open-panel" data-panel="#panel-shop"> 
          В
                                 магазин
          <img alt="arrow-right" src="./KuriloOmsk_files/arrow-right.png"/>
@@ -1404,345 +1439,77 @@
      </div>
     </div>
    </section>
+
    <section class="section photogallery">
-    <div class="container-fluid">
-     <div class="row no-gutters align-items-center">
+  <div class="container-fluid">
+    <div class="row no-gutters align-items-center">
+      
+      <!-- ЛЕВАЯ КОЛОНКА: картинки -->
       <div class="col-12 col-lg-7 order-1 order-lg-0">
-       <div class="photogallery-slider__img slick-initialized slick-slider">
-        <div class="slick-list draggable">
-         <div class="slick-track" style="opacity: 1; width: 37812px; transform: translate3d(-1644px, 0px, 0px);">
-          <div aria-hidden="true" class="slick-slide slick-cloned" data-slick-index="-1" style="width: 1644px;" tabindex="-1">
-           <div>
-            <img alt="" src="./KuriloOmsk_files/60 продуктовый.jpg" style="width: 100%; display: inline-block;"/>
-           </div>
-          </div>
-          <div aria-hidden="false" class="slick-slide slick-current slick-active" data-slick-index="0" style="width: 1644px;">
-           <div>
-            <img alt="" src="./KuriloOmsk_files/автомагазин склад 2-min.jpg" style="width: 100%; display: inline-block;"/>
-           </div>
-          </div>
-          <div aria-hidden="true" class="slick-slide" data-slick-index="1" style="width: 1644px;" tabindex="-1">
-           <div>
-            <img alt="" src="./KuriloOmsk_files/photogallery-2.jpg" style="width: 100%; display: inline-block;"/>
-           </div>
-          </div>
-          <div aria-hidden="true" class="slick-slide" data-slick-index="2" style="width: 1644px;" tabindex="-1">
-           <div>
-            <img alt="" src="./KuriloOmsk_files/36 (1).jpg" style="width: 100%; display: inline-block;"/>
-           </div>
-          </div>
-          <div aria-hidden="true" class="slick-slide" data-slick-index="3" style="width: 1644px;" tabindex="-1">
-           <div>
-            <img alt="" src="./KuriloOmsk_files/photogallery-4.jpg" style="width: 100%; display: inline-block;"/>
-           </div>
-          </div>
-          <div aria-hidden="true" class="slick-slide" data-slick-index="4" style="width: 1644px;" tabindex="-1">
-           <div>
-            <img alt="" src="./KuriloOmsk_files/photogallery-5.jpg" style="width: 100%; display: inline-block;"/>
-           </div>
-          </div>
-          <div aria-hidden="true" class="slick-slide" data-slick-index="5" style="width: 1644px;" tabindex="-1">
-           <div>
-            <img alt="" src="./KuriloOmsk_files/2.jpg" style="width: 100%; display: inline-block;"/>
-           </div>
-          </div>
-          <div aria-hidden="true" class="slick-slide" data-slick-index="6" style="width: 1644px;" tabindex="-1">
-           <div>
-            <img alt="" src="./KuriloOmsk_files/8.jpg" style="width: 100%; display: inline-block;"/>
-           </div>
-          </div>
-          <div aria-hidden="true" class="slick-slide" data-slick-index="7" style="width: 1644px;" tabindex="-1">
-           <div>
-            <img alt="" src="./KuriloOmsk_files/47.jpg" style="width: 100%; display: inline-block;"/>
-           </div>
-          </div>
-          <div aria-hidden="true" class="slick-slide" data-slick-index="8" style="width: 1644px;" tabindex="-1">
-           <div>
-            <img alt="" src="./KuriloOmsk_files/34.jpg" style="width: 100%; display: inline-block;"/>
-           </div>
-          </div>
-          <div aria-hidden="true" class="slick-slide" data-slick-index="9" style="width: 1644px;" tabindex="-1">
-           <div>
-            <img alt="" src="./KuriloOmsk_files/36.jpg" style="width: 100%; display: inline-block;"/>
-           </div>
-          </div>
-          <div aria-hidden="true" class="slick-slide" data-slick-index="10" style="width: 1644px;" tabindex="-1">
-           <div>
-            <img alt="" src="./KuriloOmsk_files/60 продуктовый.jpg" style="width: 100%; display: inline-block;"/>
-           </div>
-          </div>
-          <div aria-hidden="true" class="slick-slide slick-cloned" data-slick-index="11" style="width: 1644px;" tabindex="-1">
-           <div>
-            <img alt="" src="./KuriloOmsk_files/автомагазин склад 2-min.jpg" style="width: 100%; display: inline-block;"/>
-           </div>
-          </div>
-          <div aria-hidden="true" class="slick-slide slick-cloned" data-slick-index="12" style="width: 1644px;" tabindex="-1">
-           <div>
-            <img alt="" src="./KuriloOmsk_files/photogallery-2.jpg" style="width: 100%; display: inline-block;"/>
-           </div>
-          </div>
-          <div aria-hidden="true" class="slick-slide slick-cloned" data-slick-index="13" style="width: 1644px;" tabindex="-1">
-           <div>
-            <img alt="" src="./KuriloOmsk_files/36 (1).jpg" style="width: 100%; display: inline-block;"/>
-           </div>
-          </div>
-          <div aria-hidden="true" class="slick-slide slick-cloned" data-slick-index="14" style="width: 1644px;" tabindex="-1">
-           <div>
-            <img alt="" src="./KuriloOmsk_files/photogallery-4.jpg" style="width: 100%; display: inline-block;"/>
-           </div>
-          </div>
-          <div aria-hidden="true" class="slick-slide slick-cloned" data-slick-index="15" style="width: 1644px;" tabindex="-1">
-           <div>
-            <img alt="" src="./KuriloOmsk_files/photogallery-5.jpg" style="width: 100%; display: inline-block;"/>
-           </div>
-          </div>
-          <div aria-hidden="true" class="slick-slide slick-cloned" data-slick-index="16" style="width: 1644px;" tabindex="-1">
-           <div>
-            <img alt="" src="./KuriloOmsk_files/2.jpg" style="width: 100%; display: inline-block;"/>
-           </div>
-          </div>
-          <div aria-hidden="true" class="slick-slide slick-cloned" data-slick-index="17" style="width: 1644px;" tabindex="-1">
-           <div>
-            <img alt="" src="./KuriloOmsk_files/8.jpg" style="width: 100%; display: inline-block;"/>
-           </div>
-          </div>
-          <div aria-hidden="true" class="slick-slide slick-cloned" data-slick-index="18" style="width: 1644px;" tabindex="-1">
-           <div>
-            <img alt="" src="./KuriloOmsk_files/47.jpg" style="width: 100%; display: inline-block;"/>
-           </div>
-          </div>
-          <div aria-hidden="true" class="slick-slide slick-cloned" data-slick-index="19" style="width: 1644px;" tabindex="-1">
-           <div>
-            <img alt="" src="./KuriloOmsk_files/34.jpg" style="width: 100%; display: inline-block;"/>
-           </div>
-          </div>
-          <div aria-hidden="true" class="slick-slide slick-cloned" data-slick-index="20" style="width: 1644px;" tabindex="-1">
-           <div>
-            <img alt="" src="./KuriloOmsk_files/36.jpg" style="width: 100%; display: inline-block;"/>
-           </div>
-          </div>
-          <div aria-hidden="true" class="slick-slide slick-cloned" data-slick-index="21" style="width: 1644px;" tabindex="-1">
-           <div>
-            <img alt="" src="./KuriloOmsk_files/60 продуктовый.jpg" style="width: 100%; display: inline-block;"/>
-           </div>
-          </div>
-         </div>
+        <div class="photogallery-slider__img">
+          <div class="pg-slide"><img src="./KuriloOmsk_files/автомагазин склад 2-min.jpg" alt=""></div>
+          <div class="pg-slide"><img src="./KuriloOmsk_files/36.jpg" alt=""></div>
+          <div class="pg-slide"><img src="./KuriloOmsk_files/36 (1).jpg" alt=""></div>
+          <div class="pg-slide"><img src="./KuriloOmsk_files/photogallery-4.jpg" alt=""></div>
+          <div class="pg-slide"><img src="./KuriloOmsk_files/photogallery-5.jpg" alt=""></div>
+          <div class="pg-slide"><img src="./KuriloOmsk_files/2.jpg" alt=""></div>
+          <div class="pg-slide"><img src="./KuriloOmsk_files/8.jpg" alt=""></div>
+          <div class="pg-slide"><img src="./KuriloOmsk_files/47.jpg" alt=""></div>
+          <div class="pg-slide"><img src="./KuriloOmsk_files/34.jpg" alt=""></div>
+          <div class="pg-slide"><img src="./KuriloOmsk_files/36.jpg" alt=""></div>
+          <div class="pg-slide"><img src="./KuriloOmsk_files/60 продуктовый.jpg" alt=""></div>
         </div>
-       </div>
       </div>
+
+      <!-- ПРАВАЯ КОЛОНКА: текст + стрелки/пагинация -->
       <div class="col-12 col-lg-5 text-center">
-       <div class="photogallery-info subtitle">
-        <h2>
-         Фотогалерея
-        </h2>
-        <div class="photogallery-slider__info slick-initialized slick-slider">
-         <div class="slick-list">
-          <div class="slick-track" style="opacity: 1; width: 7866px; transform: translate3d(-342px, 0px, 0px);">
-           <div aria-hidden="true" class="slick-slide slick-cloned" data-slick-index="-1" style="width: 342px;" tabindex="-1">
-            <div>
-             <h3 style="width: 100%; display: inline-block;">
-              Продуктовый магазин п.
-                                                    Красный Яр
-             </h3>
-            </div>
-           </div>
-           <div aria-hidden="false" class="slick-slide slick-current slick-active" data-slick-index="0" style="width: 342px;">
-            <div>
-             <h3 style="width: 100%; display: inline-block;">
-              Склад-магазин п. Красный
-                                                    Яр
-             </h3>
-            </div>
-           </div>
-           <div aria-hidden="true" class="slick-slide" data-slick-index="1" style="width: 342px;" tabindex="-1">
-            <div>
-             <h3 style="width: 100%; display: inline-block;">
-              Шиномонтаж
-             </h3>
-            </div>
-           </div>
-           <div aria-hidden="true" class="slick-slide" data-slick-index="2" style="width: 342px;" tabindex="-1">
-            <div>
-             <h3 style="width: 100%; display: inline-block;">
-              Кафе п. Красный Яр
-             </h3>
-            </div>
-           </div>
-           <div aria-hidden="true" class="slick-slide" data-slick-index="3" style="width: 342px;" tabindex="-1">
-            <div>
-             <h3 style="width: 100%; display: inline-block;">
-              Сан.блок
-             </h3>
-            </div>
-           </div>
-           <div aria-hidden="true" class="slick-slide" data-slick-index="4" style="width: 342px;" tabindex="-1">
-            <div>
-             <h3 style="width: 100%; display: inline-block;">
-              Гостиница
-             </h3>
-            </div>
-           </div>
-           <div aria-hidden="true" class="slick-slide" data-slick-index="5" style="width: 342px;" tabindex="-1">
-            <div>
-             <h3 style="width: 100%; display: inline-block;">
-              СТО с. Троицкое
-             </h3>
-            </div>
-           </div>
-           <div aria-hidden="true" class="slick-slide" data-slick-index="6" style="width: 342px;" tabindex="-1">
-            <div>
-             <h3 style="width: 100%; display: inline-block;">
-              СТО п. Красный Яр
-             </h3>
-            </div>
-           </div>
-           <div aria-hidden="true" class="slick-slide" data-slick-index="7" style="width: 342px;" tabindex="-1">
-            <div>
-             <h3 style="width: 100%; display: inline-block;">
-              Кафе с. Троицкое
-             </h3>
-            </div>
-           </div>
-           <div aria-hidden="true" class="slick-slide" data-slick-index="8" style="width: 342px;" tabindex="-1">
-            <div>
-             <h3 style="width: 100%; display: inline-block;">
-              Автомойка с. Троицкое
-             </h3>
-            </div>
-           </div>
-           <div aria-hidden="true" class="slick-slide" data-slick-index="9" style="width: 342px;" tabindex="-1">
-            <div>
-             <h3 style="width: 100%; display: inline-block;">
-              Склад-магазин с.
-                                                    Троицкое
-             </h3>
-            </div>
-           </div>
-           <div aria-hidden="true" class="slick-slide" data-slick-index="10" style="width: 342px;" tabindex="-1">
-            <div>
-             <h3 style="width: 100%; display: inline-block;">
-              Продуктовый магазин п.
-                                                    Красный Яр
-             </h3>
-            </div>
-           </div>
-           <div aria-hidden="true" class="slick-slide slick-cloned" data-slick-index="11" style="width: 342px;" tabindex="-1">
-            <div>
-             <h3 style="width: 100%; display: inline-block;">
-              Склад-магазин п. Красный
-                                                    Яр
-             </h3>
-            </div>
-           </div>
-           <div aria-hidden="true" class="slick-slide slick-cloned" data-slick-index="12" style="width: 342px;" tabindex="-1">
-            <div>
-             <h3 style="width: 100%; display: inline-block;">
-              Шиномонтаж
-             </h3>
-            </div>
-           </div>
-           <div aria-hidden="true" class="slick-slide slick-cloned" data-slick-index="13" style="width: 342px;" tabindex="-1">
-            <div>
-             <h3 style="width: 100%; display: inline-block;">
-              Кафе п. Красный Яр
-             </h3>
-            </div>
-           </div>
-           <div aria-hidden="true" class="slick-slide slick-cloned" data-slick-index="14" style="width: 342px;" tabindex="-1">
-            <div>
-             <h3 style="width: 100%; display: inline-block;">
-              Сан.блок
-             </h3>
-            </div>
-           </div>
-           <div aria-hidden="true" class="slick-slide slick-cloned" data-slick-index="15" style="width: 342px;" tabindex="-1">
-            <div>
-             <h3 style="width: 100%; display: inline-block;">
-              Гостиница
-             </h3>
-            </div>
-           </div>
-           <div aria-hidden="true" class="slick-slide slick-cloned" data-slick-index="16" style="width: 342px;" tabindex="-1">
-            <div>
-             <h3 style="width: 100%; display: inline-block;">
-              СТО с. Троицкое
-             </h3>
-            </div>
-           </div>
-           <div aria-hidden="true" class="slick-slide slick-cloned" data-slick-index="17" style="width: 342px;" tabindex="-1">
-            <div>
-             <h3 style="width: 100%; display: inline-block;">
-              СТО п. Красный Яр
-             </h3>
-            </div>
-           </div>
-           <div aria-hidden="true" class="slick-slide slick-cloned" data-slick-index="18" style="width: 342px;" tabindex="-1">
-            <div>
-             <h3 style="width: 100%; display: inline-block;">
-              Кафе с. Троицкое
-             </h3>
-            </div>
-           </div>
-           <div aria-hidden="true" class="slick-slide slick-cloned" data-slick-index="19" style="width: 342px;" tabindex="-1">
-            <div>
-             <h3 style="width: 100%; display: inline-block;">
-              Автомойка с. Троицкое
-             </h3>
-            </div>
-           </div>
-           <div aria-hidden="true" class="slick-slide slick-cloned" data-slick-index="20" style="width: 342px;" tabindex="-1">
-            <div>
-             <h3 style="width: 100%; display: inline-block;">
-              Склад-магазин с.
-                                                    Троицкое
-             </h3>
-            </div>
-           </div>
-           <div aria-hidden="true" class="slick-slide slick-cloned" data-slick-index="21" style="width: 342px;" tabindex="-1">
-            <div>
-             <h3 style="width: 100%; display: inline-block;">
-              Продуктовый магазин п.
-                                                    Красный Яр
-             </h3>
-            </div>
-           </div>
+        <div class="photogallery-info subtitle">
+          <h2>Фотогалерея</h2>
+
+          <div class="photogallery-slider__info">
+            <div><h3>Склад-магазин п. Красный Яр</h3></div>
+            <div><h3>Шиномонтаж</h3></div>
+            <div><h3>Кафе п. Красный Яр</h3></div>
+            <div><h3>Сан.блок</h3></div>
+            <div><h3>Гостиница</h3></div>
+            <div><h3>СТО с. Троицкое</h3></div>
+            <div><h3>СТО п. Красный Яр</h3></div>
+            <div><h3>Кафе с. Троицкое</h3></div>
+            <div><h3>Автомойка с. Троицкое</h3></div>
+            <div><h3>Склад-магазин с. Троицкое</h3></div>
+            <div><h3>Продуктовый магазин п. Красный Яр</h3></div>
           </div>
-         </div>
+
+          <!-- Внешние стрелки + пагинация (оставляю) -->
+          <div class="slider-nav">
+            <button class="slider-nav__arrow slider-nav__arrow--prev" type="button" aria-label="Prev">
+              <svg width="95" height="8" viewBox="0 0 95 8" fill="black" xmlns="http://www.w3.org/2000/svg">
+                <path d="M0.646446 3.64645C0.451187 3.84171 0.451187 4.15829 0.646446 4.35355L3.82843 7.53553C4.02369 7.7308 4.34027 7.7308 4.53554 7.53553C4.7308 7.34027 4.7308 7.02369 4.53554 6.82843L1.70711 4L4.53554 1.17157C4.7308 0.976311 4.7308 0.659728 4.53554 0.464466C4.34027 0.269204 4.02369 0.269204 3.82843 0.464466L0.646446 3.64645ZM95 3.5L1 3.5V4.5L95 4.5V3.5Z"/>
+              </svg>
+            </button>
+
+            <div class="slider-nav__pagination">
+              <h3><span class="active">1</span>/<span class="total">11</span></h3>
+            </div>
+
+            <button class="slider-nav__arrow slider-nav__arrow--next" type="button" aria-label="Next">
+              <svg width="95" height="8" viewBox="0 0 95 8" fill="black" xmlns="http://www.w3.org/2000/svg">
+                <path d="M94.3536 4.35355C94.5488 4.15828 94.5488 3.8417 94.3536 3.64644L91.1716 0.464458C90.9763 0.269196 90.6597 0.269196 90.4645 0.464458C90.2692 0.65972 90.2692 0.976303 90.4645 1.17157L93.2929 3.99999L90.4645 6.82842C90.2692 7.02368 90.2692 7.34026 90.4645 7.53553C90.6597 7.73079 90.9763 7.73079 91.1716 7.53553L94.3536 4.35355ZM4.37114e-08 4.5L94 4.49999L94 3.49999L-4.37114e-08 3.5L4.37114e-08 4.5Z"/>
+              </svg>
+            </button>
+          </div>
+
+          <a class="button button--primary js-open-panel" data-panel="#panel-photogallery">Смотреть все фото</a>
         </div>
-        <div class="slider-nav">
-         <button class="slider-nav__arrow slider-nav__arrow--prev slick-arrow" style="display: block;">
-          <svg fill="black" height="8" viewbox="0 0 95 8" width="95" xmlns="http://www.w3.org/2000/svg">
-           <path d="M0.646446 3.64645C0.451187 3.84171 0.451187 4.15829 0.646446 4.35355L3.82843 7.53553C4.02369 7.7308 4.34027 7.7308 4.53554 7.53553C4.7308 7.34027 4.7308 7.02369 4.53554 6.82843L1.70711 4L4.53554 1.17157C4.7308 0.976311 4.7308 0.659728 4.53554 0.464466C4.34027 0.269204 4.02369 0.269204 3.82843 0.464466L0.646446 3.64645ZM95 3.5L1 3.5V4.5L95 4.5V3.5Z">
-           </path>
-          </svg>
-         </button>
-         <div class="slider-nav__pagination">
-          <h3>
-           <span class="active">
-            1
-           </span>
-           /
-           <span class="total">
-            11
-           </span>
-          </h3>
-         </div>
-         <button class="slider-nav__arrow slider-nav__arrow--next slick-arrow" style="display: block;">
-          <svg fill="black" height="8" viewbox="0 0 95 8" width="95" xmlns="http://www.w3.org/2000/svg">
-           <path d="M94.3536 4.35355C94.5488 4.15828 94.5488 3.8417 94.3536 3.64644L91.1716 0.464458C90.9763 0.269196 90.6597 0.269196 90.4645 0.464458C90.2692 0.65972 90.2692 0.976303 90.4645 1.17157L93.2929 3.99999L90.4645 6.82842C90.2692 7.02368 90.2692 7.34026 90.4645 7.53553C90.6597 7.73079 90.9763 7.73079 91.1716 7.53553L94.3536 4.35355ZM4.37114e-08 4.5L94 4.49999L94 3.49999L-4.37114e-08 3.5L4.37114e-08 4.5Z">
-           </path>
-          </svg>
-         </button>
-        </div>
-        <a class="button button--primary" href="http://kuriloomsk.ru/gallery/">
-         Смотреть
-                                все фото
-        </a>
-       </div>
       </div>
-     </div>
+
     </div>
-   </section>
+  </div>
+</section>
+
+
+
+
    <section class="section certificates">
     <div class="container">
      <div class="row justify-content-center">
@@ -2613,6 +2380,12 @@
        </button>
        <div class="nav-dropdown__wrap">
         <ul class="nav-dropdown">
+          <li class="nav-menu__item">
+          <a class="nav-menu__link js-open-panel" data-panel="#panel-kuzov">
+           Кузовной
+                                        ремонт
+          </a>
+         </li>
          <li class="nav-menu__item">
           <a class="nav-menu__link" href="./remont/remont-dvigatelya.html">
            Ремонт
@@ -2767,12 +2540,12 @@
        </div>
       </li>
       <li class="nav-menu__item">
-       <a class="nav-menu__link" href="http://kuriloomsk.ru/catalog/">
+       <a class="nav-menu__link js-open-panel" data-panel="#panel-shop">
         Магазин
        </a>
       </li>
       <li class="nav-menu__item has-dropdown">
-       <a class="nav-menu__link" href="http://kuriloomsk.ru/vidy-avtomobiley/">
+       <a class="nav-menu__link">
         Виды
                             автомобилей
        </a>
@@ -2783,7 +2556,7 @@
        <div class="nav-dropdown__wrap">
         <ul class="nav-dropdown">
          <li class="nav-menu__item">
-          <a class="nav-menu__link" href="http://kuriloomsk.ru/vidy-avtomobiley/pritsepy-i-polupritsepy/">
+          <a class="nav-menu__link js-open-panel" data-panel="#panel-pritsepy">
            Прицепы
                                         и полуприцепы
           </a>
@@ -2811,7 +2584,7 @@
         </ul>
        </div>
       </li>
-      <li class="nav-menu__item has-dropdown">
+      <!-- <li class="nav-menu__item has-dropdown">
        <a class="nav-menu__link" href="http://kuriloomsk.ru/brands/">
         Марки
        </a>
@@ -2871,11 +2644,46 @@
            SHACMAN
           </a>
          </li>
+         <li class="nav-menu__item">
+          <a class="nav-menu__link" href="http://kuriloomsk.ru/brands/shacman/">
+           DONGFENG
+          </a>
+         </li>
+         <li class="nav-menu__item">
+          <a class="nav-menu__link" href="http://kuriloomsk.ru/brands/shacman/">
+           FAW
+          </a>
+         </li>
+         <li class="nav-menu__item">
+          <a class="nav-menu__link" href="http://kuriloomsk.ru/brands/shacman/">
+           SITRAK
+          </a>
+         </li>
+         <li class="nav-menu__item">
+          <a class="nav-menu__link" href="http://kuriloomsk.ru/brands/shacman/">
+           FOTON
+          </a>
+         </li>
+         <li class="nav-menu__item">
+          <a class="nav-menu__link" href="http://kuriloomsk.ru/brands/shacman/">
+           SANY
+          </a>
+         </li>
+         <li class="nav-menu__item">
+          <a class="nav-menu__link" href="http://kuriloomsk.ru/brands/shacman/">
+           HOWO
+          </a>
+         </li>
+         <li class="nav-menu__item">
+          <a class="nav-menu__link" href="http://kuriloomsk.ru/brands/shacman/">
+           JAC
+          </a>
+         </li>
         </ul>
        </div>
-      </li>
+      </li> -->
       <li class="nav-menu__item has-dropdown">
-       <a class="nav-menu__link" href="http://kuriloomsk.ru/uslugi/">
+       <a class="nav-menu__link">
         Услуги
        </a>
        <button class="nav-dropdown__btn">
@@ -2885,17 +2693,17 @@
        <div class="nav-dropdown__wrap">
         <ul class="nav-dropdown">
          <li class="nav-menu__item">
-          <a class="nav-menu__link" href="http://kuriloomsk.ru/uslugi/avtomoyka/">
+          <a class="nav-menu__link"  data-panel="#panel-avtomoyka">
            Автомойка
           </a>
          </li>
          <li class="nav-menu__item">
-          <a class="nav-menu__link" href="http://kuriloomsk.ru/uslugi/stoyanka/">
+          <a class="nav-menu__link js-open-panel"  data-panel="#panel-stoyanka">
            Стоянка
           </a>
          </li>
          <li class="nav-menu__item">
-          <a class="nav-menu__link" href="http://kuriloomsk.ru/uslugi/shinomontazh/">
+          <a class="nav-menu__link" data-panel="#panel-shinomontaj">
            Шиномонтаж
           </a>
          </li>
@@ -2985,7 +2793,7 @@
         </ul>
        </div>
       </li>
-      <li class="nav-menu__item">
+      <!-- <li class="nav-menu__item">
        <a class="nav-menu__link" href="http://kuriloomsk.ru/personal/cart/">
         Корзина(
         <span class="js-cart-count">
@@ -2993,7 +2801,7 @@
         </span>
         )
        </a>
-      </li>
+      </li> -->
      </ul>
     </nav>
    </div>
@@ -3026,9 +2834,13 @@
       <div class="popup__content">
        <div id="popup-request">
         <div class="form--alt">
-         <h2>
-          Записаться на ремонт
-         </h2>
+          <div class="form-header">
+            <h2>Задать вопрос</h2>
+            <a class="button button--secondary js-open-panel"
+              data-panel="#panel-kontakti">
+              Контактная информация
+            </a>
+          </div>
          <form action="https://kuriloomsk.ru/" class="js-repair-form" method="post">
           <input name="PAGE_URL" type="hidden" value="http://kuriloomsk.ru/"/>
           <div class="row">
@@ -3497,6 +3309,587 @@
       });
     })();
   </script>
+
+
+    <!-- Полноэкранная панель "Кузовной ремонт" -->
+    <div id="panel-kuzov" class="popup service-panel" role="dialog" aria-modal="true" aria-hidden="true">
+        <div class="popup__content service-panel__content">
+            <button type="button" class="popup-close" aria-label="Закрыть">✕</button>
+
+            <header class="service-panel__header">
+                <h2>Кузовной ремонт</h2>
+                <p class="service-panel__lead">Полный цикл работ: дефектовка, геометрия, покраска, полировка и т.д.</p>
+            </header>
+
+            <div class="service-panel__body">
+                <!-- контент: список услуг, фото, прайс, форма и пр. -->
+                <section class="service-section">
+                    <h3>Что делаем</h3>
+                    <ul class="service-list">
+                        <li>Выправление геометрии кузова</li>
+                        <li>Локальная / полная покраска</li>
+                        <li>Ремонт / замена панелей</li>
+                        <li>Полировка ЛКП, антикор</li>
+                    </ul>
+                </section>
+                
+                <!-- Текст-заглушка для SEO/описания -->
+                <section class="service-section service-desc">
+                    <h3>Коротко о процессе</h3>
+                    <p>
+                        Мы проводим полную диагностику, согласуем объём работ и сроки, подбираем материалы под ваш бюджет.
+                        Ниже — ключевые этапы, чтобы вы понимали, как мы работаем.
+                    </p>
+                    <ul class="service-bullets">
+                        <li>Дефектовка и оценка сроков</li>
+                        <li>Подготовка поверхности и материалы</li>
+                        <li>Ремонт, грунт, окраска, сушка</li>
+                        <li>Сборка, контроль качества, выдача авто</li>
+                    </ul>
+                </section>
+                
+                <section class="service-section">
+                    <h3>Цены (от)</h3>
+                    <table class="price">
+                        <tr>
+                            <td>Локальный ремонт элемента</td>
+                            <td>от 6 000 ₽</td>
+                        </tr>
+                        <tr>
+                            <td>Покраска элемента</td>
+                            <td>от 9 000 ₽</td>
+                        </tr>
+                        <tr>
+                            <td>Полировка кузова</td>
+                            <td>от 7 000 ₽</td>
+                        </tr>
+                    </table>
+                </section>
+                
+                <!-- Галерея: большое фото + снизу миниатюры -->
+                <section class="service-section">
+                  <!-- подпись к текущему фото -->
+                  <div class="gallery-caption">
+                    <h3 data-role="gtitle">Малярный цех</h3>
+                    <p  data-role="gdesc">Окраска деталей в профессиональной камере с фильтрацией и контролем температуры. 
+                      Используем сертифицированные материалы для стойкого блеска и защиты.</p>
+                  </div>
+
+                  <div class="gallery">
+                    <div class="gallery__main">
+                      <img src="./KuriloOmsk_files/kuzovnoy-remont1.jpg"
+                          alt="Кузовной ремонт — пример 1" id="galleryMain">
+                    </div>
+
+                    <div class="gallery__thumbs">
+                      <img src="./KuriloOmsk_files/kuzovnoy-remont1.jpg"
+                          class="is-active"
+                          data-full="./KuriloOmsk_files/kuzovnoy-remont1.jpg"
+                          data-title="Малярный цех"
+                          data-desc="Окраска деталей в профессиональной камере с фильтрацией и контролем температуры. Используем сертифицированные материалы для стойкого блеска и защиты.">
+
+                      <img src="./KuriloOmsk_files/kuzovnoy-remont2.jpg"
+                          data-full="./KuriloOmsk_files/kuzovnoy-remont2.jpg"
+                          data-title="Подготовка к окраске"
+                          data-desc="Шлифовка, обезжиривание и точный подбор цвета. Поверхности выравниваются, детали укрываются от напыла.">
+
+                      <img src="./KuriloOmsk_files/kuzovnoy-remont3.jpg"
+                          data-full="./KuriloOmsk_files/kuzovnoy-remont3.jpg"
+                          data-title="Геометрия кузова"
+                          data-desc="Восстанавливаем заводские размеры кузова на стапеле с лазерным контролем точности.">
+                          
+                      <img src="./KuriloOmsk_files/kuzovnoy-remont3.jpg"
+                          data-full="./KuriloOmsk_files/kuzovnoy-remont3.jpg"
+                          data-title="Полировка и защита ЛКП"
+                          data-desc="Финишная полировка и нанесение керамики или воска для защиты и блеска покрытия.">
+                    </div>
+                  </div>
+                </section>
+
+              <!-- Контакты (две колонки: слева Красный Яр, справа Троицкое) -->
+            <div class="contact-note">
+
+              <div class="contact-note__item contact-note__item--left">
+                <div class="contact-note__title">Красный Яр, ул. Дорожная, 19</div>
+                <a class="contact-note__phone" href="tel:+70000000000">8 913 676-55-55</a>
+              </div>
+
+              <div class="contact-note__center">
+                <a class="button button--secondary js-open-panel"
+                  data-panel="#panel-kontakti">
+                  Контакты
+                </a>
+              </div>
+
+              <div class="contact-note__item contact-note__item--right">
+                <div class="contact-note__title">Троицкое, ул. Омская, 14</div>
+                <a class="contact-note__phone" href="tel:+70000000001">8 913 669-55-55</a>
+              </div>
+
+            </div>
+
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Полноэкранная панель "Магазин" -->
+<div id="panel-shop" class="popup service-panel" role="dialog" aria-modal="true" aria-hidden="true">
+  <div class="popup__content service-panel__content">
+    <button type="button" class="popup-close" aria-label="Закрыть">✕</button>
+
+    <header class="service-panel__header">
+      <h2>Магазин</h2>
+      <p class="service-panel__lead">
+        Оригинальные и проверенные аналоги. Подбор по VIN, гарантия, быстрая поставка.
+      </p>
+    </header>
+
+    <div class="service-panel__body">
+      <!-- микро-описание -->
+      <section class="service-section">
+        <h3>Почему у нас</h3>
+        <p>
+          Прямые поставки без посредников, входной контроль качества и понятные цены.
+          Подберём деталь по VIN и при желании установим в нашем сервисе.
+        </p>
+      </section>
+
+      <!-- ходовые позиции -->
+      <section class="service-section">
+        <h3>Ходовые позиции</h3>
+
+        <ul class="shop-list">
+          <!-- Карточка 1 -->
+          <li class="shop-card">
+            <img src="./KuriloOmsk_files/bumper.jpg" alt="Бампер передний">
+            <div class="shop-card__body">
+              <div class="shop-card__title">Бампер передний</div>
+              <div class="shop-card__desc">
+                Точная геометрия и заводские точки крепления. Поставляется в грунте — готов к покраске.
+              </div>
+            </div>
+          </li>
+
+          <!-- Карточка 2 -->
+          <li class="shop-card">
+            <img src="./KuriloOmsk_files/headlight-left.jpg" alt="Фара левая">
+            <div class="shop-card__body">
+              <div class="shop-card__title">Фара левая</div>
+              <div class="shop-card__desc">
+                Галоген/LED/ксенон. Корректор, герметичность, регулировка по ГОСТ. Гарантия 12 месяцев.
+              </div>
+            </div>
+          </li>
+
+          <!-- Карточка 3 -->
+          <li class="shop-card">
+            <img src="./KuriloOmsk_files/fender.jpg" alt="Крыло переднее">
+            <div class="shop-card__body">
+              <div class="shop-card__title">Крыло переднее</div>
+              <div class="shop-card__desc">
+                Сталь/пластик. Стабильные зазоры без доработок по месту. Антикоррозионное покрытие.
+              </div>
+            </div>
+          </li>
+        </ul>
+
+        <ul class="shop-list">
+          <!-- Карточка 4 -->
+          <li class="shop-card">
+            <img src="./KuriloOmsk_files/bumper.jpg" alt="Бампер передний">
+            <div class="shop-card__body">
+              <div class="shop-card__title">Бампер передний2</div>
+              <div class="shop-card__desc">
+                Точная геометрия и заводские точки крепления. Поставляется в грунте — готов к покраске.
+              </div>
+            </div>
+          </li>
+
+          <!-- Карточка 5 -->
+          <li class="shop-card">
+            <img src="./KuriloOmsk_files/headlight-left.jpg" alt="Фара левая">
+            <div class="shop-card__body">
+              <div class="shop-card__title">Фара левая2</div>
+              <div class="shop-card__desc">
+                Галоген/LED/ксенон. Корректор, герметичность, регулировка по ГОСТ. Гарантия 12 месяцев.
+              </div>
+            </div>
+          </li>
+
+          <!-- Карточка 6 -->
+          <li class="shop-card">
+            <img src="./KuriloOmsk_files/fender.jpg" alt="Крыло переднее">
+            <div class="shop-card__body">
+              <div class="shop-card__title">Крыло переднее2</div>
+              <div class="shop-card__desc">
+                Сталь/пластик. Стабильные зазоры без доработок по месту. Антикоррозионное покрытие.
+              </div>
+            </div>
+          </li>
+        </ul>
+
+        <ul class="shop-list">
+          <!-- Карточка 7 -->
+          <li class="shop-card">
+            <img src="./KuriloOmsk_files/bumper.jpg" alt="Бампер передний">
+            <div class="shop-card__body">
+              <div class="shop-card__title">Бампер передний3</div>
+              <div class="shop-card__desc">
+                Точная геометрия и заводские точки крепления. Поставляется в грунте — готов к покраске.
+              </div>
+            </div>
+          </li>
+
+          <!-- Карточка 8 -->
+          <li class="shop-card">
+            <img src="./KuriloOmsk_files/headlight-left.jpg" alt="Фара левая">
+            <div class="shop-card__body">
+              <div class="shop-card__title">Фара левая3</div>
+              <div class="shop-card__desc">
+                Галоген/LED/ксенон. Корректор, герметичность, регулировка по ГОСТ. Гарантия 12 месяцев.
+              </div>
+            </div>
+          </li>
+
+          <!-- Карточка 9 -->
+          <li class="shop-card">
+            <img src="./KuriloOmsk_files/fender.jpg" alt="Крыло переднее">
+            <div class="shop-card__body">
+              <div class="shop-card__title">Крыло переднее3</div>
+              <div class="shop-card__desc">
+                Сталь/пластик. Стабильные зазоры без доработок по месту. Антикоррозионное покрытие.
+              </div>
+            </div>
+          </li>
+        </ul>
+
+    
+      </section>
+
+      <!-- Контакты (две колонки: слева Красный Яр, справа Троицкое) -->
+            <div class="contact-note">
+
+              <div class="contact-note__item contact-note__item--left">
+                <div class="contact-note__title">Красный Яр, ул. Дорожная, 19</div>
+                <a class="contact-note__phone" href="tel:+70000000000">8 913 676-55-55</a>
+              </div>
+
+              <div class="contact-note__center">
+                <a class="button button--secondary js-open-panel"
+                  data-panel="#panel-kontakti">
+                  Контакты
+                </a>
+              </div>
+
+              <div class="contact-note__item contact-note__item--right">
+                <div class="contact-note__title">Троицкое, ул. Омская, 14</div>
+                <a class="contact-note__phone" href="tel:+70000000001">8 913 669-55-55</a>
+              </div>
+
+            </div>
+    </div>
+  </div>
+</div>
+
+
+  <!-- Полноэкранная панель "Прицепы и полуприцепы" -->
+    <div id="panel-pritsepy" class="popup service-panel" role="dialog" aria-modal="true" aria-hidden="true">
+        <div class="popup__content service-panel__content">
+            <button type="button" class="popup-close" aria-label="Закрыть">✕</button>
+
+            <header class="service-panel__header">
+                <h2>Прицепы и полуприцепы</h2>
+                <p class="service-panel__lead">Полный цикл работ: дефектовка, геометрия, покраска, полировка и т.д.</p>
+            </header>
+
+            <div class="service-panel__body">
+                <!-- контент: список услуг, фото, прайс, форма и пр. -->
+                <section class="service-section">
+                    <h3>Что делаем</h3>
+                    <ul class="service-list">
+                        <li>Выправление геометрии кузова</li>
+                        <li>Локальная / полная покраска</li>
+                        <li>Ремонт / замена панелей</li>
+                        <li>Полировка ЛКП, антикор</li>
+                    </ul>
+                </section>
+                
+                <!-- Текст-заглушка для SEO/описания -->
+                <section class="service-section service-desc">
+                    <h3>Коротко о процессе</h3>
+                    <p>
+                        Мы проводим полную диагностику, согласуем объём работ и сроки, подбираем материалы под ваш бюджет.
+                        Ниже — ключевые этапы, чтобы вы понимали, как мы работаем.
+                    </p>
+                    <ul class="service-bullets">
+                        <li>Дефектовка и оценка сроков</li>
+                        <li>Подготовка поверхности и материалы</li>
+                        <li>Ремонт, грунт, окраска, сушка</li>
+                        <li>Сборка, контроль качества, выдача авто</li>
+                    </ul>
+                </section>
+
+                <!-- Текст-заглушка для SEO/описания -->
+                <section class="service-section service-desc">
+                    <h3>Марки</h3>
+                    <p>
+                        Мы работаем только с проверенными и надёжными брендами прицепной техники.
+                    </p>
+                    <ul class="service-bullets">
+                        <li>TONAR</li>
+                        <li>NEFAZ</li>
+                        <li>Schmitz Cargobull</li>
+                        <li>Krone</li>
+                        <li>Grunwald</li>
+                        <li>Kögel</li>
+                        <li>Wielton</li>
+                    </ul>
+                </section>
+                
+                <section class="service-section">
+                    <h3>Цены (от)</h3>
+                    <table class="price">
+                        <tr>
+                            <td>Локальный ремонт элемента</td>
+                            <td>от 6 000 ₽</td>
+                        </tr>
+                        <tr>
+                            <td>Покраска элемента</td>
+                            <td>от 9 000 ₽</td>
+                        </tr>
+                        <tr>
+                            <td>Полировка кузова</td>
+                            <td>от 7 000 ₽</td>
+                        </tr>
+                    </table>
+                </section>
+                
+                <!-- Галерея: большое фото + снизу миниатюры -->
+                <section class="service-section">
+                  <!-- подпись к текущему фото -->
+                  <div class="gallery-caption">
+                    <h3 data-role="gtitle">Малярный цех</h3>
+                    <p  data-role="gdesc">Окраска деталей в профессиональной камере с фильтрацией и контролем температуры. 
+                      Используем сертифицированные материалы для стойкого блеска и защиты.</p>
+                  </div>
+
+                  <div class="gallery">
+                    <div class="gallery__main">
+                      <img src="./KuriloOmsk_files/kuzovnoy-remont1.jpg"
+                          alt="Прицепы и полуприцепы пример" id="galleryMain">
+                    </div>
+
+                    <div class="gallery__thumbs">
+                      <img src="./KuriloOmsk_files/kuzovnoy-remont1.jpg"
+                          class="is-active"
+                          data-full="./KuriloOmsk_files/kuzovnoy-remont1.jpg"
+                          data-title="Малярный цех"
+                          data-desc="Окраска деталей в профессиональной камере с фильтрацией и контролем температуры. Используем сертифицированные материалы для стойкого блеска и защиты.">
+
+                      <img src="./KuriloOmsk_files/kuzovnoy-remont2.jpg"
+                          data-full="./KuriloOmsk_files/kuzovnoy-remont2.jpg"
+                          data-title="Подготовка к окраске"
+                          data-desc="Шлифовка, обезжиривание и точный подбор цвета. Поверхности выравниваются, детали укрываются от напыла.">
+
+                      <img src="./KuriloOmsk_files/kuzovnoy-remont3.jpg"
+                          data-full="./KuriloOmsk_files/kuzovnoy-remont3.jpg"
+                          data-title="Геометрия кузова"
+                          data-desc="Восстанавливаем заводские размеры кузова на стапеле с лазерным контролем точности.">
+                          
+                    </div>
+                  </div>
+                </section>
+              
+                <!-- Контакты (две колонки: слева Красный Яр, справа Троицкое) -->
+            <div class="contact-note">
+
+              <div class="contact-note__item contact-note__item--left">
+                <div class="contact-note__title">Красный Яр, ул. Дорожная, 19</div>
+                <a class="contact-note__phone" href="tel:+70000000000">8 913 676-55-55</a>
+              </div>
+
+              <div class="contact-note__center">
+                <a class="button button--secondary js-open-panel"
+                  data-panel="#panel-kontakti">
+                  Контакты
+                </a>
+              </div>
+
+              <div class="contact-note__item contact-note__item--right">
+                <div class="contact-note__title">Троицкое, ул. Омская, 14</div>
+                <a class="contact-note__phone" href="tel:+70000000001">8 913 669-55-55</a>
+              </div>
+
+            </div>
+
+            </div>
+        </div>
+    </div>
+
+
+
+    
+    <!-- Полноэкранная панель "Стоянка" -->
+<div id="panel-stoyanka" class="popup service-panel" role="dialog" aria-modal="true" aria-hidden="true">
+  <div class="popup__content service-panel__content">
+    <button type="button" class="popup-close" aria-label="Закрыть">✕</button>
+
+    <!-- ЦЕЛЬНАЯ ЧЁРНАЯ ПАНЕЛЬ -->
+    <header class="service-panel__header split-header" data-active="left">
+      <div class="split-half left" role="tab" aria-selected="true">
+        <h2>Стоянка</h2>
+        <p>Красный Яр</p>
+      </div>
+
+      <div class="split-half right" role="tab" aria-selected="false">
+        <h2>Стоянка</h2>
+        <p>Троицкое</p>
+      </div>
+
+      <!-- золотая линия-индикатор -->
+      <span class="indicator"></span>
+    </header>
+
+
+
+    <div class="service-panel__body">
+
+      <!-- ===== Красный Яр ===== -->
+      <section id="pane-krasny" class="tab-pane is-active" role="tabpanel" aria-labelledby="tab-krasny">
+        <section class="service-section service-desc">
+          <h3>Описание стоянки</h3>
+          <p>Охраняемая площадка для грузовой и легкой коммерческой техники: широкие проезды, освещение, видеонаблюдение 24/7, доступ по пропускам. Зимой — регулярная расчистка. Возможна подача 220 В по запросу.</p>
+          <ul class="service-bullets">
+            <li>КПП, камеры, охрана 24/7</li>
+            <li>Разворотная зона для длинномеров</li>
+            <li>Розетки 220 В (по договорённости)</li>
+            <li>Санузел и питьевая вода</li>
+          </ul>
+        </section>
+
+        <section class="service-section">
+          <h3>Цены (от)</h3>
+          <table class="price">
+            <tr><td>Легковой / сутки</td><td>от 150 ₽</td></tr>
+            <tr><td>Грузовик/прицеп / сутки</td><td>от 300 ₽</td></tr>
+            <tr><td>Абонемент месяц (легковой)</td><td>от 4 000 ₽</td></tr>
+            <tr><td>Абонемент месяц (грузовой/прицеп)</td><td>от 8 000 ₽</td></tr>
+          </table>
+        </section>
+
+        <!-- Фото -->
+        <section class="service-section">
+          <div class="gallery-caption">
+            <h3 data-role="gtitle">Малярный цех</h3>
+            <p  data-role="gdesc">Покрасочная камера с фильтрацией и контролем температуры.</p>
+          </div>
+          <div class="gallery">
+            <div class="gallery__main">
+              <img src="./KuriloOmsk_files/kuzovnoy-remont1.jpg" alt="Стоянка Красный Яр — фото">
+            </div>
+            <div class="gallery__thumbs">
+              <img src="./KuriloOmsk_files/kuzovnoy-remont1.jpg" class="is-active"
+                   data-full="./KuriloOmsk_files/kuzovnoy-remont1.jpg"
+                   data-title="Малярный цех"
+                   data-desc="Покрасочная камера, стойкое покрытие.">
+              <img src="./KuriloOmsk_files/kuzovnoy-remont2.jpg"
+                   data-full="./KuriloOmsk_files/kuzovnoy-remont2.jpg"
+                   data-title="Подготовка к окраске"
+                   data-desc="Шлифовка, обезжиривание, подбор цвета.">
+              <img src="./KuriloOmsk_files/kuzovnoy-remont3.jpg"
+                   data-full="./KuriloOmsk_files/kuzovnoy-remont3.jpg"
+                   data-title="Геометрия кузова"
+                   data-desc="Стапель и контроль размеров.">
+            </div>
+          </div>
+        </section>
+      </section>
+
+      <!-- ===== Троицкое ===== -->
+      <section id="pane-troitskoe" class="tab-pane" role="tabpanel" aria-labelledby="tab-troitskoe" hidden>
+        <section class="service-section service-desc">
+          <h3>Описание стоянки</h3>
+          <p>Площадка с приёмом длинномерной техники и отдельной зоной для полуприцепов. Освещённая территория, видеоконтроль, удобный выезд на магистраль. Возможна постановка прицепа без тягача.</p>
+          <ul class="service-bullets">
+            <li>Выделенная зона для длинномеров</li>
+            <li>Доступ по пропускам 24/7</li>
+            <li>Электропитание 220 В (по запросу)</li>
+            <li>Зимой — расчистка и посыпка</li>
+          </ul>
+        </section>
+
+        <section class="service-section">
+          <h3>Цены (от)</h3>
+          <table class="price">
+            <tr><td>Легковой / сутки</td><td>от 150 ₽</td></tr>
+            <tr><td>Грузовик/прицеп / сутки</td><td>от 320 ₽</td></tr>
+            <tr><td>Месяц (длинномер / прицеп без тягача)</td><td>от 8 500 ₽</td></tr>
+          </table>
+        </section>
+
+        <!-- Фото -->
+        <section class="service-section">
+          <div class="gallery-caption">
+            <h3 data-role="gtitle">Зона подготовки</h3>
+            <p  data-role="gdesc">Тёплая закрытая зона подготовки c контролем пыли и влажности.</p>
+          </div>
+          <div class="gallery">
+            <div class="gallery__main">
+              <img src="./KuriloOmsk_files/kuzovnoy-remont2.jpg" alt="Стоянка Троицкое — фото">
+            </div>
+            <div class="gallery__thumbs">
+              <img src="./KuriloOmsk_files/kuzovnoy-remont2.jpg" class="is-active"
+                   data-full="./KuriloOmsk_files/kuzovnoy-remont2.jpg"
+                   data-title="Зона подготовки"
+                   data-desc="Закрытая тёплая зона для шлифовки и подготовки.">
+              <img src="./KuriloOmsk_files/kuzovnoy-remont3.jpg"
+                   data-full="./KuriloOmsk_files/kuzovnoy-remont3.jpg"
+                   data-title="Ремонт и геометрия"
+                   data-desc="Стапель и лазерные измерения.">
+              <img src="./KuriloOmsk_files/kuzovnoy-remont1.jpg"
+                   data-full="./KuriloOmsk_files/kuzovnoy-remont1.jpg"
+                   data-title="Малярный цех"
+                   data-desc="Покрасочная камера.">
+            </div>
+          </div>
+        </section>
+      </section>
+
+
+            <!-- Контакты (две колонки: слева Красный Яр, справа Троицкое) -->
+            <div class="contact-note">
+
+              <div class="contact-note__item contact-note__item--left">
+                <div class="contact-note__title">Красный Яр, ул. Дорожная, 19</div>
+                <a class="contact-note__phone" href="tel:+70000000000">8 913 676-55-55</a>
+              </div>
+
+              <div class="contact-note__center">
+                <a class="button button--secondary js-open-panel"
+                  data-panel="#panel-kontakti">
+                  Контакты
+                </a>
+              </div>
+
+              <div class="contact-note__item contact-note__item--right">
+                <div class="contact-note__title">Троицкое, ул. Омская, 14</div>
+                <a class="contact-note__phone" href="tel:+70000000001">8 913 669-55-55</a>
+              </div>
+
+            </div>
+
+
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
 
 
 
