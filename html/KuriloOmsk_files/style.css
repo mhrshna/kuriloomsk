@@ -5512,7 +5512,7 @@ a[data-fancybox="gallery"]::before {
     /* закрепляем у верхнего края панели */
     z-index: 5;
     /* выше контента, ниже крестика */
-    background: rgba(151, 151, 151, 0.4);
+    background: rgb(215 215 215 / 40%);
     /* мягкий прозрачный фон */
     backdrop-filter: blur(8px);
     /* лёгкий блюр, под стиль панели */
@@ -5553,7 +5553,7 @@ a[data-fancybox="gallery"]::before {
 .popup.service-panel::before{
   content:"";
   position:absolute; inset:0;
-  background:rgba(0,0,0,0.25);
+  background:rgba(0,0,0,0.05);
   backdrop-filter:blur(12px);
   -webkit-backdrop-filter:blur(12px);
   will-change:opacity;
@@ -5570,7 +5570,7 @@ a[data-fancybox="gallery"]::before {
   margin:6vh auto 4vh;
   width:min(1100px,92vw);
   max-height:calc(100vh - 10vh);
-  background:rgba(255, 255, 255, 0.88);
+  background:rgb(255 255 255);
   color:#000000;
   border-radius:16px;
   padding:28px 28px 20px;
@@ -6037,11 +6037,205 @@ body.modal-open { overflow: hidden; }
 
 
 
-
-
 /* Курсор руки */
 .nav-menu__link {
     cursor: pointer;
+}
+
+
+
+
+
+
+/* === МОДАЛКА ОТЗЫВОВ С ПЛАВНОЙ АНИМАЦИЕЙ === */
+/* корневой контейнер */
+.review-modal{
+  position: fixed;
+  inset: 0;
+  z-index: 1100;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  opacity: 0;
+  pointer-events: none;
+}
+
+.review-modal.is-open{
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* === ПЛАВНЫЙ БЛЮР КАК У ПАНЕЛЕЙ === */
+.review-modal__backdrop{
+  position: absolute;
+  inset: 0;
+
+  background: rgba(0,0,0,0);             
+  backdrop-filter: blur(0px);            
+  -webkit-backdrop-filter: blur(0px);
+
+  opacity: 0;                             
+  transition:
+    opacity .32s ease,
+    background .32s ease,
+    backdrop-filter .32s ease;
+}
+
+.review-modal.is-open .review-modal__backdrop{
+  background: rgba(0,0,0,.45);            /* затемнение */
+  backdrop-filter: blur(12px);            /* плавный блюр */
+  -webkit-backdrop-filter: blur(12px);
+  opacity: 1;
+}
+
+/* белая карточка по центру + анимация translate/opacity */
+.review-modal__dialog{
+  position: relative;
+  z-index: 1;
+
+  width: min(900px, 96vw);
+  padding: 40px 42px 34px;
+
+  background: #fafafa;
+  border-radius: 22px;
+  box-shadow: 0 26px 60px rgba(0,0,0,.35);
+
+  opacity: 0;
+  transform: translateY(16px);
+  transition:
+    opacity .28s ease,
+    transform .28s ease;
+}
+
+.review-modal.is-open .review-modal__dialog{
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* крестик */
+.review-modal__close{
+  position: absolute;
+  top: 18px;
+  right: 20px;
+  width: 38px;
+  height: 38px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+  border: none;
+  background: transparent;
+  font-size: 22px;
+  line-height: 1;
+  color: #DDB96F;
+  cursor: pointer;
+}
+.review-modal__close:hover{
+  background: rgba(0,0,0,.07);
+}
+
+/* заголовки и кнопки */
+.review-modal__title{
+  margin: 0 50px 14px;
+  font-size: 30px;
+  font-weight: 700;
+  text-align: center;
+  color: #222;
+}
+
+.review-modal__subtitle{
+  margin: 0 40px 32px;
+  font-size: 17px;
+  color: #555;
+  text-align: center;
+}
+
+.review-modal__buttons{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+  margin-bottom: 26px;
+}
+
+.review-modal__btn{
+  display: block;
+  padding: 18px 24px;
+  border-radius: 14px;
+  background: #fff;
+  border: 1px solid rgba(0,0,0,.08);
+  color: #222;
+  text-decoration: none;
+  transition:
+    background .18s ease,
+    border-color .18s ease,
+    box-shadow .18s ease,
+    transform .12s ease;
+}
+.review-modal__btn:hover{
+  background: rgba(221,185,111,.10);
+  border-color: rgba(221,185,111,.75);
+  box-shadow: 0 10px 24px rgba(0,0,0,.12);
+  transform: translateY(-2px);
+}
+
+.review-modal__btn-title{
+  display: block;
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 4px;
+  text-align: left;
+}
+.review-modal__btn-desc{
+  display: block;
+  font-size: 15px;
+  color: #666;
+  text-align: left;
+}
+
+.review-modal__hint{
+  margin: 8px 0 0;
+  font-size: 15px;
+  text-align: center;
+  color: #777;
+}
+
+/* адаптив */
+@media (max-width: 640px){
+  .review-modal__dialog{
+    width: 96vw;
+    padding: 28px 22px 24px;
+  }
+  .review-modal__buttons{
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+  .review-modal__title{
+    font-size: 26px;
+  }
+  .review-modal__btn-title{
+    font-size: 17px;
+  }
+}
+
+/* === Анимация закрытия через is-closing === */
+.review-modal.is-closing .review-modal__backdrop{
+  background: rgba(0,0,0,0);
+  backdrop-filter: blur(0px);
+  -webkit-backdrop-filter: blur(0px);
+  opacity: 0;
+}
+
+.review-modal.is-closing .review-modal__dialog{
+  opacity: 0;
+  transform: translateY(16px);
+}
+
+.reviews__link{
+  cursor: pointer;
 }
 
 

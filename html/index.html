@@ -524,7 +524,7 @@
           </a>
          </li>
          <li class="nav-menu__item" style="padding-right: 0px;">
-          <a class="nav-menu__link" data-panel="#panel-shinomontaj">
+          <a class="nav-menu__link js-open-panel" data-panel="#panel-shinomontazh"> 
            Шиномонтаж
           </a>
          </li>
@@ -2160,12 +2160,22 @@
         Отзывы наших клиентов
        </h2>
       </div>
+
+
       <div class="col-12 col-lg-6 text-right">
-       <a class="reviews__link" target="_blank" href="https://yandex.ru/maps/org/kurilotransavto/172326765952/reviews/?ll=72.898787%2C55.230492&z=17.64">
-        Посмотреть
-                            все отзывы
-       </a>
+        <a
+          class="reviews__link"
+          data-open-modal="#reviewModal"
+          data-review-mode="view"
+        >
+          Посмотреть
+          все отзывы
+        </a>
       </div>
+
+
+
+
       <div class="col-12 col-lg-10">
        <div class="row justify-content-between reviews-wrap">
         <div class="col-12 col-md-6 col-lg-6 reviews-item__wrap">
@@ -2198,7 +2208,7 @@
            </div>
            <div class="reviews-item__date">
             <time datetime="2018-07-25">
-             25.07.2018
+             25.07.2025
             </time>
            </div>
            <div class="reviews-item__rating">
@@ -2239,7 +2249,7 @@
            </div>
            <div class="reviews-item__date">
             <time datetime="2018-07-25">
-             11.03.2018
+             11.03.2025
             </time>
            </div>
            <div class="reviews-item__rating">
@@ -2259,11 +2269,19 @@
         </div>
        </div>
       </div>
+
+
       <div class="col-12 text-center">
-       <button class="button button--primary button--popup" data-popup="review">
-        Оставить отзыв
-       </button>
+        <a
+          class="button button--primary button--popup"
+          data-open-modal="#reviewModal"
+          data-review-mode="add"
+        >
+          Оставить отзыв
+        </a>
       </div>
+
+
      </div>
     </div>
    </section>
@@ -2703,7 +2721,7 @@
           </a>
          </li>
          <li class="nav-menu__item">
-          <a class="nav-menu__link" data-panel="#panel-shinomontaj">
+          <a class="nav-menu__link js-open-panel" data-panel="#panel-shinomontazh">
            Шиномонтаж
           </a>
          </li>
@@ -2810,6 +2828,7 @@
     </i>
    </button>
   </div>
+
   <!-- Popups start-->
   <div class="popup">
    <div class="container">
@@ -2910,7 +2929,7 @@
          </form>
         </div>
        </div>
-       <div id="popup-review">
+       <!-- <div id="popup-review">
         <div class="form--alt">
          <h2>
           Оставить отзыв
@@ -2978,7 +2997,7 @@
           </div>
          </form>
         </div>
-       </div>
+       </div> -->
        <div id="popup-virtual-tour">
         <iframe allowfullscreen="" border="0" data-ruffle-polyfilled="" frameborder="0" height="600" id="tour_frame" src="./KuriloOmsk_files/index.html" width="100%">
         </iframe>
@@ -3888,6 +3907,220 @@
 
 
 
+
+<!-- Полноэкранная панель "Шиномонтаж" -->
+<div id="panel-shinomontazh" class="popup service-panel" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="popup__content service-panel__content">
+        <button type="button" class="popup-close" aria-label="Закрыть">✕</button>
+
+        <header class="service-panel__header">
+            <h2>Шиномонтаж</h2>
+            <p class="service-panel__lead">Профессиональный шиномонтаж для легковых авто, внедорожников и коммерческого транспорта.</p>
+        </header>
+
+        <div class="service-panel__body">
+
+            <!-- Что делаем -->
+            <section class="service-section">
+                <h3>Что делаем</h3>
+                <ul class="service-list">
+                    <li>Снятие / установка колес</li>
+                    <li>Монтаж и демонтаж шин</li>
+                    <li>Балансировка колес</li>
+                    <li>Ремонт проколов и боковых порезов</li>
+                    <li>Замена вентилей</li>
+                    <li>Промывка и очистка дисков</li>
+                </ul>
+            </section>
+            
+            <!-- О процессе -->
+            <section class="service-section service-desc">
+                <h3>Коротко о процессе</h3>
+                <p>
+                    Работы выполняем на современном оборудовании с точной балансировкой. Всегда проверяем состояние резины и дисков, 
+                    предупреждаем клиента о рисках и даём рекомендации.
+                </p>
+                <ul class="service-bullets">
+                    <li>Диагностика состояния шин и дисков</li>
+                    <li>Демонтаж, монтаж, очистка посадочных мест</li>
+                    <li>Точная балансировка</li>
+                    <li>Контроль затяжки и проверка давлений</li>
+                </ul>
+            </section>
+
+            <!-- Марки -->
+            <section class="service-section service-desc">
+                <h3>Какие марки обслуживаем</h3>
+                <p>Работаем со всеми брендами шин — от бюджетных до премиальных.</p>
+                <ul class="service-bullets">
+                    <li>Michelin</li>
+                    <li>Bridgestone</li>
+                    <li>Pirelli</li>
+                    <li>Nokian</li>
+                    <li>Hankook</li>
+                    <li>Continental</li>
+                    <li>Toyo</li>
+                </ul>
+            </section>
+            
+            <!-- Цены -->
+            <section class="service-section">
+                <h3>Цены (от)</h3>
+                <table class="price">
+                    <tr>
+                        <td>Монтаж + демонтаж (R13–R16)</td>
+                        <td>от 500 ₽</td>
+                    </tr>
+                    <tr>
+                        <td>Балансировка колеса</td>
+                        <td>от 250 ₽</td>
+                    </tr>
+                    <tr>
+                        <td>Ремонт прокола</td>
+                        <td>от 300 ₽</td>
+                    </tr>
+                </table>
+            </section>
+            
+            <!-- Галерея -->
+            <section class="service-section">
+
+              <div class="gallery-caption">
+                <h3 data-role="gtitle">Рабочий пост шиномонтажа</h3>
+                <p data-role="gdesc">Современное оборудование для бережного монтажа и точной балансировки. Работаем аккуратно, без повреждений дисков.</p>
+              </div>
+
+              <div class="gallery">
+                <div class="gallery__main">
+                  <img src="./KuriloOmsk_files/kuzovnoy-remont3.jpg"
+                       alt="Шиномонтаж" id="galleryMain">
+                </div>
+
+                <div class="gallery__thumbs">
+                  <img src="./KuriloOmsk_files/kuzovnoy-remont3.jpg"
+                      class="is-active"
+                      data-full="./KuriloOmsk_files/kuzovnoy-remont3.jpg"
+                      data-title="Рабочий пост"
+                      data-desc="Современное оборудование для бережного монтажа и точной балансировки. Работаем аккуратно, без повреждений дисков.">
+
+                  <img src="./KuriloOmsk_files/kuzovnoy-remont2.jpg"
+                      data-full="./KuriloOmsk_files/kuzovnoy-remont2.jpg"
+                      data-title="Балансировка"
+                      data-desc="Точная балансировка на стенде. Подходит для легковых, внедорожников и коммерческого транспорта.">
+
+                  <img src="./KuriloOmsk_files/kuzovnoy-remont1.jpg"
+                      data-full="./KuriloOmsk_files/kuzovnoy-remont1.jpg"
+                      data-title="Ремонт проколов"
+                      data-desc="Качественный ремонт шин: грибки, жгуты, латки. Восстанавливаем герметичность и безопасность.">
+                </div>
+              </div>
+            </section>
+          
+            <!-- Контакты -->
+            <div class="contact-note">
+
+              <div class="contact-note__item contact-note__item--left">
+                <div class="contact-note__title">Красный Яр, ул. Дорожная, 19</div>
+                <a class="contact-note__phone" href="tel:+70000000000">8 913 676-55-55</a>
+              </div>
+
+              <div class="contact-note__center">
+                <a class="button button--secondary js-open-panel"
+                  data-panel="#panel-kontakti">
+                  Контакты
+                </a>
+              </div>
+
+              <div class="contact-note__item contact-note__item--right">
+                <div class="contact-note__title">Троицкое, ул. Омская, 14</div>
+                <a class="contact-note__phone" href="tel:+70000000001">8 913 669-55-55</a>
+              </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
+<div class="review-modal" id="reviewModal">
+  <div class="review-modal__backdrop"></div>
+
+  <div class="review-modal__dialog">
+    <button class="review-modal__close" data-close>✕</button>
+
+    <h2 class="review-modal__title"
+        data-text-view="Где вы хотите посмотреть отзывы?"
+        data-text-add="Где вы хотите оставить отзыв?">
+      Где вы хотите посмотреть отзывы?
+    </h2>
+
+    <p class="review-modal__subtitle"
+       data-subtitle-view="Выберите объект, для которого хотите открыть страницу отзывов."
+       data-subtitle-add="Выберите объект, для которого хотите написать отзыв.">
+      Выберите объект, для которого хотите открыть страницу отзывов.
+    </p>
+
+    <div class="review-modal__buttons">
+      <!-- Гостиница -->
+      <a
+        class="review-modal__btn"
+        target="_blank"
+        data-url-view="https://yandex.ru/maps/?ll=72.901191%2C55.230191&mode=poi&poi%5Bpoint%5D=72.899818%2C55.230584&poi%5Buri%5D=ymapsbm1%3A%2F%2Forg%3Foid%3D172326765952&tab=reviews&z=17"
+        data-url-add="https://yandex.ru/maps/org/kurilotransavto/172326765952/reviews?utm_source=maps-reviews-widget&utm_medium=reviews&utm_content=add_review&add-review"
+      >
+        <span class="review-modal__btn-title">Гостиница</span>
+        <span class="review-modal__btn-desc">Мотель, парковка, сервис, кафе</span>
+      </a>
+
+      <!-- СТО -->
+      <a
+        class="review-modal__btn"
+        target="_blank"
+        data-url-view="https://yandex.ru/maps/?ll=72.901191%2C55.230191&mode=poi&poi%5Bpoint%5D=72.901463%2C55.230093&poi%5Buri%5D=ymapsbm1%3A%2F%2Forg%3Foid%3D1306705509&tab=reviews&z=17"
+        data-url-add="https://yandex.ru/maps/org/kurilotransavto/1306705509/reviews?utm_source=maps-reviews-widget&utm_medium=reviews&utm_content=add_review&add-review"
+      >
+        <span class="review-modal__btn-title">СТО</span>
+        <span class="review-modal__btn-desc">Автосервис, автотехцентр, мойка</span>
+      </a>
+    </div>
+
+
+    <!-- <div style="width:560px;height:800px;overflow:hidden;position:relative;">
+      <iframe
+        style="width:100%;height:100%;border:1px solid #e6e6e6;border-radius:8px;box-sizing:border-box"
+        src="https://yandex.ru/maps-reviews-widget/172326765952?comments">
+      </iframe>
+        <a
+        href="https://yandex.ru/maps/org/kurilotransavto/172326765952/" target="_blank"
+        style="box-sizing:border-box;text-decoration:none;color:#b3b3b3;font-size:10px;font-family:YS Text,sans-serif;padding:0 20px;position:absolute;bottom:8px;width:100%;text-align:center;left:0;overflow:hidden;text-overflow:ellipsis;display:block;max-height:14px;white-space:nowrap;padding:0 16px;box-sizing:border-box">Курилотрансавто
+        на карте Омской области — Яндекс Карты
+      </a>
+    </div> -->
+
+
+    <!-- <div style="width:560px;height:800px;overflow:hidden;position:relative;">
+      <iframe
+        style="width:100%;height:100%;border:1px solid #e6e6e6;border-radius:8px;box-sizing:border-box"
+        src="https://yandex.ru/maps-reviews-widget/1306705509?comments">
+      </iframe>
+      <a
+        href="https://yandex.ru/maps/org/kurilotransavto/1306705509/" target="_blank"
+        style="box-sizing:border-box;text-decoration:none;color:#b3b3b3;font-size:10px;font-family:YS Text,sans-serif;padding:0 20px;position:absolute;bottom:8px;width:100%;text-align:center;left:0;overflow:hidden;text-overflow:ellipsis;display:block;max-height:14px;white-space:nowrap;padding:0 16px;box-sizing:border-box">Курилотрансавто
+        на карте Омской области — Яндекс Карты
+      </a>
+    </div> -->
+
+
+    <p class="review-modal__hint"
+      data-hint-view="Откроется новая вкладка Яндекс Карт."
+      data-hint-add="Откроется новая вкладка Яндекс Карт. Выберите оценку, напишите отзыв и нажмите &quot;Сохранить&quot;.">
+      Откроется новая вкладка Яндекс.Карт.
+    </p>
+
+  </div>
+</div>
 
 
 

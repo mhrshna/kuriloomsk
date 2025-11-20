@@ -262,6 +262,117 @@ jQuery(document).ready(function ($) {
 
 
 
+// выпадашка выбора отзывов
+document.addEventListener("DOMContentLoaded", function () {
+
+  function setupReviewModal(modal, mode) {
+  if (!modal) return;
+
+  const title = modal.querySelector(".review-modal__title");
+  const subtitle = modal.querySelector(".review-modal__subtitle");
+  const hint = modal.querySelector(".review-modal__hint");
+  const buttons = modal.querySelectorAll(".review-modal__btn");
+
+  if (title) {
+    title.textContent =
+      mode === "add"
+        ? title.dataset.textAdd
+        : title.dataset.textView;
+  }
+
+  if (subtitle) {
+    subtitle.textContent =
+      mode === "add"
+        ? subtitle.dataset.subtitleAdd
+        : subtitle.dataset.subtitleView;
+  }
+
+  if (hint) {
+    hint.textContent =
+      mode === "add"
+        ? hint.dataset.hintAdd
+        : hint.dataset.hintView;
+  }
+
+  buttons.forEach(btn => {
+    const url =
+      mode === "add"
+        ? btn.dataset.urlAdd
+        : btn.dataset.urlView;
+    if (url) btn.setAttribute("href", url);
+  });
+}
+
+  function openReviewModal(trigger) {
+    const modalSelector = trigger.dataset.openModal;
+    const mode = trigger.dataset.reviewMode || "view";
+    const modal = document.querySelector(modalSelector);
+    if (!modal) return;
+
+    setupReviewModal(modal, mode);
+    modal.classList.add("is-open");
+  }
+
+
+  // helper: плавное закрытие с анимацией
+  function closeReviewModal(modal) {
+    if (!modal || !modal.classList.contains("is-open")) return;
+
+    modal.classList.add("is-closing");
+
+    // время должно совпадать с CSS-transition (.28s)
+    setTimeout(() => {
+      modal.classList.remove("is-open", "is-closing");
+    }, 280);
+  }
+
+  // Открытие
+  document.addEventListener("click", function (e) {
+    const trigger = e.target.closest("[data-open-modal]");
+    if (!trigger) return;
+    e.preventDefault();
+    openReviewModal(trigger);
+  });
+
+  // Закрытие (крестик + клик по фону)
+  document.querySelectorAll(".review-modal").forEach(modal => {
+    const closeBtn = modal.querySelector("[data-close]");
+    const backdrop = modal.querySelector(".review-modal__backdrop");
+
+    if (closeBtn) {
+      closeBtn.addEventListener("click", () => {
+        closeReviewModal(modal);
+      });
+    }
+
+    if (backdrop) {
+      backdrop.addEventListener("click", () => {
+        closeReviewModal(modal);
+      });
+    }
+  });
+
+  // Закрытие по ESC
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape") {
+      document
+        .querySelectorAll(".review-modal.is-open")
+        .forEach(modal => closeReviewModal(modal));
+    }
+  });
+
+
+});
+
+
+
+
+
+
+
+
+
+
 // === Панель: скроллим только .service-panel__body, фон не листается ===
 jQuery(function ($) {
   let touchStartY = 0;
@@ -599,8 +710,8 @@ jQuery(function ($) {
 jQuery(function ($) {
   // по ссылке "Ремонт"
   $(document).on('click', '.nav-menu__item.has-dropdown > .nav-menu__link', function (e) {
-    e.preventDefault();           // не переходим на /remont/
-    e.stopPropagation();          // чтобы глобальный обработчик не закрыл сразу
+    e.preventDefault();           
+    e.stopPropagation();          
     const $li = $(this).closest('.has-dropdown');
 
     $('.nav-menu__item.has-dropdown').not($li).removeClass('is-open');
