@@ -186,11 +186,11 @@
     </div>
     <div class="nav-main">
      <ul class="nav-menu">
-      <li class="nav-menu__item active">
+      <!-- <li class="nav-menu__item active">
        <a class="nav-menu__link" href="http://kuriloomsk.ru/">
         Главная
        </a>
-      </li>
+      </li> -->
       <li class="nav-menu__item has-dropdown">
        <a class="nav-menu__link js-toggle-dropdown" role="button">
         Ремонт
@@ -672,10 +672,15 @@
          Гостиница, кафе и баня для наших клиентов.
         </li>
        </ul>
-       <button class="button button--primary button--popup" data-popup="request">
-        Задать
-                            вопрос
-       </button>
+
+
+        <!-- Кнопка "Задать вопрос" -->
+        <a class="button button--primary button--popup"
+          data-open-modal="#questionModal">
+          Задать вопрос
+        </a>
+
+
        <p>
         <a class="button button--link js-open-panel" data-panel="#panel-shop"> 
          В
@@ -2383,11 +2388,11 @@
    <div class="mobile__menu">
     <nav class="nav-mobile">
      <ul class="nav-menu">
-      <li class="nav-menu__item active">
+      <!-- <li class="nav-menu__item active">
        <a class="nav-menu__link" href="http://kuriloomsk.ru/">
         Главная
        </a>
-      </li>
+      </li> -->
       <li class="nav-menu__item has-dropdown">
        <a class="nav-menu__link" href="http://kuriloomsk.ru/remont/">
         Ремонт
@@ -2830,7 +2835,7 @@
   </div>
 
   <!-- Popups start-->
-  <div class="popup">
+  <!-- <div class="popup">
    <div class="container">
     <div class="row justify-content-center">
      <div class="col-12 col-lg-10">
@@ -2929,7 +2934,9 @@
          </form>
         </div>
        </div>
-       <!-- <div id="popup-review">
+
+
+       <div id="popup-review">
         <div class="form--alt">
          <h2>
           Оставить отзыв
@@ -2997,7 +3004,9 @@
           </div>
          </form>
         </div>
-       </div> -->
+       </div>
+
+
        <div id="popup-virtual-tour">
         <iframe allowfullscreen="" border="0" data-ruffle-polyfilled="" frameborder="0" height="600" id="tour_frame" src="./KuriloOmsk_files/index.html" width="100%">
         </iframe>
@@ -3010,7 +3019,7 @@
      </div>
     </div>
    </div>
-  </div>
+  </div> -->
   <button class="button--popup js-product-popup-init" data-popup="product" style="display: none;" type="button">
   </button>
   <!-- Popups end-->
@@ -4043,7 +4052,7 @@
 </div>
 
 
-
+<!-- Выпадашка выбора отзывов -->>
 <div class="review-modal" id="reviewModal">
   <div class="review-modal__backdrop"></div>
 
@@ -4121,6 +4130,130 @@
 
   </div>
 </div>
+
+
+
+
+<!-- Модалка "Задать вопрос" -->
+<div class="review-modal" id="questionModal">
+  <div class="review-modal__backdrop"></div>
+
+  <div class="review-modal__dialog question-modal">
+    <button class="review-modal__close" type="button" data-close>✕</button>
+
+    <h2 class="question-modal__title">Задать вопрос</h2>
+
+    <form class="question-form" id="questionForm" novalidate>
+      <div class="question-form__grid">
+        <!-- Левая колонка -->
+        <div class="question-form__col question-form__col--left">
+
+          <!-- Имя -->
+          <div class="question-form__group">
+            <label class="question-form__label" for="q-name">Ваше имя</label>
+            <input class="question-form__input"
+                   id="q-name"
+                   name="name"
+                   type="text"
+                   placeholder="Ваше имя"
+                   required>
+          </div>
+
+          <!-- Тумблер способа связи -->
+          <div class="question-form__group">
+            <span class="question-form__label">Как с вами связаться?</span>
+
+            <div class="question-form__contact-type" data-contact-type>
+              <button type="button"
+                      class="contact-type__option contact-type__option--active"
+                      data-type="email">
+                E-mail
+              </button>
+              <button type="button"
+                      class="contact-type__option"
+                      data-type="phone">
+                Телефон
+              </button>
+            </div>
+          </div>
+
+          <!-- Поле контакта -->
+          <div class="question-form__group">
+
+            <input class="question-form__input"
+                   id="q-email-or-phone"
+                   name="contact"
+                   type="email"
+                   placeholder="example@mail.ru"
+                   data-input-email
+                   required>
+
+            <input class="question-form__input"
+                   id="q-phone"
+                   name="phone"
+                   type="tel"
+                   placeholder="+7 (___) ___-__-__"
+                   data-input-phone
+                   style="display:none;">
+          </div>
+
+
+          <!-- Чекбокс согласия -->
+          <div class="question-form__consent">
+            <label class="question-form__consent-label">
+              <input type="checkbox" name="consent" required>
+              <span>
+                Согласен на обработку персональных данных.
+                <a href="../o-nas/polozhenie-o-konfidentsialnosti.html"
+                   target="_blank">
+                  Положение о конфиденциальности
+                </a>
+              </span>
+            </label>
+          </div>
+        
+        </div>
+
+        <!-- Правая колонка -->
+        <div class="question-form__col question-form__col--right">
+          <div class="question-form__group question-form__group--full">
+            <label class="question-form__label" for="q-message">Ваш вопрос</label>
+            <textarea class="question-form__textarea"
+                      id="q-message"
+                      name="message"
+                      placeholder="Ваш вопрос"
+                      required></textarea>
+          </div>
+        </div>
+      </div>
+
+
+
+      <div class="question-form__footer">
+
+        <p class="question-form__hint">
+          Вы можете найти все доступные контакты в разделе
+          <a href="../o-nas/kontakti.html" class="question-form__hint-link js-open-panel" data-panel="#panel-kontakti">
+            «Контактная информация»
+          </a>.
+        </p>
+
+        <button class="button button--primary question-form__submit"
+                type="submit">
+          Отправить
+        </button>
+      </div>
+
+
+      </div>
+    </form>
+  </div>
+</div>
+
+
+
+
+
 
 
 

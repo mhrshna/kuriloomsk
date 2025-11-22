@@ -6047,7 +6047,7 @@ body.modal-open { overflow: hidden; }
 
 
 
-/* === МОДАЛКА ОТЗЫВОВ С ПЛАВНОЙ АНИМАЦИЕЙ === */
+/* МОДАЛКА ОТЗЫВОВ С ПЛАВНОЙ АНИМАЦИЕЙ */
 /* корневой контейнер */
 .review-modal{
   position: fixed;
@@ -6237,6 +6237,327 @@ body.modal-open { overflow: hidden; }
 .reviews__link{
   cursor: pointer;
 }
+
+
+
+
+
+/* МОДАЛКА ЗАДАТЬ ВОПРОС */
+.question-modal {
+  padding: 32px 38px 28px;
+}
+
+/* Заголовок */
+.question-modal__title {
+  margin: 0 0 20px;
+  font-size: 28px;
+  font-weight: 700;
+}
+
+/* Две колонки формы */
+.question-form__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1.3fr);
+  gap: 20px 40px;
+  align-items: flex-start;
+  margin-bottom: 6px; 
+}
+
+.question-form__col {
+  min-width: 0;
+}
+
+/* Правая колонка */
+.question-form__col--right {
+  display: block;
+}
+
+/* Группы полей */
+.question-form__group {
+  margin-bottom: 10px;
+}
+
+.question-form__group--full {
+  display: block;
+}
+
+/* Подписи полей */
+.question-form__label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 14px;
+  color: #555;
+}
+
+/* Единый стиль инпутов и textarea */
+.question-modal .question-form__input,
+.question-modal .question-form__textarea {
+  width: 100%;
+  padding: 12px 18px;
+  border-radius: 10px;
+  border: 1px solid rgba(0,0,0,.12);
+  background: #ffffff;
+  font-family: inherit;
+  font-size: 15px;
+  line-height: 1.4;
+  color: #000;
+  outline: none;
+  box-sizing: border-box;
+  transition: border-color .15s ease, box-shadow .15s ease, background .15s ease;
+}
+
+/* Плейсхолдеры */
+.question-modal .question-form__input::placeholder,
+.question-modal .question-form__textarea::placeholder {
+  color: #b0b0b0;
+  font-family: inherit;
+  font-size: 15px;
+  font-style: italic;
+}
+
+/* Фокус */
+.question-modal .question-form__input:focus,
+.question-modal .question-form__textarea:focus {
+  border-color: rgba(198,155,61,.8);
+  box-shadow: 0 0 0 1px rgba(198,155,61,.4);
+  background: #fffdf7;
+}
+
+/* Textarea — адекватная высота */
+.question-modal .question-form__textarea {
+  min-height: 180px;
+  resize: none;
+}
+
+/* Тумблер E-mail / Телефон */
+.question-form__contact-type {
+  display: inline-flex;
+  background: #f3f3f3;
+  padding: 3px;
+  border-radius: 999px;
+  gap: 4px;
+}
+
+.contact-type__option {
+  border: none;
+  background: transparent;
+  padding: 6px 16px;        
+  border-radius: 999px;
+  font-size: 14px;
+  cursor: pointer;
+  white-space: nowrap;
+  color: #555;
+  transition: 
+    background .16s ease,
+    color .16s ease,
+    box-shadow .16s ease;
+}
+
+.contact-type__option--active {
+  background: #ffffff;   
+  color: #222;           
+  box-shadow: 0 0 0 1px rgba(221,185,111,.7); 
+}
+
+/* Чекбокс согласия */
+.question-form__consent {
+  margin: 10px 0 4px;
+}
+
+.question-form__consent-label {
+  display: inline-flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 13px;
+  color: #555;
+}
+
+.question-form__consent-label input[type="checkbox"] {
+  margin-top: 2px;
+}
+
+.question-form__consent-label a {
+  color: #c69b3d;
+  text-decoration: underline;
+}
+
+/* Нижняя панель: подсказка слева, кнопка справа */
+.question-form__footer {
+  margin-top: 4px;
+   padding-bottom: 4px;
+  display: flex;
+  justify-content: space-between; /* текст слева, кнопка справа */
+  align-items: flex-end;          /* выравниваем по нижней линии */
+  gap: 16px;
+}
+
+/* Подсказка "Вы можете найти" */
+.question-form__hint {
+  margin-top: 0;
+  padding-top: 0;
+   padding-bottom: 4px;
+  margin: 0;
+  max-width: 60%;
+  font-size: 13px;
+  color: #777;
+  transform: translateY(-4px);
+}
+
+.question-form__hint-link {
+  color: #c69b3d;
+  text-decoration: underline;
+}
+
+.question-form__hint-link:hover {
+  opacity: .85;
+}
+
+/* Кнопка отправки */
+.question-form__submit {
+  padding: 12px 36px;
+  border-radius: 999px;
+  font-size: 16px;
+}
+
+/* 1. Расширяем textarea вниз до уровня чекбокса */
+.question-modal .question-form__textarea {
+  min-height: 255px !important; 
+}
+
+/* 2. Поднимаем текст “Вы можете найти” */
+.question-form__hint {
+  transform: translateY(-10px) !important;
+}
+
+/* Меньший отступ именно под блоком с E-mail / Телефон */
+.question-form__col--left .question-form__group:nth-of-type(2) {
+  margin-bottom: 6px !important;
+}
+
+
+/* Адаптив */
+@media (max-width: 768px) {
+  .question-modal {
+    padding: 22px 16px 20px;
+  }
+
+  .question-form__grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+    margin-bottom: 12px;
+  }
+
+  .question-form__footer {
+    flex-direction: column-reverse;
+    align-items: stretch;
+  }
+
+  .question-form__submit {
+    width: 100%;
+    text-align: center;
+  }
+
+  .question-form__hint {
+    max-width: 100%;
+  }
+}
+
+/* --- Ошибки в форме "Задать вопрос" --- */
+
+/* Подсветка полей с ошибкой */
+.question-modal .question-form__input.is-error,
+.question-modal .question-form__textarea.is-error {
+  margin-bottom: 4px !important;          /* как и в обычном состоянии */
+  border-color: #e06464 !important;
+  box-shadow: none;
+  background: #fff8f8;
+}
+
+/* Базовый вид текста ошибки */
+.question-modal .question-form__error {
+  font-size: 12px;
+  line-height: 1.3;
+  color: #e06464;
+}
+
+/* Ошибка чекбокса — подсвечиваем квадратик */
+input[type='checkbox'] + span.checkbox-error::before {
+  border-color: #e06464 !important;
+  background: #fff8f8 !important;
+  box-shadow: 0 0 0 1px rgba(224, 100, 100, 0.35);
+}
+
+input[type='checkbox'] + span.checkbox-error::after {
+  background-color: #e06464 !important;
+}
+
+/*  Фикс дёргания в модалке "Задать вопрос"*/
+
+/* Базовый отступ между группами */
+.question-modal .question-form__group {
+  margin-bottom: 10px;
+}
+
+/* СЛЕВА: резервируем место под ошибку и фиксируем её внизу группы */
+.question-modal .question-form__col--left .question-form__group {
+  position: relative;
+  padding-bottom: 14px;   
+}
+
+.question-modal .question-form__col--left .question-form__error {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+}
+
+/* СПРАВА: ошибка обычным потоком, без absolute */
+.question-modal .question-form__col--right .question-form__error {
+  position: static;
+  margin-top: 4px;
+}
+
+/* Инпуты в модалке — одинаковые отступы всегда */
+.question-modal input[type='text'],
+.question-modal input[type='email'],
+.question-modal input[type='tel'],
+.question-modal input[type='search'] {
+  height: auto !important;
+  margin-bottom: 4px !important;   /* ВСЕГДА 4px */
+  padding: 12px 18px !important;
+  border-color: rgba(0,0,0,.12) !important;
+  font-size: 15px !important;
+}
+
+/* Убираем лишний отступ под ошибку у блока "Как с вами связаться?" */
+.question-modal .question-form__col--left .question-form__group:nth-of-type(2) {
+  padding-bottom: 0 !important;
+}
+
+
+/* Всплывашка "вопрос отправлен" */
+.question-toast {
+  position: fixed;
+  left: 50%;
+  bottom: 24px;
+  transform: translateX(-50%) translateY(20px);
+  padding: 10px 20px;
+  border-radius: 999px;
+  background: #fffdf7;
+  color: #333;
+  font-size: 14px;
+  box-shadow: 0 10px 30px rgba(0,0,0,.18);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 1200; /* чуть выше модалки (1100) */
+  transition: opacity .25s ease, transform .25s ease;
+}
+
+.question-toast.is-visible {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+
 
 
 

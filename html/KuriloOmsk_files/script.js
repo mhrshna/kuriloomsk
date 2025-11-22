@@ -366,6 +366,299 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 
+// ЗАДАТЬ ВОПРОС
+document.addEventListener("DOMContentLoaded", function () {
+  // Переключатель E-mail / Телефон
+  document.addEventListener("click", function (e) {
+    const btn = e.target.closest(".contact-type__option");
+    if (!btn) return;
+
+    const wrapper = btn.closest("[data-contact-type]");
+    if (!wrapper) return;
+
+    const type = btn.dataset.type; // 'email' | 'phone'
+
+    // Подсветка активной кнопки
+    wrapper.querySelectorAll(".contact-type__option").forEach(b => {
+      b.classList.toggle("contact-type__option--active", b === btn);
+    });
+
+    const emailInput = document.querySelector("[data-input-email]");
+    const phoneInput = document.querySelector("[data-input-phone]");
+
+    if (!emailInput || !phoneInput) return;
+
+    // Сбрасываем ошибки у обоих полей при любом переключении
+    [emailInput, phoneInput].forEach(function (input) {
+      const group = input.closest('.question-form__group');
+      if (!group) return;
+      input.classList.remove('is-error');
+      const err = group.querySelector('.question-form__error');
+      if (err) err.textContent = '';
+    });
+
+    if (type === "email") {
+      emailInput.style.display = "";
+      emailInput.required = true;
+      emailInput.type = "email";
+      emailInput.placeholder = "example@mail.ru";
+
+      phoneInput.style.display = "none";
+      phoneInput.required = false;
+      phoneInput.value = "";
+    } else {
+      // телефон
+      emailInput.style.display = "none";
+      emailInput.required = false;
+      emailInput.value = "";
+
+      phoneInput.style.display = "";
+      phoneInput.required = true;
+      phoneInput.type = "tel";
+      phoneInput.placeholder = "+7 (___) ___-__-__";
+    }
+  });
+});
+
+document.addEventListener('DOMContentLoaded', function () {
+  const form = document.getElementById('questionForm');
+  if (!form) return;
+
+  const modal        = document.getElementById('questionModal');
+  const nameInput    = form.querySelector('#q-name');
+  const emailInput   = form.querySelector('[data-input-email]');
+  const phoneInput   = form.querySelector('[data-input-phone]');
+  const messageInput = form.querySelector('#q-message');
+  const consent      = form.querySelector('input[name="consent"]');
+
+  // какой контакт сейчас активен (email / phone)
+  function getActiveContactInput() {
+    if (!emailInput || !phoneInput) return emailInput || phoneInput;
+    const emailHidden = window.getComputedStyle(emailInput).display === 'none';
+    return emailHidden ? phoneInput : emailInput;
+  }
+
+  // проверка корректности телефона
+  function isValidPhone(raw) {
+    if (!raw) return false;
+
+    // убираем всё, кроме цифр
+    let digits = raw.replace(/[^\d]/g, '');
+
+    // если начинается с 8 — считаем как 7 (рф)
+    if (digits.startsWith('8')) {
+      digits = '7' + digits.slice(1);
+    }
+
+    // формат 7XXXXXXXXXX (11 цифр)
+    return digits.length === 11 && digits.startsWith('7');
+  }
+
+  // создать/найти контейнер под ошибку прямо в группе
+  function getErrorElement(input) {
+    const group = input.closest('.question-form__group');
+    if (!group) return null;
+    let err = group.querySelector('.question-form__error');
+    if (!err) {
+      err = document.createElement('div');
+      err.className = 'question-form__error';
+      group.appendChild(err);
+    }
+    return err;
+  }
+
+  // создаём пустые контейнеры ошибок сразу, чтобы их появление потом не меняло высоту сетки
+  [nameInput, emailInput, phoneInput, messageInput].forEach(function (input) {
+    if (!input) return;
+    getErrorElement(input);
+  });
+
+  function showFieldError(input, message) {
+    const err = getErrorElement(input);
+    if (!err) return;
+    input.classList.add('is-error');
+    err.textContent = message;
+  }
+
+  function clearFieldError(input) {
+    if (!input) return;
+    input.classList.remove('is-error');
+    const group = input.closest('.question-form__group');
+    if (!group) return;
+    const err = group.querySelector('.question-form__error');
+    if (err) err.textContent = '';
+  }
+
+  // общий ресет формы и ошибок
+  function resetQuestionForm() {
+    // сбрасываем значения
+    form.reset();
+
+    // очищаем ошибки полей
+    [nameInput, emailInput, phoneInput, messageInput].forEach(clearFieldError);
+
+    // убираем подсветку чекбокса
+    if (consent && consent.nextElementSibling) {
+      consent.nextElementSibling.classList.remove('checkbox-error');
+    }
+
+    // вернуть активный email по умолчанию
+    if (emailInput && phoneInput) {
+      emailInput.style.display = '';
+      emailInput.required = true;
+
+      phoneInput.style.display = 'none';
+      phoneInput.required = false;
+      phoneInput.value = '';
+
+      const toggleWrap = form.querySelector('[data-contact-type]');
+      if (toggleWrap) {
+        toggleWrap.querySelectorAll('.contact-type__option').forEach(btn => {
+          btn.classList.toggle(
+            'contact-type__option--active',
+            btn.dataset.type === 'email'
+          );
+        });
+      }
+    }
+  }
+
+  // очищаем ошибку при фокусе/вводе для текстовых полей
+  [nameInput, emailInput, phoneInput, messageInput].forEach(function (input) {
+    if (!input) return;
+    input.addEventListener('focus',  () => clearFieldError(input));
+    input.addEventListener('input',  () => clearFieldError(input));
+    input.addEventListener('change', () => clearFieldError(input));
+  });
+
+  // очищаем подсветку чекбокса при смене состояния
+  if (consent) {
+    consent.addEventListener('change', () => {
+      if (consent.nextElementSibling) {
+        consent.nextElementSibling.classList.remove('checkbox-error');
+      }
+    });
+  }
+
+  // плавное закрытие модалки, как по крестику
+  function closeQuestionModal() {
+    if (!modal) return;
+    modal.classList.add('is-closing');
+    setTimeout(function () {
+      modal.classList.remove('is-open', 'is-closing');
+    }, 280);
+  }
+
+  // всплывашка "вопрос отправлен"
+  function showQuestionToast(message) {
+    let toast = document.querySelector('.question-toast');
+    if (!toast) {
+      toast = document.createElement('div');
+      toast.className = 'question-toast';
+      document.body.appendChild(toast);
+    }
+
+    toast.textContent = message;
+
+    // перезапуск анимации
+    toast.classList.remove('is-visible');
+    void toast.offsetWidth;
+    toast.classList.add('is-visible');
+
+    setTimeout(function () {
+      toast.classList.remove('is-visible');
+    }, 3000);
+  }
+
+  // очистка при ОТКРЫТИИ модалки ("Задать вопрос")
+  document.addEventListener('click', function (e) {
+    const openBtn = e.target.closest('[data-open-modal="#questionModal"]');
+    if (!openBtn) return;
+    resetQuestionForm();
+  });
+
+  // очистка при ЗАКРЫТИИ модалки по крестику (data-close внутри questionModal)
+  if (modal) {
+    modal.addEventListener('click', function (e) {
+      const closeBtn = e.target.closest('[data-close]');
+      if (!closeBtn) return;
+      resetQuestionForm();
+    });
+  }
+
+  // основная проверка при отправке
+  form.addEventListener('submit', function (e) {
+    let isValid = true;
+
+    // сброс ошибок полей 
+    [nameInput, emailInput, phoneInput, messageInput].forEach(clearFieldError);
+    if (consent && consent.nextElementSibling) {
+      consent.nextElementSibling.classList.remove('checkbox-error');
+    }
+
+    // 1. Имя
+    if (!nameInput.value.trim()) {
+      showFieldError(nameInput, 'Укажите ваше имя.');
+      isValid = false;
+    }
+
+    // 2. Контакт (email или телефон)
+    const contactInput = getActiveContactInput();
+    if (contactInput) {
+      const value = contactInput.value.trim();
+
+      if (!value) {
+        showFieldError(contactInput, 'Укажите контакт для связи.');
+        isValid = false;
+      } else {
+        // проверка email
+        if (contactInput === emailInput && !emailInput.checkValidity()) {
+          showFieldError(contactInput, 'Проверьте корректность e-mail.');
+          isValid = false;
+        }
+
+        // проверка телефона
+        if (contactInput === phoneInput && !isValidPhone(value)) {
+          showFieldError(contactInput, 'Введите корректный номер телефона.');
+          isValid = false;
+        }
+      }
+    }
+
+    // 3. Вопрос
+    if (!messageInput.value.trim()) {
+      showFieldError(messageInput, 'Напишите ваш вопрос.');
+      isValid = false;
+    }
+
+    // 4. Согласие — подсвечиваем квадратик чекбокса (span после input)
+    if (!consent.checked) {
+      if (consent.nextElementSibling) {
+        consent.nextElementSibling.classList.add('checkbox-error');
+      }
+      isValid = false;
+    }
+
+    if (!isValid) {
+      e.preventDefault();
+      const firstError = form.querySelector('.is-error, .checkbox-error');
+      if (firstError && firstError.scrollIntoView) {
+        firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+      return;
+    }
+
+    // УСПЕШНАЯ ОТПРАВКА 
+    e.preventDefault(); // чтобы не перезагружать страницу
+
+    // полностью очищаем форму и состояние
+    resetQuestionForm();
+
+    // закрываем модалку и показываем вывод
+    closeQuestionModal();
+    showQuestionToast('Вопрос отправлен, ожидайте обратной связи.');
+  });
+});
 
 
 
@@ -373,7 +666,13 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 
-// === Панель: скроллим только .service-panel__body, фон не листается ===
+
+
+
+
+
+
+// Основная панель: скроллим только .service-panel__body, фон не листается
 jQuery(function ($) {
   let touchStartY = 0;
 
@@ -743,7 +1042,6 @@ jQuery(function ($) {
       var $hdr   = $(this);
       var $panel = $hdr.closest('.popup.service-panel');
 
-      // Селекторы панелей контента
       var paneLeftSel  = $hdr.attr('data-pane-left');
       var paneRightSel = $hdr.attr('data-pane-right');
 
@@ -776,8 +1074,14 @@ jQuery(function ($) {
       // Снимаем старые хендлеры и вешаем новые
       $hdr
         .off('.splitHdr')
-        .on('click.splitHdr', '.left', function () { switchTo('left'); })
-        .on('click.splitHdr', '.right', function () { switchTo('right'); })
+        // Клик по ЛЮБОЙ точке шапки
+        .on('click.splitHdr', function (e) {
+          var offset = $hdr.offset();
+          var x = e.pageX - offset.left;
+          var side = x < ($hdr.outerWidth() / 2) ? 'left' : 'right';
+          switchTo(side);
+        })
+        // Клавиши стрелок как раньше
         .on('keydown.splitHdr', function (e) {
           if (e.key === 'ArrowLeft')  { e.preventDefault(); switchTo('left');  }
           if (e.key === 'ArrowRight') { e.preventDefault(); switchTo('right'); }
@@ -788,9 +1092,9 @@ jQuery(function ($) {
     });
   }
 
-  // Инициализация на странице
   initSplitHeader($(document));
 });
+
 
 
 
