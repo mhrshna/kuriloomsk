@@ -1206,10 +1206,6 @@
           </div>
           <div class="">
             <p class="cost-price__number"><span>1500</span> Руб</p>
-            <p class="cost-price__info">Токарные работы нового типа</p>
-          </div>
-          <div class="">
-            <p class="cost-price__number"><span>1500</span> Руб</p>
             <p class="cost-price__info">Тест</p>
           </div>
           <div class="">
@@ -1991,11 +1987,13 @@
             Трасса Р402 Тюмень —
                                             Омск, 575км
            </h5>
-          <!-- Посёлок Красный Яр -->
-          <a class="button button--primary scrollto location__btn" href="#map" data-lat="55.230492" data-lng="72.900109"
-            data-name="Посёлок «Красный Яр»">
+
+          <!-- Красный Яр -->
+          <button
+            class="button button--primary location__btn"
+            data-map-panel="#map-panel-krasnyj">
             Показать на карте
-          </a>
+          </button>
 
           </div>
          </div>
@@ -2039,11 +2037,14 @@
             Трасса М51 Омск —
                                             Новосибирск, 657км
            </h5>
-          <!-- Село Троицкое -->
-          <a class="button button--primary scrollto location__btn" href="#map" data-lat="54.863114" data-lng="73.297955"
-            data-name="Село «Троицкое»">
-            Показать на карте
-          </a>
+           
+            <!-- Троицкое -->
+            <button
+              class="button button--primary location__btn" 
+              data-map-panel="#map-panel-troitskoe">
+              Показать на карте
+            </button>
+
           </div>
          </div>
         </div>
@@ -2290,7 +2291,7 @@
      </div>
     </div>
    </section>
-   <section class="map-wrap">
+   <!-- <section class="map-wrap">
     <div class="container-fluid">
      <div class="row no-gutters align-items-center">
       <div class="col-12 col-lg-7 order-1 order-lg-0">
@@ -2328,7 +2329,7 @@
       </div>
      </div>
     </div>
-   </section>
+   </section> -->
   </main>
   <footer class="footer dark">
    <div class="container">
@@ -3023,117 +3024,6 @@
   <button class="button--popup js-product-popup-init" data-popup="product" style="display: none;" type="button">
   </button>
   <!-- Popups end-->
-  <!-- Yandex map-->
-  <script src="./KuriloOmsk_files/custom-yandex-map.js">
-  </script>
-
-  <script>
-    (function () {
-      // ---------- функция надёжного докрута карты (оставлена как у тебя) ----------
-      function ensureMapInView(mode = 'center') {
-        const el = document.getElementById('map');
-        if (!el) return Promise.resolve();
-
-        const MAX_TRIES = 8;
-        const PAUSE_MS = 120;
-
-        return new Promise(resolve => {
-          let tries = 0;
-          (function step() {
-            const vh = (window.visualViewport && window.visualViewport.height) || window.innerHeight;
-            const rect = el.getBoundingClientRect();
-            const pageY = window.pageYOffset;
-            const header = document.querySelector('.header');
-            const HEADER_OFFSET = header ? header.offsetHeight : 0;
-            const SAFETY = 12;
-
-            let targetTop;
-            if (mode === 'bottom') {
-              targetTop = rect.top + pageY + rect.height - vh - SAFETY;
-            } else if (mode === 'top') {
-              targetTop = rect.top + pageY - HEADER_OFFSET - SAFETY;
-            } else {
-              targetTop = rect.top + pageY - (vh - rect.height) / 2 - HEADER_OFFSET;
-            }
-            if (targetTop < 0) targetTop = 0;
-
-            const topVisible = rect.top >= HEADER_OFFSET + SAFETY;
-            const bottomVisible = rect.bottom <= vh - SAFETY;
-            const centerVisible = rect.top < (vh / 2) && rect.bottom > (vh / 2);
-
-            const ok =
-              (mode === 'bottom' && bottomVisible) ||
-              (mode === 'top' && topVisible) ||
-              (mode === 'center' && centerVisible);
-
-            if (ok || tries >= MAX_TRIES) return resolve();
-
-            tries++;
-            window.scrollTo({ top: Math.round(targetTop), behavior: 'smooth' });
-            setTimeout(step, PAUSE_MS);
-          })();
-        });
-      }
-
-      // ---------- вспомогательные ----------
-      function getMapInstance() {
-        return window.myMap || window.map || window.ymap || null;
-      }
-
-      function waitMapReady(ms = 4000) {
-        const t0 = Date.now();
-        return new Promise(res => {
-          (function tick() {
-            if (window.ymaps && getMapInstance()) return res();
-            if (Date.now() - t0 > ms) return res();
-            requestAnimationFrame(tick);
-          })();
-        });
-      }
-
-      // ВАЖНО: старую функцию centerAndMark НЕ используем и не вызываем
-
-      // ---------- обработчик клика по "Показать на карте" ----------
-      document.addEventListener('click', function (e) {
-        const btn = e.target.closest('.location__btn');
-        if (!btn) return;
-
-        // глушим старые обработчики
-        e.preventDefault();
-        e.stopPropagation();
-        if (typeof e.stopImmediatePropagation === 'function') e.stopImmediatePropagation();
-
-        const lat = parseFloat(btn.dataset.lat);
-        const lng = parseFloat(btn.dataset.lng);
-        if (Number.isNaN(lat) || Number.isNaN(lng)) return;
-
-        (async () => {
-          // прокрутка к карте
-          await ensureMapInView('bottom');
-          await waitMapReady();
-
-          const map = getMapInstance();
-          if (!map || !window.ymaps) return;
-
-          const target = [lat, lng];
-
-          // Плавный перелёт к уже существующей метке (ничего не удаляем/не создаём)
-          try {
-            await map.panTo(target, { flying: true, delay: 0 }); // сохранит текущий zoom
-          } catch (_) {
-            try {
-              map.setCenter(target, map.getZoom(), { duration: 500 });
-            } catch (_) {
-              map.setCenter(target, map.getZoom());
-            }
-          }
-        })();
-      }, true);
-    })();
-  </script>
-
-
-
 
 
   <!-- Slick Slider-->
@@ -3159,113 +3049,6 @@
   <script src="./KuriloOmsk_files/script.js">
   </script>
 
-
-  <!-- Не нашел теги яндекса, чтобы грамотно отрегулировать скролл в коде, сделал отдельно перезаписью-->
-  <style>
-    /* якорь, в который будем скроллить */
-    .js-map-focus {
-      position: absolute;
-      bottom: 140px;
-      left: 0;
-      width: 1px;
-      height: 1px;
-      pointer-events: none;
-      scroll-margin-top: 80px;
-      /* высота фикс. шапки */
-    }
-  </style>
-  
-  <script>
-    (function () {
-      // Пытаемся найти контейнер карты и вставить внутрь якорь .js-map-focus
-      function findMapContainer() {
-        // 1) Если у тебя есть явные контейнеры с id — пробуем их первыми:
-        let el = document.querySelector('#map, #yamap, #yandex-map');
-        if (el) return el;
-
-        // 2) Частые кастомные классы/обёртки
-        el = document.querySelector('.map, .map-block, .map-wrapper');
-        if (el) return el;
-
-        // 3) Если ничего не нашли — входим внутрь карты Яндекса и поднимаемся к адекватному контейнеру
-        //   .ymaps-2-1-79-map — внутренний узел карты, он точно есть после инициализации
-        const inner = document.querySelector('.ymaps-2-1-79-map');
-        if (!inner) return null;
-
-        // поднимаемся вверх, пока не найдём блок с адекватной высотой (сам контейнер карты)
-        let cur = inner;
-        while (cur && cur !== document.body) {
-          const cs = getComputedStyle(cur);
-          const h = cur.getBoundingClientRect().height;
-          if (h >= 240 && (cs.position === 'relative' || cs.position === 'absolute' || cs.position === 'fixed' || cs.position === 'sticky')) {
-            return cur;
-          }
-          cur = cur.parentElement;
-        }
-        return null;
-      }
-
-      function ensureFocusAnchor() {
-        const host = findMapContainer();
-        if (!host) return false;
-
-        // если якорь уже есть — используем его
-        let focus = host.querySelector('.js-map-focus');
-        if (!focus) {
-          // гарантируем position для контейнера
-          const cs = getComputedStyle(host);
-          if (cs.position === 'static') host.style.position = 'relative';
-
-          focus = document.createElement('div');
-          focus.className = 'js-map-focus';
-          focus.setAttribute('aria-hidden', 'true');
-          host.appendChild(focus);
-        }
-        // сохраним глобально
-        window.__mapFocusEl = focus;
-        return true;
-      }
-
-      // Надёжный скролл к якорю: двойной вызов + догонка
-      async function scrollToMapFocus(mode = 'center') {
-        // если по каким-то причинам не нашли ещё — попробуем создать
-        if (!window.__mapFocusEl) {
-          ensureFocusAnchor();
-        }
-        const focus = window.__mapFocusEl;
-        if (!focus) return;
-
-        // Можно менять логику позиционирования: center/bottom/top
-        // Для якоря это не критично он же уже стоит ближе к низу карты
-        focus.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        await new Promise(r => setTimeout(r, 280));
-        focus.scrollIntoView({ behavior: 'smooth', block: 'start' });
-
-        await new Promise(r => {
-          const done = () => { window.removeEventListener('scrollend', done); r(); };
-          if ('onscrollend' in window) window.addEventListener('scrollend', done, { once: true });
-          else setTimeout(done, 450);
-        });
-      }
-
-      // Попытка воткнуть якорь сейчас и повторяем пару раз на случай,
-      // если карта дорисуется позже (ленивая инициализация/мобильные браузеры)
-      ensureFocusAnchor();
-      let tries = 0;
-      const iv = setInterval(() => {
-        if (window.__mapFocusEl || tries++ > 12) { clearInterval(iv); return; }
-        ensureFocusAnchor();
-      }, 250);
-
-      // Делаем функцию доступной снаружи
-      window.scrollToMapFocus = scrollToMapFocus;
-
-      // Если уже где-то зовётся ensureMapInView('center'|'bottom'),
-      // просто перехватим её и направим на скролл, чтобы НИЧЕГО в другом коде не менять:
-      window.ensureMapInView = scrollToMapFocus;
-
-    })();
-  </script>
 
 
   <script>
@@ -4164,6 +3947,7 @@
             <span class="question-form__label">Как с вами связаться?</span>
 
             <div class="question-form__contact-type" data-contact-type>
+              <div class="contact-type__slider" aria-hidden="true"></div>
               <button type="button"
                       class="contact-type__option contact-type__option--active"
                       data-type="email">
@@ -4253,6 +4037,50 @@
 
 
 
+
+<!-- Панель карты: Посёлок "Красный Яр" -->
+<div class="map-panel" id="map-panel-krasnyj" aria-hidden="true">
+  <div class="map-panel__backdrop" data-map-close></div>
+
+  <div class="map-panel__dialog" role="dialog" aria-modal="true">
+    <button class="map-panel__close" type="button" data-map-close>✕</button>
+
+    <h3 class="map-panel__title">СТО — Красный Яр</h3>
+    <p class="map-panel__subtitle">
+      Трасса Р402 Тюмень — Омск, 575 км
+    </p>
+
+    <div class="map-panel__iframe-wrap">
+      <iframe
+        src="https://yandex.ru/map-widget/v1/?ll=72.901339%2C55.229996&mode=poi&poi%5Bpoint%5D=72.901463%2C55.230093&poi%5Buri%5D=ymapsbm1%3A%2F%2Forg%3Foid%3D1306705509&z=16.8"
+        frameborder="1"
+        allowfullscreen="true"
+      ></iframe>
+    </div>
+  </div>
+</div>
+
+<!-- Панель карты: Село "Троицкое" -->
+<div class="map-panel" id="map-panel-troitskoe" aria-hidden="true">
+  <div class="map-panel__backdrop" data-map-close></div>
+
+  <div class="map-panel__dialog" role="dialog" aria-modal="true">
+    <button class="map-panel__close" type="button" data-map-close>✕</button>
+
+    <h3 class="map-panel__title">СТО — Троицкое</h3>
+    <p class="map-panel__subtitle">
+      Трасса М51 Омск — Новосибирск, 657 км
+    </p>
+
+    <div class="map-panel__iframe-wrap">
+      <iframe
+        src="https://yandex.ru/map-widget/v1/?ll=73.297281%2C54.863725&mode=poi&poi%5Bpoint%5D=73.297185%2C54.863810&poi%5Buri%5D=ymapsbm1%3A%2F%2Forg%3Foid%3D14648424239&z=17"
+        frameborder="1"
+        allowfullscreen="true"
+      ></iframe>
+    </div>
+  </div>
+</div>
 
 
 

@@ -368,6 +368,18 @@ document.addEventListener("DOMContentLoaded", function () {
 
 // ЗАДАТЬ ВОПРОС
 document.addEventListener("DOMContentLoaded", function () {
+    // создаём ползунок внутри переключателя
+  document.querySelectorAll('.question-form__contact-type[data-contact-type]').forEach(function (wrap) {
+    if (!wrap.querySelector('.contact-type__slider')) {
+      const slider = document.createElement('div');
+      slider.className = 'contact-type__slider';
+      wrap.insertBefore(slider, wrap.firstChild);
+    }
+    updateContactSlider(wrap); 
+  });
+
+  
+  
   // Переключатель E-mail / Телефон
   document.addEventListener("click", function (e) {
     const btn = e.target.closest(".contact-type__option");
@@ -382,6 +394,9 @@ document.addEventListener("DOMContentLoaded", function () {
     wrapper.querySelectorAll(".contact-type__option").forEach(b => {
       b.classList.toggle("contact-type__option--active", b === btn);
     });
+    // Обновляем позицию ползунка
+    updateContactSlider(wrapper);
+
 
     const emailInput = document.querySelector("[data-input-email]");
     const phoneInput = document.querySelector("[data-input-phone]");
@@ -419,6 +434,21 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 });
+
+// Обновить позицию и ширину ползунка под активной кнопкой
+function updateContactSlider(wrapper) {
+  if (!wrapper) return;
+  const slider = wrapper.querySelector('.contact-type__slider');
+  const active = wrapper.querySelector('.contact-type__option--active');
+  if (!slider || !active) return;
+
+  const wrapRect = wrapper.getBoundingClientRect();
+  const btnRect  = active.getBoundingClientRect();
+
+  slider.style.width = btnRect.width + 'px';
+  slider.style.transform = 'translateX(' + (btnRect.left - wrapRect.left) + 'px)';
+}
+
 
 document.addEventListener('DOMContentLoaded', function () {
   const form = document.getElementById('questionForm');
@@ -519,7 +549,11 @@ document.addEventListener('DOMContentLoaded', function () {
             btn.dataset.type === 'email'
           );
         });
+
+        // вернуть ползунок под E-mail
+        updateContactSlider(toggleWrap);
       }
+
     }
   }
 
@@ -664,6 +698,119 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
 
+
+
+
+// Выпадашка Яндекс Карт
+document.addEventListener('DOMContentLoaded', function () {
+  // Ленивая подгрузка карт
+  document.querySelectorAll('.map-panel__iframe-wrap iframe').forEach(function (frame) {
+    if (frame.dataset.mapSrc && !frame.src) {
+      frame.src = frame.dataset.mapSrc;
+    }
+  });
+
+  // ======== ЛОК СКРОЛЛА СТРАНИЦЫ ========
+ let scrollLocked = false;
+let savedScrollY = 0;
+
+function lockScroll() {
+  if (scrollLocked) return;
+  scrollLocked = true;
+
+  // запоминаем позицию
+  savedScrollY = window.scrollY || document.documentElement.scrollTop || 0;
+
+  // ширина системного скроллбара
+  const scrollBarWidth = window.innerWidth - document.documentElement.clientWidth;
+
+  // компенсируем исчезновение скроллбара
+  if (scrollBarWidth > 0) {
+    document.body.style.marginRight = scrollBarWidth + 'px';
+  }
+
+  // фиксируем body
+  document.body.style.position = 'fixed';
+  document.body.style.top = `-${savedScrollY}px`;
+  document.body.style.left = '0';
+  document.body.style.right = '0';
+  document.body.style.width = '100%';
+}
+
+function unlockScroll() {
+  if (!scrollLocked) return;
+  scrollLocked = false;
+
+  document.body.style.position = '';
+  document.body.style.top = '';
+  document.body.style.left = '';
+  document.body.style.right = '';
+  document.body.style.width = '';
+  document.body.style.marginRight = '';
+
+  window.scrollTo(0, savedScrollY);
+}
+
+  function isAnyMapOpen() {
+    return !!document.querySelector('.map-panel.is-open');
+  }
+
+  function openMapPanel(panel) {
+    if (!panel) return;
+    panel.classList.add('is-open');
+    panel.setAttribute('aria-hidden', 'false');
+
+    // при открытии первой карты — лочим скролл
+    if (!scrollLocked) {
+      lockScroll();
+    }
+  }
+
+  function closeMapPanel(panel) {
+    if (!panel) return;
+    panel.classList.remove('is-open');
+    panel.setAttribute('aria-hidden', 'true');
+
+    // если карт больше нет — снимаем лок
+    if (!isAnyMapOpen()) {
+      unlockScroll();
+    }
+  }
+
+  // Открытие по кнопке data-map-panel
+  document.addEventListener('click', function (e) {
+    const btn = e.target.closest('[data-map-panel]');
+    if (!btn) return;
+
+    const selector = btn.dataset.mapPanel;
+    if (!selector) return;
+
+    const panel = document.querySelector(selector);
+    if (panel) openMapPanel(panel);
+
+    e.preventDefault();
+  });
+
+  // Закрытие по фону / крестику (data-map-close)
+  document.addEventListener('click', function (e) {
+    const closer = e.target.closest('[data-map-close]');
+    if (!closer) return;
+
+    const panel = closer.closest('.map-panel');
+    if (panel) closeMapPanel(panel);
+  });
+
+  // Закрытие по Esc
+  document.addEventListener('keydown', function (e) {
+    if (e.key !== 'Escape') return;
+
+    document.querySelectorAll('.map-panel.is-open').forEach(function (panel) {
+      closeMapPanel(panel);
+    });
+  });
+
+
+});
 
 
 
@@ -924,18 +1071,15 @@ jQuery(function ($) {
 });
 
 
-// Галерея: плавная смена + подписи (фиксим сравнение src)
+// Галерея: плавная смена + подписи
 jQuery(function ($) {
 
   function normSrc(u) {
     if (!u) return '';
-    // убираем origin, хэши и query, приводим к единому виду
     try {
-      // если абсолютный — приведём к pathname
       var abs = new URL(u, window.location.href);
       return abs.pathname.replace(/\/+/g, '/');
     } catch (e) {
-      // относительный — просто уберём лишнее
       return u.split('#')[0].split('?')[0];
     }
   }
@@ -949,32 +1093,47 @@ jQuery(function ($) {
     $thumb.closest('.gallery').find('.gallery__main img').attr('alt', title || 'Фото');
   }
 
+  // Флаг, чтобы не наслаивались анимации
+  var isAnimating = false;
+
+  // Прелоадим все полноразмерные картинки
+  $('.gallery__thumbs img').each(function () {
+    var full = $(this).data('full');
+    if (full) {
+      var img = new Image();
+      img.src = full;
+    }
+  });
+
   $(document).on('click', '.gallery__thumbs img', function () {
+    if (isAnimating) return;
+
     var $thumb    = $(this);
     var full      = $thumb.data('full') || $thumb.attr('src');
     var $gallery  = $thumb.closest('.gallery');
     var $mainWrap = $gallery.find('.gallery__main');
     var $current  = $mainWrap.find('img');
 
-    // Нормализуем пути перед сравнением
+    // Нормализуем пути
     var cur = normSrc($current.attr('src'));
     var nxt = normSrc(full);
 
-    // Обновим активное состояние превью
+    // Обновляем активное превью
     $thumb.addClass('is-active').siblings('img').removeClass('is-active');
 
-    // Даже если браузер считает пути «одинаковыми» — всё равно обновим подпись
+    // Подпись обновляем всегда
     updateGalleryCaption($thumb);
 
-    // Если реально то же изображение — просто выходим
+    // Если реально то же изображение — дальше не идём
     if (cur === nxt) return;
 
-    // Гарантируем позиционирование обёртки
+    // Убеждаемся, что обёртка позиционируется
     if ($mainWrap.css('position') === 'static') {
       $mainWrap.css('position', 'relative');
     }
 
-    // Создаём новое изображение поверх старого с fade
+    isAnimating = true;
+
     var $next = $('<img>', {
       src: full,
       alt: $thumb.data('title') || $current.attr('alt') || '',
@@ -988,14 +1147,26 @@ jQuery(function ($) {
       }
     });
 
-    $mainWrap.append($next);
-    $next.stop(true, true).animate({ opacity: 1 }, 300, 'swing', function () {
-      $current.remove();
-      $next.css({ position: '', inset: '', objectFit: '' });
+    // Ждём, пока новая картинка загрузится, чтобы не было "мигания"
+    $next.on('load', function () {
+      $mainWrap.append($next);
+
+      // Crossfade: старая плавно исчезает, новая появляется
+      $current.stop(true, true).animate({ opacity: 0 }, 260, 'swing');
+      $next.stop(true, true).animate({ opacity: 1 }, 280, 'swing', function () {
+        $current.remove();
+        $next.css({ position: '', inset: '', objectFit: '' });
+        isAnimating = false;
+      });
     });
+
+    // На случай, если картинка уже в кеше и load сработает синхронно
+    if ($next[0].complete) {
+      $next.trigger('load');
+    }
   });
 
-  // Инициализация подписи (на случай, если активная не помечена)
+  // Инициализация подписи
   $('.gallery').each(function(){
     var $g = $(this);
     var $active = $g.find('.gallery__thumbs img.is-active').first();
@@ -1003,6 +1174,51 @@ jQuery(function ($) {
     if ($active.length) updateGalleryCaption($active);
   });
 });
+
+
+
+
+// Яндекс Карты
+document.addEventListener('click', function (e) {
+  // ОТКРЫТИЕ
+  const openBtn = e.target.closest('[data-map-panel]');
+  if (openBtn) {
+    const selector = openBtn.getAttribute('data-map-panel');
+    const panel = document.querySelector(selector);
+    if (panel) {
+      panel.classList.add('is-open');
+      document.body.style.overflow = 'hidden';
+    }
+  }
+
+  // ЗАКРЫТИЕ по крестику / фону
+  const closeBtn = e.target.closest('[data-map-close]');
+  if (closeBtn) {
+    const panel = closeBtn.closest('.map-panel');
+    if (panel) {
+      panel.classList.remove('is-open');
+      document.body.style.overflow = '';
+    }
+  }
+});
+
+// ESC для закрытия
+document.addEventListener('keydown', function (e) {
+  if (e.key === 'Escape') {
+    const opened = document.querySelector('.map-panel.is-open');
+    if (opened) {
+      opened.classList.remove('is-open');
+      document.body.style.overflow = '';
+    }
+  }
+});
+
+
+
+
+
+
+
 
 
 // клик по "Ремонт" — открыть/закрыть выпадашку (как hover)

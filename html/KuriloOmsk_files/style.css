@@ -1886,17 +1886,18 @@ video {
 }
 
 .bg {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  right: 0;
-  bottom: 0;
-  background-size: cover !important;
-  background-repeat: no-repeat !important;
-  background-position: 50% 50%
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: calc(100vh + 60px); /* экран + немного запаса */
+    background-size: cover !important;
+    background-repeat: no-repeat !important;
+    background-position: center top;
+    z-index: -1; /* если нужно */
 }
+
+
 
 .bg-overlay {
   position: absolute;
@@ -1927,6 +1928,11 @@ video {
   -webkit-transition: .3s ease-in-out;
   transition: .3s ease-in-out
 }
+
+.button {
+    border-radius: 18px;
+}
+
 
 .button:focus {
   outline: none
@@ -1967,8 +1973,8 @@ video {
 }
 
 .button.button--primary.button--popup {
-  padding-left: 4.5em;
-  padding-right: 4.5em;
+  padding-left: 4.8em;
+  padding-right: 4.8em;
 }
 
 
@@ -5393,6 +5399,7 @@ a[data-fancybox="gallery"]::before {
     height: 100%;
     object-fit: cover;
     display: block;
+    will-change: opacity;
   }
   
   /* --- Галерея: улучшенный и аккуратный стиль превью --- */
@@ -5791,111 +5798,280 @@ body.modal-open { overflow: hidden; }
 
 
 
-/* =========================
-   Photogallery (главная)
-   ========================= */
+/* Фотогалерея (главная)*/
 
-/* Параметры отступов — меняй только эти 4 значения */
-:root{
-  --pg-pad-top: 150px;       /* внутр. отступ серого сверху */
-  --pg-pad-bottom: 150px;    /* внутр. отступ серого снизу  */
-  --pg-mt: -30px;            /* внешний отступ сверху (от логотипов) */
-  --pg-mb: 96px;            /* внешний отступ снизу (до "Сертификатов") */
-}
 
-/* Серый блок секции c гарантированными отступами */
-.section.photogallery{
-  background: linear-gradient(180deg, #f9f9f9 0%, #ececec 100%);
-  margin: var(--pg-mt) 0 var(--pg-mb);
-  padding: 0;                    /* внутренние отступы даём псевдоэлементами */
-  border-radius: 8px;
-  position: relative;
-  overflow: hidden;
-}
-/* гарантированный «паддинг» внутри */
-.section.photogallery::before{ content:""; display:block; height: var(--pg-pad-top); }
-.section.photogallery::after { content:""; display:block; height: var(--pg-pad-bottom); }
-
-/* Ряд — как тебе и нужно, по центру */
-.section.photogallery .row.no-gutters{ align-items: center; }
 
 /* ===== Левый слайдер (фото) ===== */
 
-.photogallery-slider__img{
+.photogallery-slider__img {
   position: relative;
   max-width: clamp(360px, 75vw, 1150px);
-  margin: 0 auto;
+  margin: 50px auto 50px;
 }
-.photogallery-slider__img .slick-list{ margin:0; padding:0; overflow:hidden; }
 
-/* Каждый слайд — свой контейнер фиксированной пропорции */
-.photogallery-slider__img .pg-slide{
+/* Вьюпорт slick – скругление и маска */
+.photogallery-slider__img .slick-list { 
+  margin: 0;
+  padding: 0;
+  overflow: hidden;                 
+  border-radius: 14px;          /* увеличенное скругление */
+  box-shadow: 0 4px 16px rgba(0,0,0,.1);
+  height: auto !important;
+}
+
+/* Каждый слайд – контейнер фиксированной пропорции */
+.photogallery-slider__img .pg-slide {
   position: relative;
   width: 100%;
-  overflow: hidden;
-}
-.photogallery-slider__img .pg-slide::before{
-  content:"";
-  display:block;
-  padding-top: 56.25%;            /* 16:9  (для 4:3 поставь 75%) */
-}
-.photogallery-slider__img .pg-slide > img{
-  position: absolute; top:0; left:0;
-  width:100%; height:100%;
-  object-fit: cover;
-  object-position: center top;    /* можно center */
-  display:block;
-  border-radius:6px;
-  box-shadow:0 4px 16px rgba(0,0,0,.1);
+  height: 100% !important;
 }
 
-/* ВАЖНО: глушим старые глобальные правила из style.css (если вдруг остались) */
-.section.photogallery .photogallery-slider__img .slick-slide > div{
+.photogallery-slider__img .pg-slide::before {
+  content: "";
+  display: block;
+  padding-top: 63.5%;            /* пропорция, которая работает без полос */
+}
+
+/* Картинка заполняет контейнер */
+.photogallery-slider__img .pg-slide > img {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%;
+  height: 101%;                  /* твой рабочий фикс */
+  object-fit: cover;
+  object-position: center top;
+  display: block;
+}
+
+/* Выравниваем внутренние slick-элементы */
+.photogallery-slider__img .slick-track,
+.photogallery-slider__img .slick-slide,
+.photogallery-slider__img .slick-slide > div {
+  height: 100% !important;
+}
+
+/* Глушим старые глобальные правила сайта */
+.section.photogallery .photogallery-slider__img .slick-slide > div {
   padding-top: 0 !important;
   position: static !important;
   overflow: visible !important;
 }
-.section.photogallery .photogallery-slider__img .slick-slide > div > img{
+
+.section.photogallery .photogallery-slider__img .slick-slide > div > img {
   position: static !important;
   width: auto !important;
   height: auto !important;
 }
 
-/* ===== Правый столбец ===== */
 
-.photogallery-info{ text-align:center; }
-.photogallery-info h2{ margin-top: 0; }
 
-.photogallery-slider__info {
-  margin-bottom: 60px; /* расстояние между надписями и блоком стрелок/1/11 */
+
+
+/* ===== Правый столбец (карточка информации фотогалереи) ===== */
+
+
+/* Колонка справа, просто центрируем содержимое */
+.section.photogallery .col-12.col-lg-5 {
+  text-align: center;
 }
 
-/* на мобильных — чуть компактнее */
-@media (max-width: 576px) {
-  .photogallery-slider__info {
-    margin-bottom: 14px;
+/* 1. Белый прямоугольник (карточка) */
+.section.photogallery .photogallery-info {
+  background: #ffffff;
+  border-radius: 20px;
+  box-shadow: 0 8px 28px rgba(0,0,0,0.08);
+
+  width: 100%;
+  max-width: 520px;
+  height: 620px;           /* фиксируем высоту, чтобы блок не разъезжался */
+  margin: 0 auto;
+
+  padding: 48px 40px 40px; /* сверху / по бокам / снизу */
+  box-sizing: border-box;
+}
+
+/* 2. Заголовок "Фотогалерея" — отступ вниз */
+.section.photogallery .photogallery-info h2 {
+  margin: 0 0 80px;     
+}
+
+/* 3. Текст под заголовком (Склад-магазин..., Сан.блок и т.п.) */
+.section.photogallery .photogallery-slider__info {
+  margin-bottom: 100px;  
+}
+
+/* выравнивание текста внутри slick-слайдера */
+.section.photogallery .photogallery-slider__info .slick-slide,
+.section.photogallery .photogallery-slider__info .slick-slide > div {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 3.2rem;
+}
+
+.section.photogallery .photogallery-slider__info h3 {
+  margin: 0;
+  line-height: 1.25;
+}
+
+/* 4. Стрелки и 1/11 — оставляем как есть,
+
+
+/* 5. Кнопка "Смотреть все фото"
+*/
+.section.photogallery .photogallery-info .button {
+  display: inline-block;
+  margin-top: 60px;     
+}
+
+/* ===============================
+   Адаптив 1: 1200px и ниже
+   (маленькие ноутбуки / большие планшеты)
+   =============================== */
+@media (max-width: 1200px) {
+  /* уменьшаем "воздух" серого фона */
+  :root{
+    --pg-pad-top: 180px;
+    --pg-pad-bottom: 180px;
+  }
+
+  /* левый слайдер чуть уже, чтобы не давить правый столбец */
+  .section.photogallery .photogallery-slider__img{
+    max-width: clamp(320px, 70vw, 960px);
+  }
+
+  /* правый белый блок чуть компактнее */
+  .section.photogallery .photogallery-info{
+    max-width: 480px;
+    height: 560px;
+    padding: 40px 32px 40px;
+  }
+
+  .section.photogallery .photogallery-info h2{
+    margin-bottom: 64px;
+  }
+
+  .section.photogallery .photogallery-slider__info{
+    margin-bottom: 72px;
+  }
+
+  .section.photogallery .photogallery-info .button{
+    margin-top: 40px;
   }
 }
 
-.photogallery-slider__info .slick-slide,
-.photogallery-slider__info .slick-slide > div{
-  display:flex; align-items:center; justify-content:center; min-height:3.2rem;
-}
-.photogallery-slider__info h3{ margin:0; line-height:1.25; }
+/* ===============================
+   Адаптив 2: 992px и ниже
+   (планшеты + узкие ноутбуки)
+   =============================== */
+@media (max-width: 992px) {
+  /* серый фон ещё компактнее */
+  :root{
+    --pg-pad-top: 140px;
+    --pg-pad-bottom: 140px;
+  }
 
-/* Навигация (оставляем как есть, лишь страхуем кликабельность) */
-.slider-nav, .slider-nav__arrow{ position:relative; z-index:5; pointer-events:auto; }
+  /* чтобы блоки не были слишком широкими, когда становятся друг под другом */
+  .section.photogallery .photogallery-slider__img{
+    max-width: 90vw;
+  }
 
-/* Соседние секции (срезаем огромный зазор у логотипов, если был) */
-.section.logos, .logos, .section.partners, .partners{
-  margin-bottom: 12px !important;
-  padding-bottom: 0 !important;
+  .section.photogallery .photogallery-info{
+    max-width: 420px;
+    height: 520px;
+    padding: 36px 24px 36px;
+  }
+
+  .section.photogallery .photogallery-info h2{
+    margin-bottom: 48px;
+  }
+
+  .section.photogallery .photogallery-slider__info{
+    margin-bottom: 56px;
+  }
+
+  .section.photogallery .photogallery-info .button{
+    margin-top: 32px;
+  }
+
+  /* отступ между левым и правым столбцами, когда они становятся один под другим */
+  .section.photogallery .col-12.col-lg-5{
+    margin-top: 24px;
+  }
 }
 
-/* Адаптив */
-@media (max-width: 991.98px){
-  .section.photogallery .col-lg-5{ margin-top:24px; }
+/* ===============================
+   Адаптив 3: телефоны (до 576px)
+   =============================== */
+@media (max-width: 576px) {
+  /* серый фон — ещё компактнее на телефонах */
+  :root{
+    --pg-pad-top: 100px;
+    --pg-pad-bottom: 100px;
+  }
+
+  /* левый слайдер по ширине экрана */
+  .section.photogallery .photogallery-slider__img{
+    max-width: 100%;
+  }
+
+  /* правый белый блок — на всю ширину, авто-высота */
+  .section.photogallery .photogallery-info{
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+
+    padding: 28px 16px 28px;
+  }
+
+  .section.photogallery .photogallery-info h2{
+    margin-bottom: 24px;
+    font-size: 22px;
+  }
+
+  .section.photogallery .photogallery-slider__info{
+    margin-bottom: 28px;
+    min-height: auto;
+  }
+
+  .section.photogallery .photogallery-info .button{
+    margin-top: 20px;
+  }
 }
+
+/* Узкий ноут / суженный браузер: фото 4:3, карточка компактнее */
+@media (max-width: 1200px) and (min-width: 992px) {
+
+  /* Фото делаем 4:3 именно в этом диапазоне */
+  .section.photogallery .photogallery-slider__img .pg-slide::before{
+    padding-top: 75%;   /* 4:3 вместо 62.5% (16:10) */
+  }
+
+  /* Белый блок: поменьше по высоте и отступам */
+  .section.photogallery .photogallery-info{
+    height: 540px;          /* было 620px */
+    max-width: 460px;       /* было 520px */
+    padding: 40px 32px 36px;/* сверху / по бокам / снизу чуть меньше */
+  }
+
+  /* Отступ под "Фотогалерея" — не 80, а поменьше */
+  .section.photogallery .photogallery-info h2{
+    margin: 0 0 40px;
+  }
+
+  /* Отступ между подзаголовком и стрелками */
+  .section.photogallery .photogallery-slider__info{
+    margin-bottom: 48px;
+  }
+
+  /* Кнопка чуть ближе к стрелкам, чтобы блок не "растягивался" */
+  .section.photogallery .photogallery-info .button{
+    margin-top: 28px;
+  }
+}
+
 
 
 
@@ -6242,7 +6418,7 @@ body.modal-open { overflow: hidden; }
 
 
 
-/* МОДАЛКА ЗАДАТЬ ВОПРОС */
+/* ==== МОДАЛКА ЗАДАТЬ ВОПРОС ==== */
 .question-modal {
   padding: 32px 38px 28px;
 }
@@ -6557,7 +6733,196 @@ input[type='checkbox'] + span.checkbox-error::after {
   transform: translateX(-50%) translateY(0);
 }
 
+/* Анимированный ползунок для переключателя E-mail / Телефон */
 
+/* сам бегунок */
+.contact-type__slider {
+  position: absolute;
+  top: 3px;
+  bottom: 3px;
+  left: 0;
+  border-radius: 999px;
+  background: #ffffff;
+  box-shadow: 0 0 0 1px rgba(221,185,111,.7);
+  transition: transform .25s ease, width .25s ease;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* контейнер позиционируемый */
+.question-form__contact-type {
+  position: relative; /* только это добавляется к твоим существующим стилям */
+}
+
+/* текст кнопок — поверх ползунка */
+.question-form__contact-type .contact-type__option {
+  position: relative;
+  z-index: 2;
+}
+
+/* убираем дубль рамки у активной тк она теперь на ползунке */
+.question-form__contact-type .contact-type__option--active {
+  background: transparent;
+  box-shadow: none;
+}
+
+
+
+
+
+
+/* ===== Панель с картой: логика как у модалки отзывов ===== */
+
+.map-panel {
+  position: fixed;
+  inset: 0;
+  z-index: 1100;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-family: 'AnonymousPro', sans-serif;
+
+  /* корень сам не анимируем, только включаем/выключаем клики */
+  pointer-events: none;
+}
+
+.map-panel.is-open {
+  pointer-events: auto;
+}
+
+/* === ФОН + БЛЮР (как у модалки отзывов) === */
+.map-panel__backdrop {
+  position: absolute;
+  inset: 0;
+
+  background: rgba(0,0,0,0);     /* старт: прозрачный */
+  backdrop-filter: blur(0px);    /* старт: без блюра */
+  -webkit-backdrop-filter: blur(0px);
+  opacity: 0;
+
+  transition:
+    opacity .32s ease,
+    background .32s ease,
+    backdrop-filter .32s ease;
+}
+
+.map-panel.is-open .map-panel__backdrop {
+  background: rgba(0,0,0,.45);   /* затемнение */
+  backdrop-filter: blur(12px);   /* блюр */
+  -webkit-backdrop-filter: blur(12px);
+  opacity: 1;
+}
+
+/* === БЕЛАЯ КАРТОЧКА (fade + лёгкий выезд вверх) === */
+.map-panel__dialog {
+  position: relative;
+  z-index: 1;
+
+  width: min(1300px, 98vw);
+  height: min(900px, 92vh);
+  padding: 28px 32px 28px;
+
+  background: #fafafa;
+  border-radius: 22px;
+  box-shadow: 0 26px 60px rgba(0,0,0,.35);
+
+  display: flex;
+  flex-direction: column;
+
+  opacity: 0;
+  transform: translateY(16px);
+  transition:
+    opacity .32s ease,
+    transform .32s ease;
+}
+
+.map-panel.is-open .map-panel__dialog {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* крестик */
+.map-panel__close {
+  position: absolute;
+  top: 16px;
+  right: 20px;
+
+  width: 36px;
+  height: 36px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+  border: none;
+  background: transparent;
+
+  font-size: 22px;
+  line-height: 1;
+  color: #DDB96F;
+  cursor: pointer;
+
+  transform: translateY(-0.5px);
+}
+
+.map-panel__close:hover {
+  background: rgba(0,0,0,.06);
+}
+
+/* заголовки */
+.map-panel__title {
+  margin: 0 40px 6px 0;
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.map-panel__subtitle {
+  margin: 0 40px 10px 0;
+  font-size: 16px;
+  color: #555;
+}
+
+/* Блокируем прокрутку страницы, когда открыта карта */
+body.map-scroll-lock {
+  overflow: hidden;
+}
+
+
+/* карта */
+.map-panel__iframe-wrap {
+  position: relative;
+  flex: 1;
+  min-height: 520px;
+  border-radius: 16px;
+  overflow: hidden;
+  background: #e5e5e5;
+  border: 1px solid rgba(0,0,0,.12);
+}
+
+.map-panel__iframe-wrap iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+/* Мобилки */
+@media (max-width: 768px) {
+  .map-panel__dialog {
+    width: 100vw;
+    height: 100vh;
+    padding: 20px 14px 18px;
+    border-radius: 0;
+  }
+
+  .map-panel__iframe-wrap {
+    min-height: 360px;
+  }
+}
 
 
 
