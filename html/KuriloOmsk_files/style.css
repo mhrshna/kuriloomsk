@@ -8,6 +8,7 @@ body {
 
 
 
+
 [class^="ti-"],
 [class*=" ti-"] {
   font-family: 'themify';
@@ -1731,8 +1732,8 @@ video {
 }
 
 .section {
-  padding-top: 240px;
-  padding-bottom: 210px;
+  padding-top: 300px;
+  padding-bottom: 260px;
   position: relative
 }
 
@@ -1746,7 +1747,17 @@ video {
 }
 
 .is-divided {
-  border-right: 1px solid #C4C4C4
+    position: relative;
+}
+
+.is-divided::after {
+    content: "";
+    position: absolute;
+    right: 0;
+    top: 10px;              /* отступ сверху */
+    bottom: 35px;           /* отступ снизу */
+    width: 1px;
+    background: #C4C4C4;
 }
 
 .subtitle h1 {
@@ -5385,23 +5396,6 @@ a[data-fancybox="gallery"]::before {
     gap: 12px;
   }
   
-  .gallery__main {
-    width: 100%;
-    aspect-ratio: 16/9;
-    /* аккуратная рамка */
-    background: rgba(255, 255, 255, .04);
-    border-radius: 12px;
-    overflow: hidden;
-  }
-  
-  .gallery__main img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-    will-change: opacity;
-  }
-  
   /* --- Галерея: улучшенный и аккуратный стиль превью --- */
 .gallery {
   display: grid;
@@ -5409,12 +5403,15 @@ a[data-fancybox="gallery"]::before {
 }
 
 .gallery__main {
+  height: 102%;
   width: 100%;
   aspect-ratio: 16/9;
   border-radius: 14px;
   overflow: hidden;
   background: rgba(255,255,255,.04);
-  box-shadow: 0 4px 16px rgba(0,0,0,.3);
+  box-shadow:
+    0 10px 24px rgba(0,0,0,.05),  /* вертикальная глубина */
+    0 0 4px rgba(0,0,0,.5);      /* почти незаметная по бокам */
 }
 
 .gallery__main img {
@@ -5424,6 +5421,7 @@ a[data-fancybox="gallery"]::before {
   display: block;
   transition: transform .3s ease;
 }
+
 
 
 
@@ -5622,7 +5620,7 @@ a[data-fancybox="gallery"]::before {
   
   .gallery__main img {
     width: 100%;
-    height: 100%;
+    height: 101%;
     object-fit: cover;
     display: block;
   }
@@ -6925,20 +6923,748 @@ body.map-scroll-lock {
 }
 
 
+.section.certificates {
+    padding-top: 250px;   
+    padding-bottom: 300px;
+}
+
+.section.partners {
+  padding-top: 350px;    
+  padding-bottom: 340px;
+}
+
+.section.reviews--alt {   
+  padding-top: 60px !important;
+  padding-bottom: 140px;
+}
 
 
 
 
-/*
-playback timings (ms):
-  captures_list: 0.734
-  exclusion.robots: 0.034
-  exclusion.robots.policy: 0.02
-  esindex: 0.013
-  cdx.remote: 54.801
-  LoadShardBlock: 455.397 (3)
-  PetaboxLoader3.datanode: 1256.334 (5)
-  load_resource: 1333.162
-  PetaboxLoader3.resolve: 289.801
-  loaddict: 209.787
-*/
+
+/* ===== ТОП БАР ===== */
+/* Подключаем шрифт Inter */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap');
+
+.topbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 78px;
+
+    background: rgba(22, 22, 22, 0.82);
+    backdrop-filter: blur(6px);
+
+    z-index: 900;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.35);
+}
+
+.topbar__inner {
+    max-width: 1350px;
+    margin: 0 auto;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 25px;
+    font-family: "Inter", sans-serif;
+}
+
+/* ЛОГО */
+.topbar__logo img {
+    height: 54px;
+    object-fit: contain;
+}
+
+/* МЕНЮ */
+.topbar__menu {
+    display: flex;
+    gap: 32px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.topbar__menu > li {
+    position: relative;
+}
+
+/* Ссылки */
+.topbar__menu .item {
+    font-size: 18px; 
+    font-weight: 400;
+    color: #ffffff;
+    cursor: pointer;
+
+    padding: 14px 10px;   
+    display: block;
+    line-height: 1;     
+    transition: 0.2s ease;
+}
+
+/* Делаем весь li (и мостик) кликабельным по ощущениям */
+.topbar__menu .has-dropdown,
+.topbar__menu .has-dropdown::after {
+    cursor: pointer;
+}
+
+/* Если навели на весь li (включая мостик),
+   подсвечиваем сам текст так же, как при hover на .item */
+.topbar__menu .has-dropdown:hover > .item {
+    color: #f4d58e;
+    transform: translateY(-1px);
+}
+
+
+/* При наведении */
+.topbar__menu .item:hover {
+    color: #f4d58e;
+    transform: translateY(-1px);
+}
+
+/* DROPDOWN */
+.dropdown {
+    position: absolute;
+    top: 48px;
+    left: 0;
+    background: rgba(30,30,30,0.95);
+    backdrop-filter: blur(4px);
+    border-radius: 10px;
+    padding: 12px 0;
+    min-width: 260px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(10px);
+
+    transition: opacity .25s ease, transform .25s ease;
+
+    pointer-events: none;
+    z-index: 999999;
+}
+
+
+.dropdown a:hover {
+    background: rgba(255,255,255,0.08);
+    color: #f4d58e;
+}
+
+.has-dropdown:hover .dropdown,
+.has-dropdown.is-open .dropdown {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+
+    pointer-events: auto; 
+}
+
+.topbar__menu .has-dropdown {
+    position: relative;
+}
+
+/* Невидимый "мостик" между пунктом и выпадашкой */
+.topbar__menu .has-dropdown::after {
+    content: "";
+    position: absolute;
+    left: -10px;     /* чуть шире текста, чтобы не промахнуться по диагонали */
+    right: -10px;
+    top: 100%;       /* сразу под пунктом меню */
+    height: 18px;
+
+    /* прозрачно, но реагирует на мышь */
+    background: transparent;
+}
+
+.dropdown a {
+    display: block;
+    padding: 10px 20px;
+    font-size: 17px;
+    font-weight: 300;
+    color: #ffffff;
+    white-space: normal;
+    transition: 0.2s ease;
+}
+
+.dropdown a:hover {
+    background: rgba(255,255,255,0.08);
+    color: #f4d58e;
+}
+
+.js-open-panel {
+  cursor: pointer;
+}
+
+.topbar__menu {
+    list-style: none;
+}
+
+.topbar__menu > li {
+    list-style: none;
+}
+
+.topbar__menu .dropdown {
+    list-style: none;
+}
+
+.topbar__menu .dropdown li {
+    list-style: none;
+}
+
+
+/* "Ремонт" в 2 колонки */
+.dropdown--columns-2 {
+    display: grid;
+    grid-template-columns: repeat(2, max-content);
+    column-gap: 20px;
+    padding: 12px 0 14px 0;    
+    align-items: stretch;
+}
+
+/* каждый пункт */
+.dropdown--columns-2 > li {
+    margin: 2px 0;
+}
+
+/* ссылки */
+.dropdown--columns-2 a {
+    font-size: 17px;
+    font-weight: 300;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+
+    padding: 7px 18px;          
+    max-width: 28ch;           
+    white-space: normal;
+    line-height: 1.4;
+}
+
+
+/* Кнопка-бургер (по умолчанию скрыта на десктопе) */
+.topbar__toggle {
+    display: none;
+    background: none;
+    border: none;
+    padding: 0;
+    margin-left: 16px;
+    cursor: pointer;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Полоски */
+.topbar__toggle span {
+    display: block;
+    width: 18px;
+    height: 2px;
+    border-radius: 999px;
+    background: #ffffff;
+    margin: 3px 0;
+}
+
+/* Мобилка */
+@media (max-width: 992px) {
+
+    /* показываем бургер */
+    .topbar__toggle {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .topbar__menu {
+        position: fixed;
+        top: 78px;
+        left: 0;
+        right: 0;
+
+        display: flex;
+        flex-direction: column;
+        gap: 0;
+
+        background: rgba(18,18,18,0.98);
+        backdrop-filter: blur(6px);
+        border-top: 1px solid rgba(255,255,255,0.08);
+        max-height: 80vh;
+        overflow-y: auto;
+        overflow-x: hidden;
+        scrollbar-width: none;
+        z-index: 9998;
+
+        opacity: 0;
+        transform: translateY(-8px);
+        pointer-events: none;                       /* чтобы не ловило клики, когда скрыто */
+        transition: opacity .22s ease, transform .22s ease;
+    }
+
+    .topbar__menu::-webkit-scrollbar {
+        width: 0;
+        height: 0;
+        display: none;
+    }
+
+    /* когда бургер открыт — плавное ОТКРЫТИЕ и ЗАКРЫТИЕ */
+    .topbar.is-mobile-open .topbar__menu {
+        opacity: 1;
+        transform: translateY(0);
+        pointer-events: auto;
+    }
+
+
+    .topbar__menu > li {
+        border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .topbar__menu .item {
+        width: 100%;
+        padding: 14px 16px;
+        font-size: 18px;
+    }
+
+    .dropdown {
+        position: static;
+        box-shadow: none;
+        background: transparent;
+        margin-left: 8px;
+
+        display: block;
+        max-height: 0;          
+        overflow: hidden;
+
+        opacity: 0;
+        transform: translateY(-6px);
+        pointer-events: none;
+
+        padding: 0; 
+
+        transition:
+            max-height .28s ease,
+            opacity .22s ease,
+            transform .22s ease,
+            padding .22s ease;
+    }
+
+    /* плавное открытие */
+    .topbar__menu .has-dropdown.is-open > .dropdown {
+        max-height: 700px;      /* с запасом для любых списков */
+        opacity: 1;
+        transform: translateY(0);
+        pointer-events: auto;
+        padding: 4px 0 8px; 
+    }
+
+
+    .dropdown a {
+        font-size: 16px;
+        padding: 10px 24px;
+        white-space: normal;
+        transition: background-color .2s ease, color .2s ease;
+    }
+
+    .dropdown a:hover {
+        background-color: rgba(255,255,255,0.08);
+        color: #f4d58e;
+    }
+
+    /* "Ремонт" в 2 колонки в бургер-меню */
+    .topbar__menu .has-dropdown.is-open > .dropdown.dropdown--columns-2 {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        column-gap: 16px;
+    }
+
+    .topbar__menu .has-dropdown.is-open > .dropdown.dropdown--columns-2 > li {
+        margin-bottom: 6px;
+    }
+
+    .topbar__menu .has-dropdown.is-open > .dropdown.dropdown--columns-2 a {
+        max-width: none;
+        padding: 10px 24px;
+        font-size: 16px;
+        line-height: 1.35;
+    }
+
+}
+
+/* ключевые кадры для выезда меню (бургер) — используется ТОЛЬКО при открытии */
+@keyframes topbarMenuIn {
+    from {
+        transform: translateY(-8px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* ключевые кадры для появления выпадашек внутри бургера */
+@keyframes dropdownIn {
+    from {
+        transform: translateY(-4px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+
+
+
+
+
+
+
+/* Гостиница- Номера */
+
+.room-accordion {
+  background: #ffffff;
+  border-radius: 14px;
+  border: 1px solid rgba(0,0,0,0.06);
+  overflow: hidden;
+}
+
+.room-item {
+  background: transparent;
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+}
+
+.room-item:last-child {
+  border-bottom: none;
+}
+
+/* Шапка номера */
+.room-item__head {
+  width: 100%;
+  padding: 14px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+
+  background: rgba(0,0,0,0.02);
+  cursor: pointer;
+  border: none;
+  font: inherit;
+  color: inherit;
+}
+
+.room-item__head:hover {
+  background: rgba(0,0,0,0.04);
+}
+
+/* Левая часть (текст) */
+.room-item__main {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  text-align: left;
+}
+
+.room-item__name {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.room-item__meta {
+  font-size: 14px;
+  opacity: .8;
+}
+
+/* Правая часть (цена + стрелка) */
+.room-item__side {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.room-item__price {
+  white-space: nowrap;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+/* Круг со стрелкой */
+.room-item__chevron {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 1px solid rgba(0,0,0,0.22);
+  position: relative;
+  flex-shrink: 0;
+}
+
+.room-item__chevron::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 7px;
+  height: 7px;
+  border-right: 2px solid #DDB96F;
+  border-bottom: 2px solid #DDB96F;
+  transform: translate(-50%, -50%) rotate(45deg);
+  transition: transform .25s ease;
+}
+
+.room-item.is-open .room-item__chevron::before {
+  transform: translate(-50%, -50%) rotate(225deg);
+}
+
+/* Тело */
+.room-item__body {
+  max-height: 0;
+  overflow: hidden;
+  background: #ffffff;
+  transition: max-height .32s ease;
+  border-top: none;
+}
+
+.room-item.is-open .room-item__body {
+  border-top: 1px solid rgba(0,0,0,0.04);
+}
+
+/* Внутри: текст + фото */
+.room-item__inner {
+  align-items: center !important;
+  padding: 16px 18px 18px;
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1.8fr);
+  gap: 24px;
+}
+
+/* Описание номера */
+.room-item__text p {
+  font-size: 16.5px;
+  line-height: 1.55;
+  margin: 0 0 10px;
+}
+
+/* Список в номере */
+.room-item__text ul {
+  margin: 8px 0 0;
+  padding-left: 20px;
+}
+
+.room-item__text ul li {
+  font-size: 15.5px;
+  line-height: 1.7;
+  margin-bottom: 4px;
+}
+
+/* ПРЕВЬЮ ФОТО НОМЕРА */
+
+/* Контейнер превью */
+.room-item__photos {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  /* оставляем место под стрелки, чтобы они были чуть снаружи */
+  padding: 0 72px;
+  transform: translateX(30px);
+}
+
+/* Область картинки фиксированного формата 16:10 */
+.room-item__photos-track {
+  position: relative;
+  width: min(520px, 100%);
+  aspect-ratio: 16 / 10;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+/* Кадры лежат стопкой, видим только активный */
+.room-item__photos-track img {
+  position: absolute;
+  inset: 0;
+
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: inherit;
+
+  border: 2px solid transparent;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.18);
+
+  opacity: 0;
+  pointer-events: none;
+  cursor: default;
+
+  transition:
+    opacity .24s ease,
+    border-color .24s ease,
+    box-shadow .24s ease;
+}
+
+/* Активный кадр */
+.room-item__photos-track img.is-active {
+  opacity: 1;
+  pointer-events: auto;
+  cursor: zoom-in;
+
+  border-color: #DDB96F;
+  box-shadow: 0 0 0 2px rgba(221,185,111,0.35);
+}
+
+
+/* Стрелки — по вертикальному центру, чуть снаружи от рамки */
+.room-item__photos-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: none;
+
+  background: rgba(255,255,255,0.95);
+  color: #DDB96F;
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+
+  box-shadow: 0 4px 12px rgba(0,0,0,.18);
+
+  opacity: 0;
+  pointer-events: none;
+  transition:
+    opacity .2s ease,
+    transform .2s ease,
+    box-shadow .2s ease,
+    background .2s ease;
+  z-index: 2;
+}
+
+/* За счёт padding у .room-item__photos стрелки оказываются вне рамки фото */
+.room-item__photos-arrow--prev { left: 23px; }
+.room-item__photos-arrow--next { right: 23px; }
+
+/* Показываем стрелки только если есть куда листать (JS вешает .is-visible) */
+.room-item__photos-arrow.is-visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.room-item__photos-arrow.is-visible:hover {
+  background: rgba(255,255,255,1);
+  box-shadow: 0 6px 16px rgba(0,0,0,.25);
+}
+
+/* Адаптив: на мобильном всё чуть компактнее */
+@media (max-width: 768px) {
+  .room-item__inner {
+    grid-template-columns: 1fr;
+  }
+
+  .room-item__price {
+    font-size: 14px;
+  }
+
+  .room-item__photos {
+    padding: 0 52px;
+  }
+
+  .room-item__photos-track {
+    width: min(320px, 100%);
+  }
+
+  .room-item__photos-arrow {
+    width: 34px;
+    height: 34px;
+    font-size: 18px;
+  }
+
+  .room-item__photos-arrow--prev { left: 8px; }
+  .room-item__photos-arrow--next { right: 8px; }
+}
+
+/* ЛАЙТБОКС ФОТО НОМЕРОВ (анимация как у .lightbox основы)
+ */
+
+.room-photos-lightbox {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, .8);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity .35s ease, visibility 0s linear .35s;
+  z-index: 9999;
+}
+
+.room-photos-lightbox.active {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transition: opacity .35s ease, visibility 0s;
+}
+
+.room-photos-lightbox__img {
+  max-width: 90vw;
+  max-height: 85vh;
+  border-radius: 10px;
+  box-shadow: 0 0 30px rgba(0, 0, 0, .6);
+  transform: scale(.96);
+  transition: transform .35s ease;
+  cursor: zoom-out;
+}
+
+.room-photos-lightbox.active .room-photos-lightbox__img {
+  transform: scale(1);
+}
+
+/* .popup-close */
+.room-photos-lightbox__close {
+  top: 24px !important;
+  right: 24px !important;
+  z-index: 10000;
+}
+
+/* стрелки по бокам в лайтбоксе */
+.room-photos-lightbox__nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: none;
+  background: transparent;
+  color: #DDB96F;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 24px;
+  line-height: 1;
+  transition: background .22s ease, transform .22s ease;
+}
+
+.room-photos-lightbox__nav--prev { left: 32px; }
+.room-photos-lightbox__nav--next { right: 32px; }
+
+.room-photos-lightbox__nav:hover {
+  background: rgba(134,134,134,0.1);
+  transform: translateY(-50%) scale(1.04);
+}
+
+
+

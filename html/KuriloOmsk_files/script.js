@@ -1178,6 +1178,351 @@ jQuery(function ($) {
 
 
 
+
+// ТОП БАР
+document.addEventListener('DOMContentLoaded', function () {
+  const topbar = document.querySelector('.topbar');
+  const dropdownParents = document.querySelectorAll('.topbar__menu .has-dropdown');
+  const mobileToggle = document.querySelector('.topbar__toggle');
+
+  if (!topbar) return;
+
+  function closeAllDropdowns(except) {
+    dropdownParents.forEach(function (li) {
+      if (li !== except) li.classList.remove('is-open');
+    });
+  }
+
+  // Логика дропдаунов (десктоп + мобилка)
+  dropdownParents.forEach(function (li) {
+    const trigger = li.querySelector('.item');
+    if (!trigger) return;
+
+    // Клик по заголовку (Ремонт, Услуги...)
+    trigger.addEventListener('click', function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+
+      const isOpen = li.classList.contains('is-open');
+
+      // На десктопе оставляем кликом фиксацию и взаимное закрытие
+      if (window.innerWidth > 992) {
+        closeAllDropdowns();
+        if (!isOpen) li.classList.add('is-open');
+      } else {
+        // На мобилке делаем аккордеон: открываем/закрываем только этот
+        if (isOpen) {
+          li.classList.remove('is-open');
+        } else {
+          closeAllDropdowns();
+          li.classList.add('is-open');
+        }
+      }
+    });
+
+    // Для десктопа: hover + "мостик"
+    li.addEventListener('mouseenter', function () {
+      if (window.innerWidth > 992) {
+        closeAllDropdowns(li);
+      }
+    });
+  });
+
+  // Клик вне шапки закрывает всё (и мобилку, и дропдауны)
+  document.addEventListener('click', function (e) {
+    if (!topbar.contains(e.target)) {
+      closeAllDropdowns();
+      topbar.classList.remove('is-mobile-open');
+    }
+  });
+
+
+  // Мобильный бургер
+  if (mobileToggle) {
+    mobileToggle.addEventListener('click', function (e) {
+      e.stopPropagation();
+      topbar.classList.toggle('is-mobile-open');
+
+      if (!topbar.classList.contains('is-mobile-open')) {
+        closeAllDropdowns();
+      }
+    });
+  }
+
+  // При клике по ссылке в меню на мобилке — закрываем меню
+  // НО не закрываем, если это заголовок с выпадашкой (Ремонт, Услуги и т.п.)
+  document.querySelectorAll('.topbar__menu a').forEach(function (a) {
+    a.addEventListener('click', function () {
+      if (window.innerWidth <= 992) {
+        const parentLi = a.closest('.has-dropdown');
+
+        // если это пункт с выпадашкой – не закрываем меню, даём работать аккордеону
+        if (parentLi && parentLi.querySelector('.dropdown')) {
+          return;
+        }
+      }
+
+      if (topbar.classList.contains('is-mobile-open')) {
+        topbar.classList.remove('is-mobile-open');
+        closeAllDropdowns();
+      }
+    });
+  });
+
+
+  // курсор-рука для js-open-panel
+  document.querySelectorAll('.js-open-panel').forEach(function (el) {
+    el.style.cursor = 'pointer';
+  });
+});
+
+
+
+
+
+
+
+
+// Гостиница - Номера
+document.addEventListener('click', function (e) {
+  const toggle = e.target.closest('[data-room-toggle]');
+  if (!toggle) return;
+
+  const item      = toggle.closest('[data-room-item]');
+  const accordion = toggle.closest('[data-room-accordion]');
+  const body      = item.querySelector('[data-room-body]');
+  const isOpen    = item.classList.contains('is-open');
+
+  // закрываем остальные
+  accordion.querySelectorAll('[data-room-item].is-open').forEach(function (opened) {
+    if (opened === item) return;
+    opened.classList.remove('is-open');
+    const openedBody = opened.querySelector('[data-room-body]');
+    openedBody.style.maxHeight = 0;
+  });
+
+  // текущий
+  if (isOpen) {
+    item.classList.remove('is-open');
+    body.style.maxHeight = 0;
+  } else {
+    item.classList.add('is-open');
+    body.style.maxHeight = body.scrollHeight + 'px';
+  }
+});
+
+// Лайтбокс + превью фото номеров
+jQuery(function ($) {
+  var $overlay = $('[data-room-lightbox]');
+  if (!$overlay.length) return;
+
+  var $img     = $overlay.find('[data-room-lightbox-img]');
+  var $btnPrev = $overlay.find('[data-room-lightbox-prev]');
+  var $btnNext = $overlay.find('[data-room-lightbox-next]');
+
+  var currentList  = [];
+  var currentIndex = 0;
+
+  // показать текущее фото в лайтбоксе
+  function showCurrent() {
+    var item = currentList[currentIndex];
+    if (!item) return;
+
+    $img.attr('src', item.src);
+    $img.attr('alt', item.alt || '');
+  }
+
+  // открыть лайтбокс из превью
+  function openFromThumb($thumb) {
+    var $photos = $thumb.closest('.room-item__photos');
+    if (!$photos.length) return;
+
+    var $thumbs = $photos.find('.room-item__photos-track img');
+
+    currentList = $thumbs.map(function () {
+      var $t = $(this);
+      return {
+        src: $t.data('full') || $t.attr('src'),
+        alt: $t.attr('alt') || ''
+      };
+    }).get();
+
+    currentIndex = $thumbs.index($thumb);
+    if (currentIndex < 0) currentIndex = 0;
+
+    showCurrent();
+    $overlay.addClass('active').attr('aria-hidden', 'false');
+  }
+
+  function closeOverlay() {
+    $overlay.removeClass('active').attr('aria-hidden', 'true');
+  }
+
+  // перелистывание внутри лайтбокса (кольцевое)
+  function change(delta) {
+    if (!currentList.length) return;
+    var len = currentList.length;
+    currentIndex = (currentIndex + delta + len) % len;
+    showCurrent();
+  }
+
+  // закрытие по фото / крестику / фону
+  $overlay.on('click', '[data-room-lightbox-close]', function (e) {
+    e.preventDefault();
+    closeOverlay();
+  });
+    // клик по фону (тёмная область вокруг картинки) — тоже закрывает
+  $overlay.on('click', function (e) {
+    // если кликнули именно по самому оверлею, а не по картинке/стрелкам/крестику
+    if (e.target === this) {
+      closeOverlay();
+    }
+  });
+
+  // стрелки в лайтбоксе
+  $btnPrev.on('click', function (e) {
+    e.preventDefault();
+    e.stopPropagation();
+    change(-1);
+  });
+
+  $btnNext.on('click', function (e) {
+    e.preventDefault();
+    e.stopPropagation();
+    change(1);
+  });
+
+  // клавиатура: Esc, ←, →
+  $(document).on('keydown', function (e) {
+    if (!$overlay.hasClass('active')) return;
+
+    if (e.key === 'Escape' || e.key === 'Esc') {
+      closeOverlay();
+    } else if (e.key === 'ArrowLeft') {
+      change(-1);
+    } else if (e.key === 'ArrowRight') {
+      change(1);
+    }
+  });
+
+  // Превью внутри номера: одно фото по центру + стрелки
+
+  // Обновить активный кадр и видимость стрелок
+  function setActiveThumb($photos, index) {
+    var $track  = $photos.find('.room-item__photos-track');
+    var $thumbs = $track.find('img');
+    var total   = $thumbs.length;
+    if (!total) return;
+
+    index = Math.max(0, Math.min(index, total - 1));
+
+    $thumbs.removeClass('is-active');
+    var $active = $thumbs.eq(index);
+    $active.addClass('is-active');
+
+    // запоминаем индекс
+    $photos.data('roomIndex', index);
+
+    // управляём стрелками
+    var $prev = $photos.find('.room-item__photos-arrow--prev');
+    var $next = $photos.find('.room-item__photos-arrow--next');
+
+    if (index > 0) {
+      $prev.addClass('is-visible');
+    } else {
+      $prev.removeClass('is-visible');
+    }
+
+    if (index < total - 1) {
+      $next.addClass('is-visible');
+    } else {
+      $next.removeClass('is-visible');
+    }
+  }
+
+  // Инициализация: первое фото активное
+  $('.room-item__photos').each(function () {
+    var $photos = $(this);
+    var $track  = $photos.find('.room-item__photos-track');
+    var $thumbs = $track.find('img');
+    if (!$thumbs.length) return;
+
+    var $active = $thumbs.filter('.is-active').first();
+    var index;
+
+    if ($active.length) {
+      index = $thumbs.index($active);
+    } else {
+      index = 0;
+      $thumbs.eq(0).addClass('is-active');
+    }
+
+    setActiveThumb($photos, index);
+  });
+
+  // Стрелка "вперёд"
+  $(document).on('click', '.room-item__photos-arrow--next', function (e) {
+    e.preventDefault();
+    var $photos = $(this).closest('.room-item__photos');
+    var $track  = $photos.find('.room-item__photos-track');
+    var total   = $track.find('img').length;
+    if (!total) return;
+
+    var index = $photos.data('roomIndex') || 0;
+    index = Math.min(index + 1, total - 1);
+
+    setActiveThumb($photos, index);
+  });
+
+  // Стрелка "назад"
+  $(document).on('click', '.room-item__photos-arrow--prev', function (e) {
+    e.preventDefault();
+    var $photos = $(this).closest('.room-item__photos');
+    var $track  = $photos.find('.room-item__photos-track');
+    var total   = $track.find('img').length;
+    if (!total) return;
+
+    var index = $photos.data('roomIndex') || 0;
+    index = Math.max(index - 1, 0);
+
+    setActiveThumb($photos, index);
+  });
+
+  // Клик по картинке — открываем лайтбокс
+  $(document).on('click', '.room-item__photos-track img', function (e) {
+    e.preventDefault();
+    var $thumb  = $(this);
+    var $photos = $thumb.closest('.room-item__photos');
+    var $track  = $photos.find('.room-item__photos-track');
+    var $thumbs = $track.find('img');
+    var index   = $thumbs.index($thumb);
+
+    if (index < 0) return;
+
+    setActiveThumb($photos, index);
+    openFromThumb($thumb);
+  });
+
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // Яндекс Карты
 document.addEventListener('click', function (e) {
   // ОТКРЫТИЕ
