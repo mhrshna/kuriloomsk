@@ -169,25 +169,73 @@ $(function () {
 });
 
 // scroll more
-jQuery(document).ready(function ($) {
-	if ($('.scroll-down').length) {
-		$('.scroll-down').click(function () {
-			var destination = $(this).parents('.section').innerHeight();
-			$('html').animate({scrollTop: destination}, 900);
-		});
-	}
-}(jQuery));
+(function ($) {
 
-// smooth scroll
+  // ===== Универсальная супер-плавная функция скролла =====
+  function smoothScrollTo(targetY, duration) {
+    duration = duration || 1000; // по умолчанию 1 сек
 
-jQuery(document).ready(function ($) {
-	$("a.scrollto").click(function () {
-		elementClick = $(this).attr("href")
-		destination = $(elementClick).offset().top - 20;
-		$("html:not(:animated),body:not(:animated)").animate({scrollTop: destination}, 1100);
-		return false;
-	});
-}(jQuery));
+    var startY = window.pageYOffset || document.documentElement.scrollTop;
+    var diff = targetY - startY;
+    var startTime = null;
+
+    // плавная функция (можешь поиграть с формулой)
+    function easeInOutCubic(t) {
+      return t < 0.5
+        ? 4 * t * t * t
+        : 1 - Math.pow(-2 * t + 2, 3) / 2;
+    }
+
+    function step(timestamp) {
+      if (!startTime) startTime = timestamp;
+      var elapsed = timestamp - startTime;
+      var progress = Math.min(elapsed / duration, 1);
+      var eased = easeInOutCubic(progress);
+
+      window.scrollTo(0, startY + diff * eased);
+
+      if (progress < 1) {
+        requestAnimationFrame(step);
+      }
+    }
+
+    requestAnimationFrame(step);
+  }
+
+  // ===== Скролл по кнопке .scroll-down в центр секции партнёров =====
+  $(function () {
+    $('.scroll-down').on('click', function (e) {
+      e.preventDefault();
+
+      var $target = $('.partners-section');
+      if (!$target.length) return;
+
+      var top = $target.offset().top;
+      var height = $target.outerHeight();
+      var centerPosition = top + (height / 2) - (window.innerHeight / 2);
+
+      smoothScrollTo(centerPosition, 1200);
+    });
+  });
+
+  // ===== Плавный скролл по якорям a.scrollto =====
+  $(function () {
+    $('a.scrollto').on('click', function (e) {
+      e.preventDefault();
+
+      var elementClick = $(this).attr('href');
+      var $target = $(elementClick);
+      if (!$target.length) return;
+
+      var destination = $target.offset().top - 20; // маленький отступ сверху
+      smoothScrollTo(destination, 1200);
+    });
+  });
+
+})(jQuery);
+
+
+
 
 
 // dropdown
@@ -1320,25 +1368,47 @@ jQuery(function ($) {
   var $btnPrev = $overlay.find('[data-room-lightbox-prev]');
   var $btnNext = $overlay.find('[data-room-lightbox-next]');
 
-  var currentList  = [];
+  var currentList  = [];   // [{src, alt}, ...] для ТЕКУЩЕГО номера
   var currentIndex = 0;
+
+  // ===== КРАСИВАЯ АНИМАЦИЯ (как у сертификатов) =====
+  function animateTo(item) {
+    if (!item) return;
+
+    $img
+      .stop(true, true)
+      .css({
+        opacity: 0,
+        transform: 'scale(.985)',
+        transition: 'none'
+      })
+      .attr('src', item.src)
+      .attr('alt', item.alt || '');
+
+    setTimeout(function () {
+      $img.css({
+        transition: 'opacity .28s ease, transform .28s ease',
+        opacity: 1,
+        transform: 'scale(1)'
+      });
+    }, 20);
+  }
 
   // показать текущее фото в лайтбоксе
   function showCurrent() {
+    if (!currentList.length) return;
     var item = currentList[currentIndex];
-    if (!item) return;
-
-    $img.attr('src', item.src);
-    $img.attr('alt', item.alt || '');
+    animateTo(item);
   }
 
-  // открыть лайтбокс из превью
+  // открыть лайтбокс из превью конкретного номера
   function openFromThumb($thumb) {
     var $photos = $thumb.closest('.room-item__photos');
     if (!$photos.length) return;
 
     var $thumbs = $photos.find('.room-item__photos-track img');
 
+    // собрали список кадров для ЭТОГО номера
     currentList = $thumbs.map(function () {
       var $t = $(this);
       return {
@@ -1350,7 +1420,18 @@ jQuery(function ($) {
     currentIndex = $thumbs.index($thumb);
     if (currentIndex < 0) currentIndex = 0;
 
+    // показать первый кадр с анимацией
     showCurrent();
+
+    // ЛОГИКА: если кадр один — НЕ показываем стрелки в лайтбоксе
+    if (currentList.length <= 1) {
+      $btnPrev.hide();
+      $btnNext.hide();
+    } else {
+      $btnPrev.show();
+      $btnNext.show();
+    }
+
     $overlay.addClass('active').attr('aria-hidden', 'false');
   }
 
@@ -1358,25 +1439,35 @@ jQuery(function ($) {
     $overlay.removeClass('active').attr('aria-hidden', 'true');
   }
 
-  // перелистывание внутри лайтбокса (кольцевое)
+  // перелистывание внутри лайтбокса (кольцевое, но если один кадр — молчим)
   function change(delta) {
     if (!currentList.length) return;
     var len = currentList.length;
+    if (len <= 1) return; // один кадр — не листаем
+
     currentIndex = (currentIndex + delta + len) % len;
     showCurrent();
   }
 
-  // закрытие по фото / крестику / фону
+  // ===== ЗАКРЫТИЕ ЛАЙТБОКСА =====
+
+  // по крестику
   $overlay.on('click', '[data-room-lightbox-close]', function (e) {
     e.preventDefault();
     closeOverlay();
   });
-    // клик по фону (тёмная область вокруг картинки) — тоже закрывает
+
+  // клик по фону (тёмная область вокруг картинки)
   $overlay.on('click', function (e) {
-    // если кликнули именно по самому оверлею, а не по картинке/стрелкам/крестику
     if (e.target === this) {
       closeOverlay();
     }
+  });
+
+  // клик по самой картинке — тоже закрывает (как у сертификатов)
+  $img.on('click', function (e) {
+    e.preventDefault();
+    closeOverlay();
   });
 
   // стрелки в лайтбоксе
@@ -1399,13 +1490,123 @@ jQuery(function ($) {
     if (e.key === 'Escape' || e.key === 'Esc') {
       closeOverlay();
     } else if (e.key === 'ArrowLeft') {
+      e.preventDefault();
       change(-1);
     } else if (e.key === 'ArrowRight') {
+      e.preventDefault();
       change(1);
     }
   });
 
-  // Превью внутри номера: одно фото по центру + стрелки
+  /* Мобильный свайп для фото номеров */
+jQuery(function ($) {
+  var isMobile = window.matchMedia("(max-width: 768px)").matches;
+  if (!isMobile) return;
+
+  var $overlay = $('[data-room-lightbox]');
+  var $img     = $overlay.find('[data-room-lightbox-img]');
+  var $btnPrev = $overlay.find('[data-room-lightbox-prev]');
+  var $btnNext = $overlay.find('[data-room-lightbox-next]');
+
+  // Скрываем стрелки на телефонах
+  $btnPrev.hide();
+  $btnNext.hide();
+
+  // Для анимации
+  var swipeInProgress = false;
+  var touchStartX = 0;
+  var touchEndX   = 0;
+
+  function getList() {
+    return window.currentList || [];
+  }
+  function getIndex() {
+    return window.currentIndex || 0;
+  }
+  function setIndex(v) {
+    window.currentIndex = v;
+  }
+
+  // Анимация перелистывания (слайд)
+  function swipeChange(delta) {
+    var list = getList();
+    if (!list.length || list.length <= 1) return;
+    if (swipeInProgress) return;
+
+    swipeInProgress = true;
+
+    var newIndex = (getIndex() + delta + list.length) % list.length;
+    var item = list[newIndex];
+
+    var outShift = delta > 0 ? -60 : 60;
+    var inShift  = delta > 0 ? 60 : -60;
+
+    // Уводим старый кадр
+    $img
+      .stop(true, true)
+      .css({
+        transition: 'transform .18s ease, opacity .18s ease',
+        transform: 'translateX(' + outShift + 'px)',
+        opacity: 0
+      });
+
+    setTimeout(function () {
+      // Подменяем картинку и ставим ее за краем
+      setIndex(newIndex);
+
+      $img
+        .attr('src', item.src)
+        .attr('alt', item.alt || '')
+        .css({
+          transition: 'none',
+          transform: 'translateX(' + inShift + 'px)',
+          opacity: 0
+        });
+
+      // рефлоу
+      void $img[0].offsetWidth;
+
+      // Заезд новой
+      $img.css({
+        transition: 'transform .22s ease, opacity .22s ease',
+        transform: 'translateX(0)',
+        opacity: 1
+      });
+
+      setTimeout(function () {
+        swipeInProgress = false;
+      }, 250);
+    }, 180);
+  }
+
+  // Жесты
+  $img.on('touchstart', function (e) {
+    var t = e.originalEvent.touches[0];
+    touchStartX = t.clientX;
+    touchEndX   = t.clientX;
+  });
+
+  $img.on('touchmove', function (e) {
+    var t = e.originalEvent.touches[0];
+    touchEndX = t.clientX;
+  });
+
+  $img.on('touchend', function () {
+    var diff = touchEndX - touchStartX;
+
+    if (Math.abs(diff) > 50) {
+      if (diff < 0) {
+        swipeChange(+1); 
+      } else {
+        swipeChange(-1); 
+      }
+    }
+  });
+});
+
+
+
+  // ===== ПРЕВЬЮ ВНУТРИ НОМЕРА: одно фото + боковые стрелки =====
 
   // Обновить активный кадр и видимость стрелок
   function setActiveThumb($photos, index) {
@@ -1423,20 +1624,26 @@ jQuery(function ($) {
     // запоминаем индекс
     $photos.data('roomIndex', index);
 
-    // управляём стрелками
+    // управляём стрелками превью
     var $prev = $photos.find('.room-item__photos-arrow--prev');
     var $next = $photos.find('.room-item__photos-arrow--next');
 
-    if (index > 0) {
-      $prev.addClass('is-visible');
-    } else {
+    if (total <= 1) {
+      // ЛОГИКА: если фото одно — стрелки совсем убираем
       $prev.removeClass('is-visible');
-    }
-
-    if (index < total - 1) {
-      $next.addClass('is-visible');
-    } else {
       $next.removeClass('is-visible');
+    } else {
+      if (index > 0) {
+        $prev.addClass('is-visible');
+      } else {
+        $prev.removeClass('is-visible');
+      }
+
+      if (index < total - 1) {
+        $next.addClass('is-visible');
+      } else {
+        $next.removeClass('is-visible');
+      }
     }
   }
 
@@ -1460,7 +1667,7 @@ jQuery(function ($) {
     setActiveThumb($photos, index);
   });
 
-  // Стрелка "вперёд"
+  // Стрелка "вперёд" в превью
   $(document).on('click', '.room-item__photos-arrow--next', function (e) {
     e.preventDefault();
     var $photos = $(this).closest('.room-item__photos');
@@ -1474,7 +1681,7 @@ jQuery(function ($) {
     setActiveThumb($photos, index);
   });
 
-  // Стрелка "назад"
+  // Стрелка "назад" в превью
   $(document).on('click', '.room-item__photos-arrow--prev', function (e) {
     e.preventDefault();
     var $photos = $(this).closest('.room-item__photos');
@@ -1488,7 +1695,7 @@ jQuery(function ($) {
     setActiveThumb($photos, index);
   });
 
-  // Клик по картинке — открываем лайтбокс
+  // Клик по картинке в превью — открываем лайтбокс
   $(document).on('click', '.room-item__photos-track img', function (e) {
     e.preventDefault();
     var $thumb  = $(this);
@@ -1511,9 +1718,507 @@ jQuery(function ($) {
 
 
 
+ // СЕРТИФИКАТЫ
+jQuery(function ($) {
+  var $section = $('[data-cert-section]');
+  if (!$section.length) return;
 
 
 
+  var $items   = $section.find('.cert-item');
+  var total    = $items.length;
+  if (!total) return;
+
+  var index    = 0;                // текущий сертификат (фон)
+  var isLightboxOpen = false;
+  var animTimer = null;
+  var ANIM_DURATION = 330;         // должен совпадать с CSS-анимацией
+
+  // Левые текстовые элементы
+  var $title    = $section.find('[data-cert-title]');
+  var $name     = $section.find('[data-cert-name]');
+  var $file     = $section.find('[data-cert-file]');
+  var $download = $section.find('[data-cert-download]');
+
+  // Пагинация и кнопки
+  var $current  = $section.find('[data-cert-current]');
+  var $total    = $section.find('[data-cert-total]');
+  var $btnPrev  = $section.find('[data-cert-prev]');
+  var $btnNext  = $section.find('[data-cert-next]');
+
+  // Блоки для анимации
+  var $info    = $section.find('.cert-info');
+  var $preview = $section.find('.cert-preview');
+
+  $total.text(total);
+
+  // ФУНКЦИЯ СМЕНЫ СЕРТИФИКАТА 
+
+  /**
+   * Установить активный сертификат
+   * @param {Number} i - индекс
+   * @param {Boolean} animate 
+   */
+  function setActiveCert(i, animate) {
+    if (!total) return;
+
+    if (typeof animate === 'undefined') {
+      animate = true;
+    }
+
+
+    index = (i % total + total) % total;
+
+    // активный .cert-item
+    $items.removeClass('is-active');
+    var $item = $items.eq(index).addClass('is-active');
+
+    // обновляем тексты слева
+    $title.text($item.data('title') || '');
+    $name.text($item.data('name') || '');
+    $file.text($item.data('file') || '');
+    $download.attr('href', $item.data('download') || '#');
+
+    // пагинация
+    $current.text(index + 1);
+
+    if (!animate || isLightboxOpen) return;
+
+    if (animTimer) {
+      clearTimeout(animTimer);
+      animTimer = null;
+    }
+
+    $info.removeClass('cert-anim');
+    $preview.removeClass('cert-anim');
+
+    // небольшой тик, чтобы браузер успел сбросить класс
+    setTimeout(function () {
+      $info.addClass('cert-anim');
+      $preview.addClass('cert-anim');
+
+      animTimer = setTimeout(function () {
+        $info.removeClass('cert-anim');
+        $preview.removeClass('cert-anim');
+      }, ANIM_DURATION);
+    }, 10);
+  }
+
+
+  setActiveCert(0, false);
+
+  // КНОПКИ ВНИЗУ (стрелки)
+
+  $btnPrev.on('click', function (e) {
+    e.preventDefault();
+    setActiveCert(index - 1, true);
+  });
+
+  $btnNext.on('click', function (e) {
+    e.preventDefault();
+    setActiveCert(index + 1, true);
+  });
+
+
+  // ЛАЙТБОКС
+
+  var $overlay = $('[data-cert-lightbox]');
+  if (!$overlay.length) return;
+
+  var $lbImg   = $overlay.find('[data-cert-lightbox-img]');
+  var $lbPrev  = $overlay.find('[data-cert-lightbox-prev]');
+  var $lbNext  = $overlay.find('[data-cert-lightbox-next]');
+  var $lbClose = $overlay.find('[data-cert-lightbox-close]');
+
+  var lbIndex = 0; // текущий индекс внутри лайтбокса
+
+  // получить src для сертификата по индексу
+  function getCertSrc(idx) {
+    var $item = $items.eq(idx);
+    if (!$item.length) return null;
+
+    var $thumb = $item.find('.cert-track img').first();
+    if (!$thumb.length) return null;
+
+    return $thumb.data('full') || $thumb.attr('src');
+  }
+
+  // Показать сертификат в лайтбоксе + синхронизировать фон БЕЗ анимации
+  function showLightboxCert(i) {
+    if (!total) return;
+
+    lbIndex = (i % total + total) % total;
+    var src = getCertSrc(lbIndex);
+    if (!src) return;
+
+    $lbImg
+      .stop(true, true)
+      .css({
+        opacity: 0,
+        transform: 'scale(.985)',
+        transition: 'none'
+      })
+      .attr('src', src);
+
+    setTimeout(function () {
+      $lbImg.css({
+        transition: 'opacity .28s ease, transform .28s ease',
+        opacity: 1,
+        transform: 'scale(1)'
+      });
+    }, 20);
+
+    // синхронизируем фон, но БЕЗ анимации
+    setActiveCert(lbIndex, false);
+  }
+
+  function openLightboxFrom(idx) {
+    isLightboxOpen = true;
+    showLightboxCert(idx);
+    $overlay.addClass('active').attr('aria-hidden', 'false');
+  }
+
+  function closeLightbox() {
+    isLightboxOpen = false;
+    $overlay.removeClass('active').attr('aria-hidden', 'true');
+  }
+
+  // Клик по превью – открыть лайтбокс с текущим сертификатом
+  $section.on('click', '.cert-preview .cert-track img', function (e) {
+    e.preventDefault();
+    openLightboxFrom(index);
+  });
+
+  // Закрытие: крестик, фон, клик по самому изображению
+  $lbClose.on('click', function (e) {
+    e.preventDefault();
+    closeLightbox();
+  });
+
+  $lbImg.on('click', function (e) {
+    e.preventDefault();
+    closeLightbox();
+  });
+
+  $overlay.on('click', function (e) {
+    if (e.target === this) {
+      closeLightbox();
+    }
+  });
+
+  // Стрелки в лайтбоксе
+  $lbPrev.on('click', function (e) {
+    e.preventDefault();
+    e.stopPropagation();
+    showLightboxCert(lbIndex - 1);
+  });
+
+  $lbNext.on('click', function (e) {
+    e.preventDefault();
+    e.stopPropagation();
+    showLightboxCert(lbIndex + 1);
+  });
+
+  // Клавиатура в лайтбоксе
+  $(document).on('keydown', function (e) {
+    if (!$overlay.hasClass('active')) return;
+
+    if (e.key === 'Escape' || e.key === 'Esc') {
+      closeLightbox();
+    } else if (e.key === 'ArrowLeft') {
+      e.preventDefault();
+      showLightboxCert(lbIndex - 1);
+    } else if (e.key === 'ArrowRight') {
+      e.preventDefault();
+      showLightboxCert(lbIndex + 1);
+    }
+  });
+
+// Мобильный режим: свайп + слайд-анимация
+var isMobile = window.matchMedia("(max-width: 768px)").matches;
+
+if (isMobile) {
+  // Убираем стрелки в лайтбоксе
+  $lbPrev.hide();
+  $lbNext.hide();
+
+  var touchStartX = 0;
+  var touchEndX   = 0;
+  var swipeInProgress = false;
+  var swipeAnimTimer  = null;
+
+  // Красивое перелистывание со слайдом
+  function swipeLightboxCert(dir) {
+    if (swipeInProgress) return;
+    if (!total) return;
+
+    var newIndex = (lbIndex + dir + total) % total;
+    var newSrc   = getCertSrc(newIndex);
+    if (!newSrc) return;
+
+    swipeInProgress = true;
+
+    // Направление анимации
+    var outShift = dir > 0 ? -60 : 60; 
+    var inShift  = dir > 0 ? 60  : -60;
+
+    // выезжает текущий кадр
+    $lbImg
+      .stop(true, true)
+      .css({
+        transition: 'transform .18s ease, opacity .18s ease',
+        transform: 'translateX(' + outShift + 'px)',
+        opacity: 0
+      });
+
+    clearTimeout(swipeAnimTimer);
+    swipeAnimTimer = setTimeout(function () {
+      // меняем картинку, ставим её чуть снаружи
+      lbIndex = newIndex;
+      $lbImg
+        .attr('src', newSrc)
+        .css({
+          transition: 'none',
+          transform: 'translateX(' + inShift + 'px)',
+          opacity: 0
+        });
+
+      void $lbImg[0].offsetWidth;
+
+      // заезд новой картинки
+      $lbImg.css({
+        transition: 'transform .22s ease, opacity .22s ease',
+        transform: 'translateX(0)',
+        opacity: 1
+      });
+
+      // синхроним основную карусель сертификатов
+      setActiveCert(lbIndex, false);
+
+      setTimeout(function () {
+        swipeInProgress = false;
+      }, 230);
+    }, 190);
+  }
+
+  // Свайп по картинке
+  $lbImg.on('touchstart', function (e) {
+    var t = e.originalEvent.touches[0];
+    touchStartX = t.clientX;
+    touchEndX   = t.clientX;
+  });
+
+  $lbImg.on('touchmove', function (e) {
+    var t = e.originalEvent.touches[0];
+    touchEndX = t.clientX;
+  });
+
+  $lbImg.on('touchend', function () {
+    var diff = touchEndX - touchStartX;
+
+    // порог, чтобы не срабатывало от лёгкого дрожания пальца
+    if (Math.abs(diff) > 50) {
+      if (diff < 0) {
+        swipeLightboxCert(+1);
+      } else {
+        swipeLightboxCert(-1);
+      }
+    }
+  });
+}
+
+
+
+
+});
+
+
+
+
+
+// Стоимость работ (главная)
+document.addEventListener('DOMContentLoaded', function () {
+  const section   = document.querySelector('#cost-section');
+  if (!section) return;
+
+  const slides    = Array.from(section.querySelectorAll('.cost-card'));
+  const prevBtn   = section.querySelector('.cost-modern__arrow--prev');
+  const nextBtn   = section.querySelector('.cost-modern__arrow--next');
+  const bgLayers  = Array.from(section.querySelectorAll('.cost-modern__bg-layer'));
+  const rateItems = Array.from(section.querySelectorAll('.cost-rate'));
+
+  const total = slides.length;
+  if (!total) return;
+
+  let current = 0;
+  let activeBgIndex = 0;
+  let firstRatesInit = true;
+
+  function modulo(i, n) {
+    return (i + n) % n;
+  }
+
+  function updateSlides() {
+    const leftIndex  = modulo(current - 1, total);
+    const rightIndex = modulo(current + 1, total);
+
+    slides.forEach((slide, i) => {
+      slide.classList.remove('is-left', 'is-center', 'is-right', 'is-hidden');
+
+      if (i === current) {
+        slide.classList.add('is-center');
+      } else if (i === leftIndex) {
+        slide.classList.add('is-left');
+      } else if (i === rightIndex) {
+        slide.classList.add('is-right');
+      } else {
+        slide.classList.add('is-hidden');
+      }
+    });
+
+    const activeSlide = slides[current];
+
+    // фон
+    const bgUrl = activeSlide.dataset.bg;
+    if (bgUrl) {
+      updateBackground(bgUrl);
+    }
+
+    // ставки
+    updateRates(activeSlide);
+  }
+
+  function updateBackground(url) {
+    if (!bgLayers.length) return;
+
+    const nextBgIndex = activeBgIndex === 0 ? 1 : 0;
+    const activeLayer = bgLayers[activeBgIndex];
+    const nextLayer   = bgLayers[nextBgIndex];
+
+    nextLayer.style.backgroundImage = 'url(' + url + ')';
+    nextLayer.classList.add('is-active');
+    activeLayer.classList.remove('is-active');
+
+    activeBgIndex = nextBgIndex;
+  }
+
+function updateRates(slide) {
+  // ПЕРВЫЙ ЗАПУСК — БЕЗ АНИМАЦИИ
+  if (firstRatesInit) {
+    rateItems.forEach((item, idx) => {
+      const num   = idx + 1;
+      const label = slide.dataset['r' + num + 'Label'] || '';
+      const value = slide.dataset['r' + num + 'Value'] || '';
+
+      const valueSpan = item.querySelector('.cost-rate__value span');
+      const labelEl   = item.querySelector('.cost-rate__label');
+
+      if (valueSpan) valueSpan.textContent = value;
+      if (labelEl)   labelEl.textContent   = label;
+
+      item.classList.toggle('is-empty', !label);
+      item.classList.remove('is-updating');
+    });
+
+    firstRatesInit = false;
+    return;
+  }
+
+  // УЖЕ С ФЕЙДОМ
+  rateItems.forEach(item => {
+    item.classList.add('is-updating');
+  });
+
+  setTimeout(() => {
+    rateItems.forEach((item, idx) => {
+      const num   = idx + 1;
+      const label = slide.dataset['r' + num + 'Label'] || '';
+      const value = slide.dataset['r' + num + 'Value'] || '';
+
+      const valueSpan = item.querySelector('.cost-rate__value span');
+      const labelEl   = item.querySelector('.cost-rate__label');
+
+      if (valueSpan) valueSpan.textContent = value;
+      if (labelEl)   labelEl.textContent   = label;
+
+      item.classList.toggle('is-empty', !label);
+      item.classList.remove('is-updating');
+    });
+  }, 120);
+}
+
+
+  function go(step) {
+    current = modulo(current + step, total);
+    updateSlides();
+  }
+
+  function goPrev() {
+    go(-1);
+  }
+
+  function goNext() {
+    go(1);
+  }
+
+  if (prevBtn) prevBtn.addEventListener('click', goPrev);
+  if (nextBtn) nextBtn.addEventListener('click', goNext);
+
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'ArrowLeft')  goPrev();
+    if (e.key === 'ArrowRight') goNext();
+  });
+
+  // Клик по "Подробнее" на боковых карточках = пролистать к ней
+section.addEventListener('click', function (e) {
+  const btn = e.target.closest('.cost-card__btn');
+  if (!btn) return;
+
+  const card = btn.closest('.cost-card');
+  if (!card) return;
+
+  const idx = slides.indexOf(card);
+  if (idx === -1) return;
+
+  const leftIndex  = modulo(current - 1, total);
+  const rightIndex = modulo(current + 1, total);
+
+  // если это уже центральная — просто открыть панель как обычно
+  if (idx === current) {
+    return;
+  }
+
+  // если нажали на левую плашку — крутим влево
+  if (idx === leftIndex) {
+    go(-1);
+    return;
+  }
+
+  // если нажали на правую плашку — крутим вправо
+  if (idx === rightIndex) {
+    go(1);
+    return;
+  }
+
+  // на всякий случай: если кликнули по какой-то дальней
+  let step = idx - current;
+  if (Math.abs(step) > total / 2) {
+    step = step > 0 ? step - total : step + total;
+  }
+  go(step);
+});
+
+  // Инициализация
+  const initialBg = slides[0].dataset.bg;
+  if (initialBg && bgLayers[0]) {
+    bgLayers[0].style.backgroundImage = 'url(' + initialBg + ')';
+    bgLayers[0].classList.add('is-active');
+  }
+
+  updateSlides();
+  section.classList.add('is-ready');
+  
+});
 
 
 
