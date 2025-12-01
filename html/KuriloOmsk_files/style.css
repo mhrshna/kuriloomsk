@@ -4744,79 +4744,218 @@ a[data-fancybox="gallery"]::before {
     font-weight: 600;
   }
   
-  /* Галерея */
-  .gallery {
-    display: grid;
-    gap: 12px;
-  }
-  
-  /* --- Галерея: улучшенный и аккуратный стиль превью --- */
-.gallery {
+
+
+
+/* Галерея в панели "Кузовной ремонт" */
+.gallery.gallery--bodyshop {
   display: grid;
-  gap: 14px;
+  grid-template-columns: 48px minmax(0, 1fr) 48px;
+  gap: 0;         
+  align-items: center;
 }
 
-.gallery__main {
-  height: 102%;
-  width: 100%;
-  aspect-ratio: 16/9;
+
+
+/* Главное фото */
+.gallery.gallery--bodyshop .gallery__main {
+  position: relative;
+  max-width: 870px;         
+  justify-self: center;        
+  width: 100%;                
+  aspect-ratio: 16/9;      
   border-radius: 14px;
   overflow: hidden;
+
   background: rgba(255,255,255,.04);
   box-shadow:
-    0 10px 24px rgba(0,0,0,.05),  /* вертикальная глубина */
-    0 0 4px rgba(0,0,0,.5);      /* почти незаметная по бокам */
+    0 20px 32px rgba(0,0,0,0.14),
+    0 8px 20px rgba(0,0,0,0.12),
+    0 0 4px rgba(0,0,0,0.18);
+
 }
 
+/* Мягкая анимация текста */
+.gallery-caption [data-role="gtitle"],
+.gallery-caption [data-role="gdesc"] {
+  opacity: 1;
+  transform: translateY(0);
+  transition:
+    opacity .38s cubic-bezier(0.22, 0.61, 0.36, 1),   
+    transform .38s cubic-bezier(0.22, 0.61, 0.36, 1); 
+}
+
+/* Состояние скрыто — для перезапуска анимации */
+.gallery-caption.is-fading [data-role="gtitle"],
+.gallery-caption.is-fading [data-role="gdesc"] {
+  opacity: 0;
+  transform: translateY(4px); 
+}
+
+/* курсор */
 .gallery__main img {
+  cursor: zoom-in;
+}
+
+/* контейнер */
+.gallery__main {
+  position: relative;
+  overflow: hidden;
+}
+
+/* Глобальная плавность */
+.gallery__main img {
+  transition: transform .25s ease, filter .25s ease;
+  transform-origin: center center;
+  will-change: transform;
+}
+
+/* подпись к фото */
+.gallery-caption {
+  margin-bottom: 14px;
+}
+
+/* панель */
+.gallery.gallery--bodyshop .gallery__main img {
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
-  display: block;
-  transition: transform .3s ease;
+  transform: translateY(-0.5px) scale(1.005);
+  transform-origin: center;
+
+  transition:
+    transform .28s cubic-bezier(0.22, 0.61, 0.36, 1),
+    filter .28s ease;
+}
+
+/* hover */
+.gallery.gallery--bodyshop .gallery__main img:hover {
+  transform: translateY(-0.5px) scale(1.035);
+  filter: saturate(1.03) contrast(1.03);
 }
 
 
 
 
-.gallery__thumbs {
+/* Правая/левая колонка — вертикальные стрелки */
+.gallery__side-nav {
   display: flex;
-  justify-content: center;
+  flex-direction: column;
   align-items: center;
   gap: 10px;
-  margin-top: 6px;
 }
 
-.gallery__thumbs img {
+.gallery__side-nav--left { margin-right: -10px; }
+.gallery__side-nav--right { margin-left: -10px; }
+
+
+/* Кнопки-стрелки, в стиле навигации лайтбокса */
+.gallery__nav-btn {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: none;
+  background: transparent;
+  color: #DDB96F;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+
+  font-size: 24px;
+  line-height: 1;
+
+  transition: background .22s ease, transform .22s ease, box-shadow .22s ease;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.18);
+}
+
+.gallery__nav-btn:hover {
+  background: rgba(134,134,134,0.1);
+  transform: scale(1.04);
+}
+
+
+/* Миниатюры снизу на всю ширину */
+.gallery.gallery--bodyshop .gallery__thumbs {
+  grid-column: 1 / -1; 
+  margin-top: 16px;
+
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.gallery.gallery--bodyshop .gallery__thumbs img {
   width: 80px;
   height: 54px;
-  /* соотношение 4:3 */
   object-fit: cover;
   border-radius: 8px;
-  opacity: 0.7;
   cursor: pointer;
-  transition: transform .2s ease, opacity .2s ease, box-shadow .2s ease;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  opacity: 0.7;
+
+  border: 1px solid rgba(255,255,255,0.1);
+  transition: 0.25s ease;
 }
 
-.gallery__thumbs img:hover {
+.gallery.gallery--bodyshop .gallery__thumbs img:hover {
   opacity: 1;
   transform: translateY(-2px) scale(1.03);
-  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.35);
+  box-shadow: 0 3px 10px rgba(0,0,0,.35);
 }
 
-.gallery__thumbs img.is-active {
+.gallery.gallery--bodyshop .gallery__thumbs img.is-active {
   opacity: 1;
   border-color: #DDB96F;
-  box-shadow: 0 0 0 2px rgba(221, 185, 111, 0.5);
+  box-shadow: 0 0 0 2px rgba(221,185,111,.5);
 }
 
-/* мобильная версия — делаем чуть крупнее для кликов пальцем */
+/* Мобилка */
 @media (max-width: 768px) {
-  .gallery__thumbs img {
+  .gallery.gallery--bodyshop {
+    grid-template-columns: 1fr; 
+  }
+
+  .gallery__side-nav {
+    order: -1;
+    margin-bottom: 10px;
+    justify-content: space-between;
+    width: 100%;
+    padding: 0 40px;
+  }
+
+  .gallery__nav-btn {
+    width: 42px;
+    height: 42px;
+  }
+
+  .gallery.gallery--bodyshop .gallery__thumbs img {
     width: 64px;
     height: 44px;
   }
+}
+
+
+/* Режим одиночного фото для кузовной галереи */
+.gallery.gallery--bodyshop.gallery--single {
+  grid-template-columns: minmax(0, 1fr) !important; /* без боковых колонок */
+}
+
+/* Чуть расширяем сам блок с фото для одного кадра */
+.gallery.gallery--bodyshop.gallery--single .gallery__main {
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+/* Стрелки и превью прячем */
+.gallery.gallery--bodyshop.gallery--single .gallery__side-nav {
+  display: none !important;
+}
+
+.gallery.gallery--bodyshop.gallery--single .gallery__thumbs {
+  display: none !important;
 }
 
 
@@ -4830,30 +4969,24 @@ a[data-fancybox="gallery"]::before {
   /* Chrome, Edge, Safari */
   .service-panel__body::-webkit-scrollbar {
     width: 10px;
-    /* ширина скролла */
   }
   
   .service-panel__body::-webkit-scrollbar-track {
     background: transparent;
-    /* фон дорожки */
   }
   
   .service-panel__body::-webkit-scrollbar-thumb {
     background-color: rgba(221, 185, 111, .4);
-    /* цвет "ползунка" под крестик */
     border-radius: 4px;
     border: 2px solid transparent;
-    /* делает аккуратным */
     background-clip: padding-box;
     transition: background-color .2s ease;
   }
   
   .service-panel__body::-webkit-scrollbar-thumb:hover {
     background-color: rgba(221, 185, 111, .6);
-    /* немного ярче при наведении */
   }
   
-  /* чтобы не появлялся горизонтальный */
   .service-panel__body::-webkit-scrollbar-corner {
     background: transparent;
   }
@@ -4866,21 +4999,14 @@ a[data-fancybox="gallery"]::before {
   /* фон под заголовком внутри панели */ .service-panel__header {
   
     position: sticky;
-    /* прилипает при прокрутке */
     top: 0;
-    /* закрепляем у верхнего края панели */
     z-index: 5;
-    /* выше контента, ниже крестика */
     background: rgb(215 215 215 / 40%);
-    /* мягкий прозрачный фон */
     backdrop-filter: blur(8px);
-    /* лёгкий блюр, под стиль панели */
     -webkit-backdrop-filter: blur(8px);
     padding: 16px 20px 12px;
-    /* внутренние отступы */
     border-bottom: 2px solid rgba(0, 0, 0, 0.08);
     border-radius: 12px 12px 0 0;
-    /* красиво закругляет верх */
   }
   
   /* оформление текста в шапке */
@@ -4902,7 +5028,7 @@ a[data-fancybox="gallery"]::before {
   /* === Оверлей: только fade, без transform === */
 .popup.service-panel{
   display:block !important;
-  position:fixed; inset:0;          /* перекрываем весь экран */
+  position:fixed; inset:0;          
   opacity:0; visibility:hidden; pointer-events:none;
   transition:opacity .35s ease, visibility 0s linear .35s;
   z-index:999;
@@ -4961,111 +5087,90 @@ a[data-fancybox="gallery"]::before {
   }
 }
 
-  
+
+/* ЛАЙТБОКС ГАЛЕРЕИ СЕРВИС-ПАНЕЛЕЙ (СТИЛЬ КАК У НОМЕРОВ/СЕРТИФИКАТОВ) */
+
+.lightbox {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: rgba(0, 0, 0, .8);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+
+  transition: opacity .35s ease, visibility 0s linear .35s;
+  z-index: 9999;
+
+}
+
+.lightbox.active {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transition: opacity .35s ease, visibility 0s;
+}
+
+.lightbox img {
+  max-width: 90vw;
+  max-height: 85vh;
+  border-radius: 10px;
+  box-shadow: 0 0 30px rgba(0, 0, 0, .6);
+
+  transform: scale(.96);
+  transition: transform .35s ease, opacity .28s ease;
+
+  cursor: zoom-out;
+}
+
+.lightbox.active img {
+  transform: scale(1);
+}
+
+/* Стрелки (как у room-photos-lightbox, только для .lightbox) */
+.lightbox__nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: none;
+  background: transparent;
+  color: #DDB96F;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  cursor: pointer;
+  font-size: 24px;
+  line-height: 1;
+  transition: background .22s ease, transform .22s ease;
+  user-select: none;
+}
+
+.lightbox__nav--prev { left: 32px; }
+.lightbox__nav--next { right: 32px; }
+
+.lightbox__nav:hover {
+  background: rgba(134,134,134,0.1);
+  transform: translateY(-50%) scale(1.04);
+}
 
 
-   .gallery__main {
-    position: relative;
-    width: 100%;
-    aspect-ratio: 16 / 9;
-    /* можно 4/3, 3/2 если что */
-    overflow: hidden;
+/* Мобилка: стрелки прячем, остаётся свайп */
+@media (max-width: 768px) {
+  .lightbox__nav {
+    display: none !important;
   }
-  
-  .gallery__main img {
-    width: 100%;
-    height: 101%;
-    object-fit: cover;
-    display: block;
-  }
-
-
-  /* Лайтбокс */ .lightbox {
-     position: fixed;
-     inset: 0;
-     display: flex;
-     align-items: center;
-     justify-content: center;
-     background: rgba(0, 0, 0, .8);
-     backdrop-filter: blur(6px);
-     -webkit-backdrop-filter: blur(6px);
-     opacity: 0;
-     visibility: hidden;
-     pointer-events: none;
-     transition: opacity .35s ease, visibility 0s linear .35s;
-     z-index: 9999;
-   }
-  
-   .lightbox.active {
-     opacity: 1;
-     visibility: visible;
-     pointer-events: auto;
-     transition: opacity .35s ease, visibility 0s;
-   }
-  
-   .lightbox img {
-     max-width: 90vw;
-     max-height: 85vh;
-     border-radius: 10px;
-     box-shadow: 0 0 30px rgba(0, 0, 0, .6);
-     transform: scale(.96);
-     transition: transform .35s ease;
-     cursor: zoom-out;
-     /* клик по фото — закрыть */
-   }
-  
-   .lightbox.active img {
-     transform: scale(1);
-   }
-  
-   /* Курсор над основной картинкой галереи */
-   .gallery__main img {
-     cursor: zoom-in;
-   }
-
-   /* Контейнер главного фото — чтобы зум не вылезал */ .gallery__main {
-    position: relative;
-    overflow: hidden;
-    /* важное: обрезает края при scale */
-  }
-  
-  /* Курсор и плавный зум при наведении */
-  .gallery__main img {
-    cursor: zoom-in;
-    transition: transform .25s ease, filter .25s ease;
-    transform-origin: center center;
-    will-change: transform;
-  }
-  
-  .gallery__main img:hover {
-    transform: scale(1.02);
-    /* аккуратный намёк, что кликабельно */
-    /* при желании можно добавить лёгкий контраст/тень:
-       filter: saturate(1.02) contrast(1.02); */
-  }
-
-  .gallery-caption {
-    margin-bottom: 14px;
-    /* расстояние от описания фото до фото */
-  }
-
-  /* было: .nav-menu__item.has-dropdown:hover .nav-dropdown__wrap {
-    ...
-  }
-  
-  */ .nav-menu__item.has-dropdown.is-open .nav-dropdown__wrap {
-    opacity: 1;
-    pointer-events: auto;
-  }
-  
-  /* если крутили стрелочку при hover — повторим */
-  .nav-menu__item.has-dropdown.is-open .nav-dropdown__btn {
-    transform: scaleY(-1);
-  }
-  
-  .nav-menu__item.has-dropdown>.nav-menu__link:hover {
-    cursor: pointer;
-  }
+}
 
 
   /* список карточек магазина */
@@ -5150,279 +5255,9 @@ body.modal-open { overflow: hidden; }
 
 
 
-/* Фотогалерея (главная)*/
 
 
 
-/* ===== Левый слайдер (фото) ===== */
-
-.photogallery-slider__img {
-  position: relative;
-  max-width: clamp(360px, 75vw, 1150px);
-  margin: 50px auto 50px;
-}
-
-/* Вьюпорт slick – скругление и маска */
-.photogallery-slider__img .slick-list { 
-  margin: 0;
-  padding: 0;
-  overflow: hidden;                 
-  border-radius: 14px;          /* увеличенное скругление */
-  box-shadow: 0 4px 16px rgba(0,0,0,.1);
-  height: auto !important;
-}
-
-/* Каждый слайд – контейнер фиксированной пропорции */
-.photogallery-slider__img .pg-slide {
-  position: relative;
-  width: 100%;
-  height: 100% !important;
-}
-
-.photogallery-slider__img .pg-slide::before {
-  content: "";
-  display: block;
-  padding-top: 63.5%;            /* пропорция, которая работает без полос */
-}
-
-/* Картинка заполняет контейнер */
-.photogallery-slider__img .pg-slide > img {
-  position: absolute;
-  top: 0; left: 0;
-  width: 100%;
-  height: 101%;                  /* твой рабочий фикс */
-  object-fit: cover;
-  object-position: center top;
-  display: block;
-}
-
-/* Выравниваем внутренние slick-элементы */
-.photogallery-slider__img .slick-track,
-.photogallery-slider__img .slick-slide,
-.photogallery-slider__img .slick-slide > div {
-  height: 100% !important;
-}
-
-/* Глушим старые глобальные правила сайта */
-.section.photogallery .photogallery-slider__img .slick-slide > div {
-  padding-top: 0 !important;
-  position: static !important;
-  overflow: visible !important;
-}
-
-.section.photogallery .photogallery-slider__img .slick-slide > div > img {
-  position: static !important;
-  width: auto !important;
-  height: auto !important;
-}
-
-
-
-
-
-/* ===== Правый столбец (карточка информации фотогалереи) ===== */
-
-
-/* Колонка справа, просто центрируем содержимое */
-.section.photogallery .col-12.col-lg-5 {
-  text-align: center;
-}
-
-/* 1. Белый прямоугольник (карточка) */
-.section.photogallery .photogallery-info {
-  background: #ffffff;
-  border-radius: 20px;
-  box-shadow: 0 8px 28px rgba(0,0,0,0.08);
-
-  width: 100%;
-  max-width: 520px;
-  height: 620px;           /* фиксируем высоту, чтобы блок не разъезжался */
-  margin: 0 auto;
-
-  padding: 48px 40px 40px; /* сверху / по бокам / снизу */
-  box-sizing: border-box;
-}
-
-/* 2. Заголовок "Фотогалерея" — отступ вниз */
-.section.photogallery .photogallery-info h2 {
-  margin: 0 0 80px;     
-}
-
-/* 3. Текст под заголовком (Склад-магазин..., Сан.блок и т.п.) */
-.section.photogallery .photogallery-slider__info {
-  margin-bottom: 100px;  
-}
-
-/* выравнивание текста внутри slick-слайдера */
-.section.photogallery .photogallery-slider__info .slick-slide,
-.section.photogallery .photogallery-slider__info .slick-slide > div {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 3.2rem;
-}
-
-.section.photogallery .photogallery-slider__info h3 {
-  margin: 0;
-  line-height: 1.25;
-}
-
-/* 4. Стрелки и 1/11 — оставляем как есть,
-
-
-/* 5. Кнопка "Смотреть все фото"
-*/
-.section.photogallery .photogallery-info .button {
-  display: inline-block;
-  margin-top: 60px;     
-}
-
-/* ===============================
-   Адаптив 1: 1200px и ниже
-   (маленькие ноутбуки / большие планшеты)
-   =============================== */
-@media (max-width: 1200px) {
-  /* уменьшаем "воздух" серого фона */
-  :root{
-    --pg-pad-top: 180px;
-    --pg-pad-bottom: 180px;
-  }
-
-  /* левый слайдер чуть уже, чтобы не давить правый столбец */
-  .section.photogallery .photogallery-slider__img{
-    max-width: clamp(320px, 70vw, 960px);
-  }
-
-  /* правый белый блок чуть компактнее */
-  .section.photogallery .photogallery-info{
-    max-width: 480px;
-    height: 560px;
-    padding: 40px 32px 40px;
-  }
-
-  .section.photogallery .photogallery-info h2{
-    margin-bottom: 64px;
-  }
-
-  .section.photogallery .photogallery-slider__info{
-    margin-bottom: 72px;
-  }
-
-  .section.photogallery .photogallery-info .button{
-    margin-top: 40px;
-  }
-}
-
-/* ===============================
-   Адаптив 2: 992px и ниже
-   (планшеты + узкие ноутбуки)
-   =============================== */
-@media (max-width: 992px) {
-  /* серый фон ещё компактнее */
-  :root{
-    --pg-pad-top: 140px;
-    --pg-pad-bottom: 140px;
-  }
-
-  /* чтобы блоки не были слишком широкими, когда становятся друг под другом */
-  .section.photogallery .photogallery-slider__img{
-    max-width: 90vw;
-  }
-
-  .section.photogallery .photogallery-info{
-    max-width: 420px;
-    height: 520px;
-    padding: 36px 24px 36px;
-  }
-
-  .section.photogallery .photogallery-info h2{
-    margin-bottom: 48px;
-  }
-
-  .section.photogallery .photogallery-slider__info{
-    margin-bottom: 56px;
-  }
-
-  .section.photogallery .photogallery-info .button{
-    margin-top: 32px;
-  }
-
-  /* отступ между левым и правым столбцами, когда они становятся один под другим */
-  .section.photogallery .col-12.col-lg-5{
-    margin-top: 24px;
-  }
-}
-
-/* ===============================
-   Адаптив 3: телефоны (до 576px)
-   =============================== */
-@media (max-width: 576px) {
-  /* серый фон — ещё компактнее на телефонах */
-  :root{
-    --pg-pad-top: 100px;
-    --pg-pad-bottom: 100px;
-  }
-
-  /* левый слайдер по ширине экрана */
-  .section.photogallery .photogallery-slider__img{
-    max-width: 100%;
-  }
-
-  /* правый белый блок — на всю ширину, авто-высота */
-  .section.photogallery .photogallery-info{
-    width: 100%;
-    max-width: 100%;
-    height: auto;
-    margin: 0 auto;
-
-    padding: 28px 16px 28px;
-  }
-
-  .section.photogallery .photogallery-info h2{
-    margin-bottom: 24px;
-    font-size: 22px;
-  }
-
-  .section.photogallery .photogallery-slider__info{
-    margin-bottom: 28px;
-    min-height: auto;
-  }
-
-  .section.photogallery .photogallery-info .button{
-    margin-top: 20px;
-  }
-}
-
-/* Узкий ноут / суженный браузер: фото 4:3, карточка компактнее */
-@media (max-width: 1200px) and (min-width: 992px) {
-
-  /* Фото делаем 4:3 именно в этом диапазоне */
-  .section.photogallery .photogallery-slider__img .pg-slide::before{
-    padding-top: 75%;   /* 4:3 вместо 62.5% (16:10) */
-  }
-
-  /* Белый блок: поменьше по высоте и отступам */
-  .section.photogallery .photogallery-info{
-    height: 540px;          /* было 620px */
-    max-width: 460px;       /* было 520px */
-    padding: 40px 32px 36px;/* сверху / по бокам / снизу чуть меньше */
-  }
-
-  /* Отступ под "Фотогалерея" — не 80, а поменьше */
-  .section.photogallery .photogallery-info h2{
-    margin: 0 0 40px;
-  }
-
-  /* Отступ между подзаголовком и стрелками */
-  .section.photogallery .photogallery-slider__info{
-    margin-bottom: 48px;
-  }
-
-  /* Кнопка чуть ближе к стрелкам, чтобы блок не "растягивался" */
-  .section.photogallery .photogallery-info .button{
-    margin-top: 28px;
-  }
-}
 
 
 
@@ -5450,6 +5285,34 @@ body.modal-open { overflow: hidden; }
   border-bottom: 2px solid rgb(0 0 0 / 8%); /* вернули border-bottom */
   border-radius: 12px 12px 0 0;
   position: relative;         /* нужно для абсолютного индикатора */
+}
+
+/* Базовое состояние вкладки */
+.tab-pane {
+  opacity: 1;             
+  pointer-events: none;
+  transform: translate3d(0, 4px, 0);
+}
+
+/* Активная вкладка: мягко подползает наверх */
+.tab-pane.is-active {
+  pointer-events: auto;
+  animation: tabPaneSlideUltraSoft .32s cubic-bezier(0.23, 0.6, 0.3, 0.98) both;
+}
+
+@keyframes tabPaneSlideUltraSoft {
+  0%   { transform: translate3d(0, 4px, 0); }
+  100% { transform: translate3d(0, 0, 0); }
+}
+
+/* Уважение prefers-reduced-motion */
+@media (prefers-reduced-motion: reduce) {
+  .tab-pane,
+  .tab-pane.is-active {
+    animation: none !important;
+    transform: none !important;
+    pointer-events: auto !important;
+  }
 }
 
 /* типографика (как у старых панелей) */
@@ -5504,6 +5367,19 @@ body.modal-open { overflow: hidden; }
 
 
 /* Контейнер из 3 колонок */
+
+/* Поджимаем последнюю секцию ПЕРЕД контактами
+   именно в панели "Наши работы" */
+#panel-raboti .service-panel__body > .service-section:last-of-type {
+  margin-bottom: 1px;   /* было, скорее всего, 24–32px */
+}
+
+/* И сам блок контактов ещё чуть ближе */
+#panel-raboti .contact-note {
+  margin-top: 1px;
+}
+
+
 .popup.service-panel .contact-note{
   display: grid;
   grid-template-columns: 1fr auto 1fr;
@@ -7044,6 +6920,14 @@ body.map-scroll-lock {
   transform: translateY(-50%) scale(1.04);
 }
 
+/* Мобилка: стрелки в лайтбоксе прячем полностью */
+@media (max-width: 768px) {
+  .room-photos-lightbox__nav {
+    display: none !important;
+  }
+}
+
+
 .service-section .service-official-note {
   margin-bottom: 8px;
 }
@@ -7068,13 +6952,13 @@ body.map-scroll-lock {
 
 /* ДВЕ КОЛОНКИ: ЛЕВАЯ + ПРАВАЯ */
 
-/* ВЕСЬ БЛОК под заголовком, центрируем и задаём общую ширину */
+/* ВЕСЬ БЛОК под заголовком */
 .section.certificates .cert-layout {
   display: flex;
   align-items: flex-start;
   justify-content: center;
-  gap: 108px;                /* расстояние между левым и правым блоком */
-  max-width: 1100px;        /* общая ширина связки под заголовком */
+  gap: 108px;               
+  max-width: 1100px;       
   margin: 0 auto;
 }
 
@@ -7090,14 +6974,14 @@ body.map-scroll-lock {
 
 /* ЛЕВЫЙ БЛОК (ТЕКСТ) */
 
-/* ВЕСЬ ЛЕВЫЙ КОНТЕНТ: заголовок сертификата, формат, "Скачать" */
+/* ВЕСЬ ЛЕВЫЙ КОНТЕНТ: заголовок сертификата, формат */
 .section.certificates .cert-info {
-  margin-top: 120px;
+  margin-top: 146px;
   text-align: left;
   max-width: 300px;
 
   /* фиксированная "коробка" под самые длинные тексты */
-  height: 230px; /* если мало/много – подправь это значение */
+  height: 230px; 
 
   display: flex;
   flex-direction: column;
@@ -7106,9 +6990,9 @@ body.map-scroll-lock {
 /* Расстояние между заголовком и блоком документа */
 .section.certificates .cert-info h3 {
   margin-bottom: 30px; 
-  height: 48px;                  /* под 2 строки */
+  height: 48px;                
   display: flex;
-  align-items: flex-end;         /* однострочный прижат вниз, чтобы выглядел так же */
+  align-items: flex-end;        
 }
 
 /* Расстояние между документом и кнопкой "Скачать" */
@@ -7117,8 +7001,8 @@ body.map-scroll-lock {
   display: flex;
   align-items: center;
 
-  height: 56px;                  /* фиксированная высота ряда */
-  margin-bottom: 35px;           /* одинаковый отступ до кнопки */
+  height: 56px;                 
+  margin-bottom: 35px;          
 }
 .section.certificates .cert-info .docs-item .icon-box-text {
   flex: 1;
@@ -7131,7 +7015,7 @@ body.map-scroll-lock {
 
 /* Навигация "‹ 1/6 ›" — ровно под кнопкой "Скачать" */
 .section.certificates .cert-nav {
-  margin-top: 0px;        /* расстояние от кнопки до стрелок */
+  margin-top: 0px;       
   display: flex;
   justify-content: flex-start;
   gap: 10px;
@@ -7382,7 +7266,6 @@ body.map-scroll-lock {
     margin: 0 4px;
   }
 
-  
 }
 
 
@@ -8030,3 +7913,744 @@ body.map-scroll-lock {
 
 }
 
+
+
+
+
+.service-bullets {
+  line-height: 1.3;
+}
+
+
+
+
+
+
+
+/* Лента "Наши работы" */
+
+#panel-raboti .service-panel__body > .service-section:first-child {
+  margin-top: 0px !important;
+}
+
+#panel-raboti .service-panel__body > .service-section:first-child {
+  margin-bottom: -15px !important; 
+}
+
+.works-item {
+  padding: 18px 0 22px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.works-item:last-of-type {
+  border-bottom: none;
+}
+
+.works-item__header {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  align-items: flex-start;
+  margin-bottom: 12px;
+}
+
+.works-item__title {
+  margin: 0 0 4px;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.works-item__subtitle {
+  margin: 0;
+  opacity: .85;
+  line-height: 1.4;
+}
+
+.gallery.gallery--bodyshop .gallery__meta-line {
+  grid-column: 1 / -1;
+  margin: 10px auto -8px; 
+  font-size: 14px;
+  opacity: .78;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  flex-wrap: wrap;
+
+  text-align: center;
+  line-height: 1.4;
+}
+
+/* центральные точки-разделители */
+.gallery.gallery--bodyshop .gallery__meta-line span {
+  position: relative;
+  white-space: nowrap; 
+}
+
+.gallery.gallery--bodyshop .gallery__meta-line span + span::before {
+  content: "•";
+  position: absolute;
+  left: -10px;        
+  top: 50%;
+  transform: translateY(-50%);
+  opacity: .55;
+  font-weight: 600;
+}
+
+/* скрыть пустые мета-пункты */
+.gallery.gallery--bodyshop .gallery__meta-line span:empty {
+  display: none;
+}
+
+/* базовый стиль */
+.gallery.gallery--bodyshop .gallery__meta-line span {
+  position: relative;
+  white-space: nowrap;
+}
+
+/* точка появляется только если есть span перед этим */
+.gallery.gallery--bodyshop .gallery__meta-line span + span::before {
+  content: "•";
+  position: absolute;
+  left: -10px;
+  top: 50%;
+  transform: translateY(-50%);
+  opacity: .55;
+  font-weight: 600;
+}
+
+
+
+@media (max-width: 768px) {
+  .works-item__header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+/* Галерея внутри */
+
+.works-gallery {
+  margin-top: 8px;
+}
+
+.works-gallery__caption {
+  margin-bottom: 10px;
+}
+
+.works-gallery__caption-title {
+  margin: 0 0 4px;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.works-gallery__caption-desc {
+  margin: 0;
+  opacity: .9;
+  line-height: 1.5;
+}
+
+/* рамка: стрелка — фото — стрелка */
+.works-gallery__frame {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+
+  max-width: 1000px;              
+  margin: 0 auto 12px;
+}
+
+/* основное фото — всегда один формат */
+.works-gallery__main {
+  position: relative;
+  flex: 1 1 auto;
+  max-width: 100%;
+  border-radius: 14px;
+  overflow: hidden;
+  background: rgba(255,255,255,0.04);
+  box-shadow: 0 10px 24px rgba(0,0,0,.2);
+}
+
+/* фиксируем высоту через прослойку 16:9 */
+.works-gallery__main::before {
+  content: "";
+  display: block;
+  padding-bottom: 56.25%; 
+}
+
+/* картинка всегда заполняет этот прямоугольник */
+.works-gallery__main img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  cursor: zoom-in;
+}
+
+/* Стрелки */
+.works-gallery__nav {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: none;
+
+  background: rgba(255,255,255,0.95);     
+  color: #DDB96F;                        
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+
+  box-shadow: 0 4px 12px rgba(0,0,0,.18);  
+  opacity: 1;
+  pointer-events: auto;
+
+  transition:
+    background .2s ease,
+    transform .2s ease,
+    box-shadow .2s ease;
+}
+
+.works-gallery__nav:hover {
+  background: rgba(255,255,255,1);
+  box-shadow: 0 6px 16px rgba(0,0,0,.25);
+  transform: scale(1.05);
+}
+
+/* Превью */
+.works-gallery__thumbs {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin-top: 6px;
+  flex-wrap: wrap;
+}
+
+.works-gallery__thumb {
+  padding: 0;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  border-radius: 8px;
+  overflow: hidden;
+
+  opacity: 0.7;
+  transition: transform .2s ease, opacity .2s ease, box-shadow .2s ease, border-color .2s ease;
+
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.works-gallery__thumb img {
+  width: 80px;
+  height: 54px;  
+  object-fit: cover;
+  display: block;
+  border-radius: 8px;
+}
+
+.works-gallery__thumb:hover {
+  opacity: 1;
+  transform: translateY(-2px) scale(1.03);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.35);
+}
+
+.works-gallery__thumb.is-active {
+  opacity: 1;
+  border-color: #DDB96F;
+  box-shadow: 0 0 0 2px rgba(221, 185, 111, 0.5);
+}
+
+/* Мобилка — как в оригинале */
+@media (max-width: 768px) {
+  .works-gallery__thumb img {
+    width: 64px;
+    height: 44px;
+  }
+}
+
+
+
+
+
+
+
+
+
+/* Панель партнеров */
+#panel-partners .partners-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 32px 40px;
+}
+
+#panel-partners .partner-item {
+  flex: 0 0 calc(25% - 40px); 
+  max-width: calc(25% - 40px);
+
+  height: 160px;
+  padding: 16px 24px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 3px 14px rgba(0,0,0,0.08);
+}
+
+#panel-partners .partner-item img {
+  max-width: 100%;
+  max-height: 90%;
+  object-fit: contain;
+  display: block;
+}
+
+#panel-partners .partners-grid--panel {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 32px 40px; /* как у тебя было */
+  margin-top: 24px;
+}
+
+/* Планшет / стандартные мобилки: 2 логотипа в строку */
+@media (max-width: 900px) {
+  #panel-partners .partner-item {
+    flex: 0 0 calc(50% - 40px);
+    max-width: calc(50% - 40px);
+    height: 140px;
+    padding: 12px 16px;
+  }
+}
+
+/* Узкие телефоны: по одному в строку */
+@media (max-width: 480px) {
+  #panel-partners .partner-item {
+    flex: 0 0 100%;
+    max-width: 100%;
+    height: 120px;
+    padding: 10px 14px;
+  }
+}
+
+
+
+
+
+
+
+
+/* Лента "Новости" — отступы как у "Наших работ" */
+
+
+#panel-novosti .service-panel__body > .service-section:first-of-type {
+  margin-top: 0 !important;
+  margin-bottom: -15px !important;
+}
+
+/* Общий блок новости */
+.news-item {
+  padding: 18px 0 22px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.news-item:last-of-type {
+  border-bottom: none;
+}
+
+/* Шапка новости */
+.news-item__header {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  align-items: flex-start;
+  margin-bottom: 12px;
+}
+
+.news-item__title {
+  margin: 0 0 4px;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.news-item__subtitle {
+  margin: 0;
+  opacity: .85;
+  line-height: 1.4;
+}
+
+/* Обёртка галереи в новости */
+.news-gallery {
+  margin-top: 8px;
+}
+
+/* Мета-полоса под фото для шаблона 1 */
+.gallery.gallery--bodyshop .gallery__meta-line {
+  grid-column: 1 / -1;
+  margin: 10px auto -8px;
+  font-size: 14px;
+  opacity: .78;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  flex-wrap: wrap;
+
+  text-align: center;
+  line-height: 1.4;
+}
+
+/* точки-разделители между мета-пунктами */
+.gallery.gallery--bodyshop .gallery__meta-line span {
+  position: relative;
+  white-space: nowrap;
+}
+
+.gallery.gallery--bodyshop .gallery__meta-line span + span::before {
+  content: "•";
+  position: absolute;
+  left: -10px;
+  top: 50%;
+  transform: translateY(-50%);
+  opacity: .55;
+  font-weight: 600;
+}
+
+/* Текстовая новость (шаблон 3) */
+#panel-novosti .news-item.news-item--text-only {
+  padding-top: 0px;    
+  padding-bottom: 0px; 
+}
+
+.news-item--text-only .news-item__body p {
+  margin: 0 0 8px;
+}
+
+.news-item--text-only .news-item__body p:last-child {
+  margin-bottom: 0;
+}
+
+/* Адаптив: на мобиле шапка в столбик */
+@media (max-width: 768px) {
+  .news-item__header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .news-item__title {
+    font-size: 18px;
+  }
+
+  .news-item__subtitle {
+    font-size: 14px;
+  }
+
+  .gallery.gallery--bodyshop .gallery__meta-line {
+    margin-top: 8px;
+    font-size: 13px;
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+/* Виджет новостей */
+
+.news-widget-toggle {
+  transition: opacity .25s ease, transform .25s ease;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* мягко прячем */
+.news-widget-toggle.is-hidden {
+  opacity: 0;
+  transform: translateY(10px);
+  pointer-events: none;
+}
+
+.news-widget {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  z-index: 1100;
+  width: 360px;
+  max-width: calc(100% - 32px);
+  background: #FFFFFF;
+  border-radius: 24px;
+  box-shadow: 0 18px 60px rgba(0, 0, 0, 0.18);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  opacity: 0;
+  transform: translateX(120%);
+  pointer-events: none;
+  transition: opacity 0.35s ease, transform 0.35s ease;
+  font-family: inherit;
+}
+
+/* Появление */
+.news-widget.is-visible {
+  opacity: 1;
+  transform: translateX(0);
+  pointer-events: auto;
+}
+
+/* Крестик закрытия */
+.news-widget__close {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+
+  width: 32px;
+  height: 32px;
+
+  border: none;
+  background: none;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 24px;
+  line-height: 1;
+  color: #DDB96F !important;
+
+  cursor: pointer;
+
+  transition:
+    transform 0.35s cubic-bezier(.22, .61, .36, 1),
+    color 0.35s ease;
+}
+
+/* Едва заметный эффект при наведении */
+.news-widget__close:hover {
+  transform: scale(1.015);     
+  color: #c9a559 !important;    
+}
+
+/* Едва заметный клик */
+.news-widget__close:active {
+  transform: scale(0.985);
+}
+
+/* Шапка */
+.news-widget__header {
+  padding: 18px 20px 8px 20px;
+}
+
+.news-widget__label {
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: rgba(0, 0, 0, 0.45);
+}
+
+/* Обёртка картинки делаем карточку с тенью */
+.news-widget__image-link {
+  display: block;
+  margin: 0 20px 6px;
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.22);
+}
+
+/* Картинка внутри */
+.news-widget__image {
+  width: 100%;
+  height: 170px;
+  object-fit: cover;
+  display: block;
+}
+
+/* Контент */
+.news-widget__content {
+  padding: 10px 20px 18px;
+}
+
+.news-widget__title {
+  margin: 0 0 8px;
+  font-size: 18px;
+  font-weight: 700;
+  color: #111111;
+}
+
+.news-widget__text {
+  position: relative;
+  font-size: 14px;
+  line-height: 1.45;
+  color: rgba(0, 0, 0, 0.75);
+
+  max-height: 3.9em; 
+  overflow: hidden;
+}
+
+/* fade-out снизу */
+.news-widget__text::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+
+  width: 100%;
+  height: 17px;
+
+  background: linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0) 0%, 
+    rgba(255, 255, 255, 1) 100%  
+  );
+}
+
+
+/* Кнопка "Подробнее" */
+.news-widget__btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 11px 20px;
+  border-radius: 999px;
+  border: none;
+
+  background: #DDB96F;            
+  color: #2a2418;                
+  
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+
+  box-shadow: 0 4px 10px rgba(0,0,0,0.18);
+
+  transition:
+    background 0.25s ease,
+    transform 0.18s ease,
+    box-shadow 0.28s ease;
+}
+
+/* hover */
+.news-widget__btn:hover {
+  background: #c9a559;
+  color: #2a2418;                  
+  transform: translateY(-2px);
+  box-shadow: 0 10px 22px rgba(0,0,0,0.35);
+}
+
+/* active */
+.news-widget__btn:active {
+  transform: translateY(0);
+  box-shadow: 0 3px 8px rgba(0,0,0,0.3);
+}
+
+/* Общий стиль для всех соцсетей */
+.news-widget__socials {
+  margin-top: 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.news-widget__socials-label {
+  font-size: 13px;             
+  font-weight: 500;             
+  color: rgba(0, 0, 0, 0.55);   
+  line-height: 1;                
+  white-space: nowrap;
+
+  position: relative;
+  top: 1px;                      
+  margin-left: 2px;        
+}
+
+.news-widget__socials-list {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.news-widget__social {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #F5F5F5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  transition: background .2s ease, transform .2s ease;
+}
+
+/* все иконки — 16x16 и заливка золотом */
+.news-widget__social svg {
+  width: 16px;
+  height: 16px;
+  display: block;
+}
+
+.news-widget__social svg path {
+  fill: #C1A56A;
+}
+
+/* WHATSAPP ТОЛЩЕ */
+.news-widget__social[aria-label="WhatsApp"] svg path {
+  fill: #C1A56A;       
+  stroke: #C1A56A;  
+  stroke-width: 80;     /* жирность трубки */
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* круг вокруг трубки */
+.news-widget__social[aria-label="WhatsApp"] svg path:last-of-type {
+  fill: none;         
+  stroke: #C1A56A;
+  stroke-width: 100;    /* обводку толще */
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* Кнопка-свёртка */
+.news-widget-toggle {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  z-index: 1090;
+  padding: 9px 18px;
+  border-radius: 999px;
+  background: #FFFFFF;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.18);
+  font-size: 14px;
+  font-weight: 500;
+  color: #111111;
+  cursor: pointer;
+  display: none; 
+}
+
+/* Мобилка */
+@media (max-width: 768px) {
+  .news-widget {
+    left: 16px;
+    right: 16px;
+    bottom: 16px;
+    width: auto;
+    border-radius: 20px;
+  }
+}

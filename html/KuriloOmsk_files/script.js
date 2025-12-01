@@ -426,8 +426,6 @@ document.addEventListener("DOMContentLoaded", function () {
     updateContactSlider(wrap); 
   });
 
-  
-  
   // Переключатель E-mail / Телефон
   document.addEventListener("click", function (e) {
     const btn = e.target.closest(".contact-type__option");
@@ -1071,157 +1069,555 @@ jQuery(function ($) {
       $current.remove();
       $next.css({ position: '', top: '', left: '', objectFit: '' });
     });
+
   });
 });
 
 
-
-// Лайтбокс: открыть по клику на большое фото, закрыть по клику на фото/фон/ESC
+// Если фото одно - нет ни превью, ни стрелок
 jQuery(function ($) {
-  // создаем один лайтбокс на страницу
+
+  function applySinglePhotoMode($gallery) {
+    var $thumbs = $gallery.find('.gallery__thumbs img');
+    var count = $thumbs.length;
+
+    if (count <= 1) {
+      // скрываем превью
+      $gallery.find('.gallery__thumbs').hide();
+
+      // скрываем стрелки слева/справа
+      $gallery.find('.gallery__side-nav').hide();
+
+      // добавляем модификатор для CSS
+      $gallery.addClass('gallery--single');
+    }
+  }
+
+  // прогоняем ТОЛЬКО кузовные галереи
+  $('.gallery.gallery--bodyshop').each(function () {
+    applySinglePhotoMode($(this));
+  });
+
+});
+
+
+
+// Галерея + ИДЕАЛЬНЫЙ лайтбокс для сервис-панелей
+jQuery(function ($) {
+
+// Обновление подписи — ультрамягкий fade через CSS
+function updatePanelTextFromThumb($thumb) {
+  var title = $thumb.data('title') || '';
+  var desc  = $thumb.data('desc')  || '';
+
+  var $scope = $thumb.closest('.service-section, .works-item');
+  if (!$scope.length) {
+    $scope = $thumb.closest('.popup.service-panel');
+  }
+  if (!$scope.length) return;
+
+  var $titleEl  = $scope.find('[data-role="gtitle"]');
+  var $descEl   = $scope.find('[data-role="gdesc"]');
+  var $caption  = $scope.find('.gallery-caption');
+
+  if (!$caption.length) return;
+
+  // Старт скрывающей анимации
+  $caption.addClass('is-fading');
+
+  // Ждём окончания fade-out (CSS), затем обновляем текст
+  setTimeout(function () {
+    if ($titleEl.length) $titleEl.text(title);
+    if ($descEl.length)  $descEl.text(desc);
+
+    // Показываем обратно (fade-in)
+    $caption.removeClass('is-fading');
+  }, 180); // время скрытия (половина CSS перехода)
+}
+
+
+  // Плавно сменить главное фото по миниатюре
+  function setMainFromThumb($thumb, withFade) {
+    var full = $thumb.data('full') || $thumb.attr('src');
+    var $gallery = $thumb.closest('.gallery');
+    var $mainWrap = $gallery.find('.gallery__main');
+    var $current  = $mainWrap.find('img');
+
+    // если главного кадра нет — просто вставляем
+    if (!$current.length) {
+      var $img = $('<img>', {
+        src: full,
+        alt: $thumb.attr('alt') || ''
+      });
+      $mainWrap.empty().append($img);
+      $thumb.addClass('is-active').siblings().removeClass('is-active');
+      updatePanelTextFromThumb($thumb);
+      return;
+    }
+
+    if ($current.attr('src') === full) {
+      // даже если src совпадает — всё равно обновим актив и подписи
+      $thumb.addClass('is-active').siblings().removeClass('is-active');
+      updatePanelTextFromThumb($thumb);
+      return;
+    }
+
+    // активная миниатюра + подписи
+    $thumb.addClass('is-active').siblings().removeClass('is-active');
+    updatePanelTextFromThumb($thumb);
+
+    var $next = $('<img>', {
+      src: full,
+      alt: $current.attr('alt') || $thumb.attr('alt') || ''
+    }).css({
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      width: '100%',
+      height: '100%',
+      objectFit: 'cover',
+      opacity: 0
+    });
+
+    $mainWrap.append($next);
+
+    var duration = withFade === false ? 0 : 350;
+
+    $next.animate({ opacity: 1 }, duration, 'swing', function () {
+      $current.remove();
+      $next.css({
+        position: '',
+        top: '',
+        left: '',
+        width: '',
+        height: '',
+        objectFit: '',
+        opacity: ''
+      });
+    });
+  }
+
+  // Инициализация: по одной активной фотке на галерею
+  $('.gallery').each(function () {
+    var $gallery = $(this);
+    var $thumbs  = $gallery.find('.gallery__thumbs img');
+    if (!$thumbs.length) return;
+
+    var $active = $thumbs.filter('.is-active').first();
+    if (!$active.length) $active = $thumbs.first();
+
+    setMainFromThumb($active, false);
+  });
+
+  // Клик по превью — смена главного кадра и текста (без лайтбокса)
+  $(document).on('click', '.gallery__thumbs img', function () {
+    var $thumb = $(this);
+    setMainFromThumb($thumb, true);
+  });
+
+    // Стрелки справа от фото в панели "Кузовной ремонт"
+  $(document).on('click', '.gallery__nav-btn', function () {
+    var $btn = $(this);
+    var $gallery = $btn.closest('.gallery');
+    if (!$gallery.length) return;
+
+    var $thumbs = $gallery.find('.gallery__thumbs img');
+    if (!$thumbs.length) return;
+
+    // ищем текущую активную миниатюру
+    var $active = $thumbs.filter('.is-active').first();
+    if (!$active.length) {
+      $active = $thumbs.first();
+    }
+
+    var index = $thumbs.index($active);
+
+    if ($btn.hasClass('gallery__nav-btn--next')) {
+      index++;
+    } else if ($btn.hasClass('gallery__nav-btn--prev')) {
+      index--;
+    }
+
+    // зацикливаем
+    if (index < 0) index = $thumbs.length - 1;
+    if (index >= $thumbs.length) index = 0;
+
+    var $nextThumb = $thumbs.eq(index);
+    setMainFromThumb($nextThumb, true);
+  });
+
+
+  // ===== ЛАЙТБОКС В СТИЛЕ НОМЕРОВ (ИДЕАЛЬНЫЙ) =====
+
+  // один общий лайтбокс на страницу
   var $lightbox = $(`
     <div class="lightbox" aria-hidden="true">
-      <img src="" alt="Фото">
+      <button type="button"
+              class="popup-close room-photos-lightbox__close"
+              data-lb-close
+              aria-label="Закрыть">✕</button>
+
+      <button class="lightbox__nav lightbox__nav--prev" type="button" aria-label="Предыдущее фото">‹</button>
+      <img src="" alt="">
+      <button class="lightbox__nav lightbox__nav--next" type="button" aria-label="Следующее фото">›</button>
     </div>
   `);
+
+
   $('body').append($lightbox);
 
-  // открыть из галереи
-  $(document).on('click', '.gallery__main img', function () {
-    var src = $(this).attr('src');
-    $lightbox.find('img').attr('src', src);
+  var $lbImg  = $lightbox.find('img');
+  var $lbPrev = $lightbox.find('.lightbox__nav--prev');
+  var $lbNext = $lightbox.find('.lightbox__nav--next');
+
+  var lbList  = [];   // [{src, alt, $thumb}]
+  var lbIndex = 0;
+
+  // анимация как у сертификатов/номеров
+  function animateLightboxTo(item) {
+    if (!item) return;
+
+    $lbImg
+      .stop(true, true)
+      .css({
+        opacity: 0,
+        transform: 'scale(.985)',
+        transition: 'none'
+      })
+      .attr('src', item.src)
+      .attr('alt', item.alt || '');
+
+    setTimeout(function () {
+      $lbImg.css({
+        transition: 'opacity .28s ease, transform .28s ease',
+        opacity: 1,
+        transform: 'scale(1)'
+      });
+    }, 20);
+  }
+
+  // показать кадр по индексу + синхронизировать панель
+  function showLightboxIndex(i, animate) {
+    if (!lbList.length) return;
+
+    lbIndex = (i % lbList.length + lbList.length) % lbList.length;
+    var item = lbList[lbIndex];
+    if (!item) return;
+
+    if (animate === false) {
+      $lbImg.attr('src', item.src).attr('alt', item.alt || '');
+    } else {
+      animateLightboxTo(item);
+    }
+
+    // синхроним главное фото и подписи в панели
+    if (item.$thumb && item.$thumb.length) {
+      setMainFromThumb(item.$thumb, false);
+    }
+  }
+
+  // открыть лайтбокс из конкретной галереи
+  function openLightboxFromGallery($gallery) {
+    var $thumbs = $gallery.find('.gallery__thumbs img');
+    if (!$thumbs.length) return;
+
+    lbList = $thumbs.map(function () {
+      var $t = $(this);
+      return {
+        src: $t.data('full') || $t.attr('src'),
+        alt: $t.attr('alt') || '',
+        $thumb: $t
+      };
+    }).get();
+
+    // стартуем с активной, либо с первой
+    var $active = $thumbs.filter('.is-active').first();
+    if (!$active.length) $active = $thumbs.first();
+
+    lbIndex = $thumbs.index($active);
+    if (lbIndex < 0) lbIndex = 0;
+
+    showLightboxIndex(lbIndex, false);
+
+    if (lbList.length <= 1) {
+      $lbPrev.hide();
+      $lbNext.hide();
+    } else {
+      $lbPrev.show();
+      $lbNext.show();
+    }
+
     $lightbox.addClass('active').attr('aria-hidden', 'false');
+  }
+
+  function closeLightbox() {
+    $lightbox.removeClass('active').attr('aria-hidden', 'true');
+  }
+
+  // открыть из большого фото
+  $(document).on('click', '.gallery__main img', function () {
+    var $gallery = $(this).closest('.gallery');
+    if (!$gallery.length) return;
+    openLightboxFromGallery($gallery);
   });
 
   // закрыть по клику на фон
   $(document).on('click', '.lightbox', function (e) {
     if (e.target === this) {
-      $lightbox.removeClass('active').attr('aria-hidden', 'true');
+      closeLightbox();
     }
   });
 
-  // закрыть по клику на изображение (как просили)
+  // закрытие по крестику внутри лайтбокса
+  $(document).on('click', '.lightbox .popup-close', function (e) {
+    e.preventDefault();
+    e.stopPropagation(); // чтобы клик не улетел выше
+    closeLightbox();
+  });
+
+  // закрыть по клику на картинку
   $(document).on('click', '.lightbox img', function () {
-    $lightbox.removeClass('active').attr('aria-hidden', 'true');
+    closeLightbox();
   });
 
-  // закрыть по ESC
+  // закрыть по ESC и листать стрелками
   $(document).on('keydown', function (e) {
-    if (e.key === 'Escape') {
-      $lightbox.removeClass('active').attr('aria-hidden', 'true');
+    if (!$lightbox.hasClass('active')) return;
+
+    if (e.key === 'Escape' || e.key === 'Esc') {
+      closeLightbox();
+    } else if (e.key === 'ArrowLeft') {
+      e.preventDefault();
+      if (lbList.length <= 1) return;
+      showLightboxIndex(lbIndex - 1, true);
+    } else if (e.key === 'ArrowRight') {
+      e.preventDefault();
+      if (lbList.length <= 1) return;
+      showLightboxIndex(lbIndex + 1, true);
     }
+  });
+
+  // стрелки в лайтбоксе
+  $lbPrev.on('click', function (e) {
+    e.preventDefault();
+    e.stopPropagation();
+    if (lbList.length <= 1) return;
+    showLightboxIndex(lbIndex - 1, true);
+  });
+
+  $lbNext.on('click', function (e) {
+    e.preventDefault();
+    e.stopPropagation();
+    if (lbList.length <= 1) return;
+    showLightboxIndex(lbIndex + 1, true);
   });
 
   // не даем колесом/тачем прокручивать фон, когда открыт лайтбокс
   $(document).on('wheel touchmove', '.lightbox.active', function (e) {
     e.preventDefault();
   }, { passive: false });
-});
 
+  // ===== МОБИЛЬНЫЙ СВАЙП (как в номерах/сертах) =====
+  var isMobile = window.matchMedia("(max-width: 768px)").matches;
 
-// Галерея: плавная смена + подписи
-jQuery(function ($) {
+  if (isMobile) {
+    // на мобиле — свайп вместо стрелок (стрелки ещё и css-ом скрыты)
+    $lbPrev.hide();
+    $lbNext.hide();
 
-  function normSrc(u) {
-    if (!u) return '';
-    try {
-      var abs = new URL(u, window.location.href);
-      return abs.pathname.replace(/\/+/g, '/');
-    } catch (e) {
-      return u.split('#')[0].split('?')[0];
+    var touchStartX = 0;
+    var touchEndX   = 0;
+    var swipeInProgress = false;
+    var swipeTimer      = null;
+
+    function swipeLightbox(dir) {
+      if (swipeInProgress) return;
+      if (!lbList.length || lbList.length <= 1) return;
+
+      swipeInProgress = true;
+
+      var outShift = dir > 0 ? -60 : 60;
+      var inShift  = dir > 0 ? 60  : -60;
+      var newIndex = (lbIndex + dir + lbList.length) % lbList.length;
+      var item     = lbList[newIndex];
+
+      $lbImg
+        .stop(true, true)
+        .css({
+          transition: 'transform .18s ease, opacity .18s ease',
+          transform: 'translateX(' + outShift + 'px)',
+          opacity: 0
+        });
+
+      clearTimeout(swipeTimer);
+      swipeTimer = setTimeout(function () {
+        lbIndex = newIndex;
+        $lbImg
+          .attr('src', item.src)
+          .attr('alt', item.alt || '')
+          .css({
+            transition: 'none',
+            transform: 'translateX(' + inShift + 'px)',
+            opacity: 0
+          });
+
+        // форсим layout
+        void $lbImg[0].offsetWidth;
+
+        $lbImg.css({
+          transition: 'transform .22s ease, opacity .22s ease',
+          transform: 'translateX(0)',
+          opacity: 1
+        });
+
+        // обновляем внешнюю панель (главное фото + подписи)
+        if (item.$thumb && item.$thumb.length) {
+          setMainFromThumb(item.$thumb, false);
+        }
+
+        setTimeout(function () {
+          swipeInProgress = false;
+        }, 230);
+      }, 190);
     }
-  }
 
-  function updateGalleryCaption($thumb){
-    var $section = $thumb.closest('.service-section');
-    var title = $thumb.data('title') || '';
-    var desc  = $thumb.data('desc')  || '';
-    $section.find('[data-role="gtitle"]').text(title);
-    $section.find('[data-role="gdesc"]').text(desc);
-    $thumb.closest('.gallery').find('.gallery__main img').attr('alt', title || 'Фото');
-  }
+    $lbImg.on('touchstart', function (e) {
+      var t = e.originalEvent.touches[0];
+      touchStartX = t.clientX;
+      touchEndX   = t.clientX;
+    });
 
-  // Флаг, чтобы не наслаивались анимации
-  var isAnimating = false;
+    $lbImg.on('touchmove', function (e) {
+      var t = e.originalEvent.touches[0];
+      touchEndX = t.clientX;
+    });
 
-  // Прелоадим все полноразмерные картинки
-  $('.gallery__thumbs img').each(function () {
-    var full = $(this).data('full');
-    if (full) {
-      var img = new Image();
-      img.src = full;
-    }
-  });
-
-  $(document).on('click', '.gallery__thumbs img', function () {
-    if (isAnimating) return;
-
-    var $thumb    = $(this);
-    var full      = $thumb.data('full') || $thumb.attr('src');
-    var $gallery  = $thumb.closest('.gallery');
-    var $mainWrap = $gallery.find('.gallery__main');
-    var $current  = $mainWrap.find('img');
-
-    // Нормализуем пути
-    var cur = normSrc($current.attr('src'));
-    var nxt = normSrc(full);
-
-    // Обновляем активное превью
-    $thumb.addClass('is-active').siblings('img').removeClass('is-active');
-
-    // Подпись обновляем всегда
-    updateGalleryCaption($thumb);
-
-    // Если реально то же изображение — дальше не идём
-    if (cur === nxt) return;
-
-    // Убеждаемся, что обёртка позиционируется
-    if ($mainWrap.css('position') === 'static') {
-      $mainWrap.css('position', 'relative');
-    }
-
-    isAnimating = true;
-
-    var $next = $('<img>', {
-      src: full,
-      alt: $thumb.data('title') || $current.attr('alt') || '',
-      css: {
-        position: 'absolute',
-        inset: 0,
-        width: '100%',
-        height: '100%',
-        objectFit: 'cover',
-        opacity: 0
+    $lbImg.on('touchend', function () {
+      var diff = touchEndX - touchStartX;
+      if (Math.abs(diff) > 50) {
+        if (diff < 0) {
+          swipeLightbox(+1);
+        } else {
+          swipeLightbox(-1);
+        }
       }
     });
+  }
 
-    // Ждём, пока новая картинка загрузится, чтобы не было "мигания"
-    $next.on('load', function () {
-      $mainWrap.append($next);
+});
 
-      // Crossfade: старая плавно исчезает, новая появляется
-      $current.stop(true, true).animate({ opacity: 0 }, 260, 'swing');
-      $next.stop(true, true).animate({ opacity: 1 }, 280, 'swing', function () {
-        $current.remove();
-        $next.css({ position: '', inset: '', objectFit: '' });
-        isAnimating = false;
-      });
+
+
+
+// Наши работы
+document.addEventListener('DOMContentLoaded', function () {
+  const galleries = document.querySelectorAll('[data-works-gallery]');
+
+  galleries.forEach(gallery => {
+    const mainImg   = gallery.querySelector('.works-gallery__main-img');
+    const titleEl   = gallery.querySelector('.works-gallery__caption-title');
+    const descEl    = gallery.querySelector('.works-gallery__caption-desc');
+    const thumbs    = Array.from(gallery.querySelectorAll('.works-gallery__thumb'));
+    const prevBtn   = gallery.querySelector('.works-gallery__nav--prev');
+    const nextBtn   = gallery.querySelector('.works-gallery__nav--next');
+
+    if (!mainImg || !thumbs.length) return;
+
+    let currentIndex = 0;
+
+    function showSlide(index) {
+      if (index < 0) index = thumbs.length - 1;
+      if (index >= thumbs.length) index = 0;
+      currentIndex = index;
+
+      const thumb = thumbs[currentIndex];
+      const full  = thumb.dataset.full;
+      const title = thumb.dataset.title || '';
+      const desc  = thumb.dataset.desc || '';
+
+      mainImg.src = full;
+      if (title) mainImg.alt = title;
+
+      thumbs.forEach(t => t.classList.remove('is-active'));
+      thumb.classList.add('is-active');
+
+      if (titleEl) titleEl.textContent = title;
+      if (descEl)  descEl.textContent  = desc;
+    }
+
+    // клики по миниатюрам
+    thumbs.forEach((thumb, idx) => {
+      thumb.addEventListener('click', () => showSlide(idx));
     });
 
-    // На случай, если картинка уже в кеше и load сработает синхронно
-    if ($next[0].complete) {
-      $next.trigger('load');
+    // стрелки
+    if (prevBtn) {
+      prevBtn.addEventListener('click', () => showSlide(currentIndex - 1));
     }
-  });
+    if (nextBtn) {
+      nextBtn.addEventListener('click', () => showSlide(currentIndex + 1));
+    }
 
-  // Инициализация подписи
-  $('.gallery').each(function(){
-    var $g = $(this);
-    var $active = $g.find('.gallery__thumbs img.is-active').first();
-    if (!$active.length) $active = $g.find('.gallery__thumbs img').first();
-    if ($active.length) updateGalleryCaption($active);
+    // стартовый слайд
+    showSlide(0);
   });
 });
+
+
+
+
+
+
+
+
+// Переброс с модалки на панель
+$(document).off('click', '.js-open-panel');
+
+$(document).on('click', '.js-open-panel', function (e) {
+  e.preventDefault();
+
+  var target = $(this).data('panel');
+  if (!target) return;
+
+  // Берём любую открытую штуку: сервис-панель, модалку с отзывами, карту
+  var $open = $('.service-panel.is-open, .review-modal.is-open, .map-panel.is-open').first();
+
+  // Если сейчас что-то открыто — закрываем его "по правилам"
+  if ($open.length) {
+    // ищем её кнопку закрытия
+    var $closeBtn = $open.find('[data-close], .popup-close').first();
+
+    if ($closeBtn.length) {
+      // триггерим её родной код закрытия (там уже есть анимации)
+      $closeBtn.trigger('click');
+
+      // ждём, пока анимация закрытия визуально отыграет
+      setTimeout(function () {
+        var $panel = $(target);
+        if ($panel.length) {
+          $panel.addClass('is-open').attr('aria-hidden', 'false');
+        }
+      }, 250); // можешь 200–300 подогнать по ощущениям
+    } else {
+      // если вдруг нет кнопки — жёстко закрываем и открываем новую
+      $open.removeClass('is-open').attr('aria-hidden', 'true');
+
+      var $panel = $(target);
+      if ($panel.length) {
+        $panel.addClass('is-open').attr('aria-hidden', 'false');
+      }
+    }
+  } else {
+    // если ничего не открыто — просто открываем цель
+    var $panel = $(target);
+    if ($panel.length) {
+      $panel.addClass('is-open').attr('aria-hidden', 'false');
+    }
+  }
+});
+
+
+
 
 
 
@@ -1405,7 +1801,7 @@ jQuery(function ($) {
   function openFromThumb($thumb) {
     var $photos = $thumb.closest('.room-item__photos');
     if (!$photos.length) return;
-
+    $currentPhotos = $photos;
     var $thumbs = $photos.find('.room-item__photos-track img');
 
     // собрали список кадров для ЭТОГО номера
@@ -1447,6 +1843,11 @@ jQuery(function ($) {
 
     currentIndex = (currentIndex + delta + len) % len;
     showCurrent();
+
+    // СИНХРОНИЗАЦИЯ с превью
+    if ($currentPhotos && $currentPhotos.length) {
+      setActiveThumb($currentPhotos, currentIndex);
+    }
   }
 
   // ===== ЗАКРЫТИЕ ЛАЙТБОКСА =====
@@ -1498,113 +1899,97 @@ jQuery(function ($) {
     }
   });
 
-  /* Мобильный свайп для фото номеров */
-jQuery(function ($) {
+  // ===== МОБИЛЬНЫЙ РЕЖИМ: свайп + слайд-анимация (как у сертификатов) =====
   var isMobile = window.matchMedia("(max-width: 768px)").matches;
-  if (!isMobile) return;
 
-  var $overlay = $('[data-room-lightbox]');
-  var $img     = $overlay.find('[data-room-lightbox-img]');
-  var $btnPrev = $overlay.find('[data-room-lightbox-prev]');
-  var $btnNext = $overlay.find('[data-room-lightbox-next]');
+  if (isMobile) {
+    // Убираем стрелки в лайтбоксе на мобилке (свайп вместо них)
+    $btnPrev.hide();
+    $btnNext.hide();
 
-  // Скрываем стрелки на телефонах
-  $btnPrev.hide();
-  $btnNext.hide();
+    var touchStartX = 0;
+    var touchEndX   = 0;
+    var swipeInProgress = false;
+    var swipeAnimTimer  = null;
 
-  // Для анимации
-  var swipeInProgress = false;
-  var touchStartX = 0;
-  var touchEndX   = 0;
+    // Красивое перелистывание со слайдом
+    function swipeLightboxPhoto(dir) {
+      if (swipeInProgress) return;
+      if (!currentList.length) return;
+      if (currentList.length <= 1) return;
 
-  function getList() {
-    return window.currentList || [];
-  }
-  function getIndex() {
-    return window.currentIndex || 0;
-  }
-  function setIndex(v) {
-    window.currentIndex = v;
-  }
+      var len      = currentList.length;
+      var newIndex = (currentIndex + dir + len) % len;
+      var newItem  = currentList[newIndex];
+      if (!newItem) return;
 
-  // Анимация перелистывания (слайд)
-  function swipeChange(delta) {
-    var list = getList();
-    if (!list.length || list.length <= 1) return;
-    if (swipeInProgress) return;
+      swipeInProgress = true;
 
-    swipeInProgress = true;
+      // Направление анимации
+      var outShift = dir > 0 ? -60 : 60;
+      var inShift  = dir > 0 ? 60  : -60;
 
-    var newIndex = (getIndex() + delta + list.length) % list.length;
-    var item = list[newIndex];
-
-    var outShift = delta > 0 ? -60 : 60;
-    var inShift  = delta > 0 ? 60 : -60;
-
-    // Уводим старый кадр
-    $img
-      .stop(true, true)
-      .css({
-        transition: 'transform .18s ease, opacity .18s ease',
-        transform: 'translateX(' + outShift + 'px)',
-        opacity: 0
-      });
-
-    setTimeout(function () {
-      // Подменяем картинку и ставим ее за краем
-      setIndex(newIndex);
-
+      // выезжает текущий кадр
       $img
-        .attr('src', item.src)
-        .attr('alt', item.alt || '')
+        .stop(true, true)
         .css({
-          transition: 'none',
-          transform: 'translateX(' + inShift + 'px)',
+          transition: 'transform .18s ease, opacity .18s ease',
+          transform: 'translateX(' + outShift + 'px)',
           opacity: 0
         });
 
-      // рефлоу
-      void $img[0].offsetWidth;
+      clearTimeout(swipeAnimTimer);
+      swipeAnimTimer = setTimeout(function () {
+        // меняем картинку, ставим её чуть снаружи
+        currentIndex = newIndex;
+        $img
+          .attr('src', newItem.src)
+          .attr('alt', newItem.alt || '')
+          .css({
+            transition: 'none',
+            transform: 'translateX(' + inShift + 'px)',
+            opacity: 0
+          });
 
-      // Заезд новой
-      $img.css({
-        transition: 'transform .22s ease, opacity .22s ease',
-        transform: 'translateX(0)',
-        opacity: 1
-      });
+        // форсим пересчёт стилей
+        void $img[0].offsetWidth;
 
-      setTimeout(function () {
+        // заезд новой картинки
+        $img.css({
+          transition: 'transform .22s ease, opacity .22s ease',
+          transform: 'translateX(0)',
+          opacity: 1
+        });
+
         swipeInProgress = false;
-      }, 250);
-    }, 180);
-  }
-
-  // Жесты
-  $img.on('touchstart', function (e) {
-    var t = e.originalEvent.touches[0];
-    touchStartX = t.clientX;
-    touchEndX   = t.clientX;
-  });
-
-  $img.on('touchmove', function (e) {
-    var t = e.originalEvent.touches[0];
-    touchEndX = t.clientX;
-  });
-
-  $img.on('touchend', function () {
-    var diff = touchEndX - touchStartX;
-
-    if (Math.abs(diff) > 50) {
-      if (diff < 0) {
-        swipeChange(+1); 
-      } else {
-        swipeChange(-1); 
-      }
+      }, 190);
     }
-  });
-});
 
+    // Свайп по картинке
+    $img.on('touchstart', function (e) {
+      var t = e.originalEvent.touches[0];
+      touchStartX = t.clientX;
+      touchEndX   = t.clientX;
+    });
 
+    $img.on('touchmove', function (e) {
+      var t = e.originalEvent.touches[0];
+      touchEndX = t.clientX;
+    });
+
+    $img.on('touchend', function () {
+      var diff = touchEndX - touchStartX;
+
+      // порог, чтобы не срабатывало от лёгкого дрожания пальца
+      if (Math.abs(diff) > 50) {
+        if (diff < 0) {
+          swipeLightboxPhoto(+1);
+        } else {
+          swipeLightboxPhoto(-1);
+        }
+      }
+    });
+  }
 
   // ===== ПРЕВЬЮ ВНУТРИ НОМЕРА: одно фото + боковые стрелки =====
 
@@ -1718,6 +2103,7 @@ jQuery(function ($) {
 
 
 
+
  // СЕРТИФИКАТЫ
 jQuery(function ($) {
   var $section = $('[data-cert-section]');
@@ -1818,7 +2204,6 @@ jQuery(function ($) {
     e.preventDefault();
     setActiveCert(index + 1, true);
   });
-
 
   // ЛАЙТБОКС
 
@@ -2026,9 +2411,6 @@ if (isMobile) {
     }
   });
 }
-
-
-
 
 });
 
@@ -2268,9 +2650,6 @@ document.addEventListener('keydown', function (e) {
 
 
 
-
-
-
 // клик по "Ремонт" — открыть/закрыть выпадашку (как hover)
 jQuery(function ($) {
   // по ссылке "Ремонт"
@@ -2328,11 +2707,22 @@ jQuery(function ($) {
         var $show = targetSel ? $panel.find(targetSel) : $();
         var $all  = $panel.find('.tab-pane');
 
-        if ($show.length) {
-          $all.attr('hidden', true);
-          $show.removeAttr('hidden');
-        }
+        if (!$show.length) return;
 
+        // все вкладки скрываем и убираем is-active
+        $all.each(function () {
+          var $pane = $(this);
+          if (this === $show[0]) return;
+          $pane.removeClass('is-active').attr('hidden', true);
+        });
+
+        if ($show[0].hasAttribute('hidden')) {
+          $show.attr('hidden', false);
+          void $show[0].offsetWidth;
+        }
+        $show.addClass('is-active');
+
+        // управляём aria-selected у заголовков
         $hdr.find('.left').attr('aria-selected', side === 'left');
         $hdr.find('.right').attr('aria-selected', side === 'right');
       }
@@ -2340,14 +2730,12 @@ jQuery(function ($) {
       // Снимаем старые хендлеры и вешаем новые
       $hdr
         .off('.splitHdr')
-        // Клик по ЛЮБОЙ точке шапки
         .on('click.splitHdr', function (e) {
           var offset = $hdr.offset();
           var x = e.pageX - offset.left;
           var side = x < ($hdr.outerWidth() / 2) ? 'left' : 'right';
           switchTo(side);
         })
-        // Клавиши стрелок как раньше
         .on('keydown.splitHdr', function (e) {
           if (e.key === 'ArrowLeft')  { e.preventDefault(); switchTo('left');  }
           if (e.key === 'ArrowRight') { e.preventDefault(); switchTo('right'); }
@@ -2360,6 +2748,227 @@ jQuery(function ($) {
 
   initSplitHeader($(document));
 });
+
+
+
+
+// Вкладка Новости
+document.addEventListener('DOMContentLoaded', function () {
+  document.querySelectorAll('[data-works-gallery]').forEach(function (wrap) {
+    var gallery   = wrap.querySelector('.gallery');
+    if (!gallery) return;
+
+    var thumbsBox = gallery.querySelector('.gallery__thumbs');
+    var metaLine  = gallery.querySelector('.gallery__meta-line');
+    if (!thumbsBox || !metaLine) return;
+
+    var dateEl = metaLine.querySelector('[data-meta="date"]');
+    var locEl  = metaLine.querySelector('[data-meta="loc"]');
+    var catEl  = metaLine.querySelector('[data-meta="cat"]');
+
+    function applyMetaFromThumb(thumb) {
+      if (!thumb) return;
+
+      if (dateEl) {
+        var d = thumb.dataset.metaDate || '';
+        dateEl.textContent = d ? ('Дата: ' + d) : '';
+      }
+      if (locEl) {
+        var l = thumb.dataset.metaLoc || '';
+        locEl.textContent = l ? ('Локация: ' + l) : '';
+      }
+      if (catEl) {
+        var c = thumb.dataset.metaCat || '';
+        catEl.textContent = c ? ('Направление: ' + c) : '';
+      }
+    }
+
+    function syncWithActiveThumb() {
+      var current = thumbsBox.querySelector('img.is-active') || thumbsBox.querySelector('img');
+      applyMetaFromThumb(current);
+    }
+
+    // Инициализация ставим подпись под стартовый кадр
+    syncWithActiveThumb();
+
+    // 1) Обычный клик по превью
+    thumbsBox.addEventListener('click', function (e) {
+      var img = e.target.closest('img');
+      if (!img || !thumbsBox.contains(img)) return;
+      applyMetaFromThumb(img);
+    });
+
+    // 2) Следим за изменением классов у превью
+    var observer = new MutationObserver(function (mutations) {
+      var needSync = false;
+      mutations.forEach(function (m) {
+        if (m.type === 'attributes' && m.attributeName === 'class') {
+          needSync = true;
+        }
+        if (m.type === 'childList') {
+          needSync = true;
+        }
+      });
+      if (needSync) {
+        syncWithActiveThumb();
+      }
+    });
+
+    observer.observe(thumbsBox, {
+      subtree: true,
+      attributes: true,
+      attributeFilter: ['class'],
+      childList: true
+    });
+  });
+});
+// Логика для корректного вывода мета-информации в галереях
+document.querySelectorAll('.gallery__meta-line').forEach(function (line) {
+
+  // собираем только НЕпустые элементы
+  const spans = [...line.querySelectorAll('span[data-meta]')].filter(span => {
+    return span.textContent.trim().length > 0;
+  });
+
+  // очищаем контейнер
+  line.innerHTML = '';
+
+  // если 0 или 1 — просто вставляем текст
+  if (spans.length <= 1) {
+    if (spans[0]) line.appendChild(spans[0]); 
+    return;
+  }
+
+  // если 2 и более — вставляем через разделитель ·
+  spans.forEach((span, index) => {
+    line.appendChild(span);
+
+    if (index < spans.length - 1) {
+      const dot = document.createElement('span');
+      dot.className = 'meta-separator';
+      dot.textContent = ' · ';
+      line.appendChild(dot);
+    }
+  });
+});
+
+
+
+
+
+// Виджет новостей
+document.addEventListener('DOMContentLoaded', function () {
+  const widget    = document.querySelector('[data-news-widget]');
+  if (!widget) return;
+
+  const closeBtn  = widget.querySelector('[data-news-widget-close]');
+  const toggleBtn = document.querySelector('[data-news-widget-toggle]');
+
+  // Инициализируем кнопку "Новости": она существует, но скрыта анимацией
+  if (toggleBtn) {
+    toggleBtn.style.display = 'inline-flex';  
+    toggleBtn.classList.add('is-hidden');    
+  }
+
+  function isOverlayOpen() {
+    return !!document.querySelector(
+      '.popup.service-panel.active,' +
+      '.review-modal.is-open'
+    );
+  }
+
+  // --- закрыть виджет ---
+  function closeWidget(silent = false) {
+    widget.classList.remove('is-visible');
+    widget.dataset.manualHide = '1';
+
+    if (!silent) {
+      updateToggleVisibility();
+    }
+  }
+
+  function updateToggleVisibility() {
+    if (!toggleBtn) return;
+
+    const widgetVisible  = widget.classList.contains('is-visible');
+    const overlayVisible = isOverlayOpen();
+    const manuallyHidden = widget.dataset.manualHide === '1';
+
+    // Если открыт оверлей (панель/модалка)
+    if (overlayVisible) {
+      // на всякий случай если вдруг виджет ещё открыт закрываем его тихо
+      if (widgetVisible) {
+        closeWidget(true);
+      }
+      toggleBtn.classList.add('is-hidden');
+      return;
+    }
+
+    // Оверлеев нет, но виджет открыт кнопки тоже не должно быть
+    if (widgetVisible) {
+      toggleBtn.classList.add('is-hidden');
+      return;
+    }
+
+    // Если виджет когда-то закрывали вручную можно показывать кнопку
+    if (manuallyHidden) {
+      toggleBtn.classList.remove('is-hidden');
+    } else {
+      toggleBtn.classList.add('is-hidden');
+    }
+  }
+
+  function showWidget() {
+    widget.classList.add('is-visible');
+    if (toggleBtn) {
+      toggleBtn.classList.add('is-hidden');
+    }
+  }
+
+  setTimeout(function () {
+    if (!widget.dataset.manualHide) {
+      showWidget();
+    }
+  }, 10000);
+
+  if (closeBtn) {
+    closeBtn.addEventListener('click', function () {
+      closeWidget(false);
+    });
+  }
+
+  // "Подробнее" закрываем виджет тихо, без параллельной анимации кнопки
+  widget.addEventListener('click', function (e) {
+    const moreBtn = e.target.closest('.news-widget__btn');
+    if (!moreBtn) return;
+    closeWidget(true);
+  });
+
+  if (toggleBtn) {
+    toggleBtn.addEventListener('click', function () {
+      showWidget();
+    });
+  }
+
+  // Мгновенно закрываем открытую новость при клике по открытию панели/модалки
+  document.addEventListener('click', function (e) {
+    const opener = e.target.closest('[data-open-modal], [data-map-panel], .js-open-panel');
+    if (!opener) return;
+
+    // если в момент клика виджет открыт - закрываем
+    if (widget.classList.contains('is-visible')) {
+      closeWidget(true); // silent=true кнопку не дёргаем
+    }
+  });
+
+  // Синхронизируем состояние кнопки с оверлеями/виджетом
+  setInterval(updateToggleVisibility, 200);
+  updateToggleVisibility();
+});
+
+
+
+
 
 
 
