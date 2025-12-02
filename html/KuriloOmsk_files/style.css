@@ -4504,10 +4504,8 @@ a[data-fancybox="gallery"]::before {
   /* контейнер панели */
   .service-panel__content {
     position: relative;
-    margin: 6vh auto 4vh;
     width: min(1100px, 92vw);
-    height: calc(100vh - 10vh);
-    /* ← замена max-height на height */
+    height: auto;
     background: rgba(20, 20, 20, .88);
     color: #fff;
     border-radius: 16px;
@@ -4912,6 +4910,19 @@ a[data-fancybox="gallery"]::before {
   box-shadow: 0 0 0 2px rgba(221,185,111,.5);
 }
 
+
+/* Лёгкий плавный fade при смене набора превью */
+.gallery.gallery--bodyshop .gallery__thumbs {
+  transition: opacity 0.22s ease;
+}
+
+.gallery.gallery--bodyshop .gallery__thumbs.is-fading {
+  opacity: 0.35; /* на время смены окна превью */
+}
+
+
+
+
 /* Мобилка */
 @media (max-width: 768px) {
   .gallery.gallery--bodyshop {
@@ -4936,6 +4947,11 @@ a[data-fancybox="gallery"]::before {
     height: 44px;
   }
 }
+
+
+
+
+
 
 
 /* Режим одиночного фото для кузовной галереи */
@@ -8653,4 +8669,16 @@ body.map-scroll-lock {
     width: auto;
     border-radius: 20px;
   }
+}
+
+
+
+
+
+
+#panel-kontakti .service-section:last-of-type {
+  margin-bottom: 5px;
+}
+#panel-kontakti .service-panel__body {
+  padding-bottom: 5px;
 }

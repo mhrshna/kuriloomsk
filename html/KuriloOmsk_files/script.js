@@ -565,20 +565,26 @@ document.addEventListener('DOMContentLoaded', function () {
     if (err) err.textContent = '';
   }
 
-  // общий ресет формы и ошибок
-  function resetQuestionForm() {
-    // сбрасываем значения
-    form.reset();
 
-    // очищаем ошибки полей
+    // убираем только ошибки, значения НЕ трогаем
+  function clearQuestionErrors() {
     [nameInput, emailInput, phoneInput, messageInput].forEach(clearFieldError);
 
-    // убираем подсветку чекбокса
+    if (consent && consent.nextElementSibling) {
+      consent.nextElementSibling.classList.remove('checkbox-error');
+    }
+  }
+
+  // ПОЛНЫЙ сброс формы (использовать ТОЛЬКО после успешной отправки)
+  function resetQuestionForm() {
+    form.reset();
+
+    [nameInput, emailInput, phoneInput, messageInput].forEach(clearFieldError);
+
     if (consent && consent.nextElementSibling) {
       consent.nextElementSibling.classList.remove('checkbox-error');
     }
 
-    // вернуть активный email по умолчанию
     if (emailInput && phoneInput) {
       emailInput.style.display = '';
       emailInput.required = true;
@@ -599,9 +605,25 @@ document.addEventListener('DOMContentLoaded', function () {
         // вернуть ползунок под E-mail
         updateContactSlider(toggleWrap);
       }
-
     }
   }
+
+  // чистим ТОЛЬКО ошибки
+  document.addEventListener('click', function (e) {
+    const openBtn = e.target.closest('[data-open-modal="#questionModal"]');
+    if (!openBtn) return;
+    clearQuestionErrors();
+  });
+
+  // тоже только ошибки
+  if (modal) {
+    modal.addEventListener('click', function (e) {
+      const closeBtn = e.target.closest('[data-close]');
+      if (!closeBtn) return;
+      clearQuestionErrors();
+    });
+  }
+
 
   // очищаем ошибку при фокусе/вводе для текстовых полей
   [nameInput, emailInput, phoneInput, messageInput].forEach(function (input) {
@@ -648,22 +670,6 @@ document.addEventListener('DOMContentLoaded', function () {
     setTimeout(function () {
       toast.classList.remove('is-visible');
     }, 3000);
-  }
-
-  // очистка при ОТКРЫТИИ модалки ("Задать вопрос")
-  document.addEventListener('click', function (e) {
-    const openBtn = e.target.closest('[data-open-modal="#questionModal"]');
-    if (!openBtn) return;
-    resetQuestionForm();
-  });
-
-  // очистка при ЗАКРЫТИИ модалки по крестику (data-close внутри questionModal)
-  if (modal) {
-    modal.addEventListener('click', function (e) {
-      const closeBtn = e.target.closest('[data-close]');
-      if (!closeBtn) return;
-      resetQuestionForm();
-    });
   }
 
   // основная проверка при отправке
@@ -756,49 +762,14 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   });
 
-  // ======== ЛОК СКРОЛЛА СТРАНИЦЫ ========
- let scrollLocked = false;
-let savedScrollY = 0;
-
-function lockScroll() {
-  if (scrollLocked) return;
-  scrollLocked = true;
-
-  // запоминаем позицию
-  savedScrollY = window.scrollY || document.documentElement.scrollTop || 0;
-
-  // ширина системного скроллбара
-  const scrollBarWidth = window.innerWidth - document.documentElement.clientWidth;
-
-  // компенсируем исчезновение скроллбара
-  if (scrollBarWidth > 0) {
-    document.body.style.marginRight = scrollBarWidth + 'px';
-  }
-
-  // фиксируем body
-  document.body.style.position = 'fixed';
-  document.body.style.top = `-${savedScrollY}px`;
-  document.body.style.left = '0';
-  document.body.style.right = '0';
-  document.body.style.width = '100%';
-}
-
-function unlockScroll() {
-  if (!scrollLocked) return;
-  scrollLocked = false;
-
-  document.body.style.position = '';
-  document.body.style.top = '';
-  document.body.style.left = '';
-  document.body.style.right = '';
-  document.body.style.width = '';
-  document.body.style.marginRight = '';
-
-  window.scrollTo(0, savedScrollY);
-}
-
+  // проверяем, открыта ли хотя бы одна карта
   function isAnyMapOpen() {
     return !!document.querySelector('.map-panel.is-open');
+  }
+
+  // проверяем, открыта ли хотя бы одна сервис-панель
+  function isAnyServicePanelOpen() {
+    return !!document.querySelector('.popup.service-panel.active');
   }
 
   function openMapPanel(panel) {
@@ -806,10 +777,8 @@ function unlockScroll() {
     panel.classList.add('is-open');
     panel.setAttribute('aria-hidden', 'false');
 
-    // при открытии первой карты — лочим скролл
-    if (!scrollLocked) {
-      lockScroll();
-    }
+    // просто лочим скролл (lockScroll сам проверит флаг)
+    lockScroll();
   }
 
   function closeMapPanel(panel) {
@@ -817,8 +786,8 @@ function unlockScroll() {
     panel.classList.remove('is-open');
     panel.setAttribute('aria-hidden', 'true');
 
-    // если карт больше нет — снимаем лок
-    if (!isAnyMapOpen()) {
+    // если НЕТ открытых карт и НЕТ открытых сервис-панелей — снимаем лок
+    if (!isAnyMapOpen() && !isAnyServicePanelOpen()) {
       unlockScroll();
     }
   }
@@ -854,9 +823,49 @@ function unlockScroll() {
       closeMapPanel(panel);
     });
   });
-
-
 });
+
+
+
+
+
+
+// === Глобальный лок скролла для оверлеев (карты, панели и т.п.) ===
+let overlayScrollLocked = false;
+let overlaySavedScrollY = 0;
+
+function lockScroll() {
+  if (overlayScrollLocked) return;
+  overlayScrollLocked = true;
+
+  overlaySavedScrollY = window.scrollY || document.documentElement.scrollTop || 0;
+
+  const scrollBarWidth = window.innerWidth - document.documentElement.clientWidth;
+
+  if (scrollBarWidth > 0) {
+    document.body.style.marginRight = scrollBarWidth + 'px';
+  }
+
+  document.body.style.position = 'fixed';
+  document.body.style.top = `-${overlaySavedScrollY}px`;
+  document.body.style.left = '0';
+  document.body.style.right = '0';
+  document.body.style.width = '100%';
+}
+
+function unlockScroll() {
+  if (!overlayScrollLocked) return;
+  overlayScrollLocked = false;
+
+  document.body.style.position = '';
+  document.body.style.top = '';
+  document.body.style.left = '';
+  document.body.style.right = '';
+  document.body.style.width = '';
+  document.body.style.marginRight = '';
+
+  window.scrollTo(0, overlaySavedScrollY);
+}
 
 
 
@@ -867,211 +876,134 @@ function unlockScroll() {
 
 // Основная панель: скроллим только .service-panel__body, фон не листается
 jQuery(function ($) {
-  let touchStartY = 0;
 
-  // утилита: можно ли дальше скроллить этот элемент?
-  function canScroll(el, deltaY) {
-    if (!el) return false;
-    const t = el.scrollTop;
-    const h = el.scrollHeight;
-    const ch = el.clientHeight;
-    if (deltaY > 0) return t + ch < h; // вниз
-    if (deltaY < 0) return t > 0;      // вверх
-    return true;
+  // Центровка панели только через margin
+  function centerPanel($panel) {
+    const panelEl = $panel[0];
+    if (!panelEl) return;
+
+    const content = panelEl.querySelector('.service-panel__content');
+    if (!content) return;
+
+    // сбрасываем инлайновые марджины, чтобы померять "естественную" высоту
+    content.style.marginTop = '';
+    content.style.marginBottom = '';
+
+    requestAnimationFrame(function () {
+      const vh = window.innerHeight || document.documentElement.clientHeight;
+      const h  = content.offsetHeight;
+
+      // если панель почти во весь экран — используем 6vh/4vh
+      if (h >= vh * 0.9) {
+        content.style.marginTop = '6vh';
+        content.style.marginBottom = '4vh';
+        return;
+      }
+
+      // нормальное центрирование: (vh - h) / 2
+      let top = (vh - h) / 2;
+
+      // чуть подстрахуемся от отрицательных / слишком маленьких значений
+      if (top < 16) top = 16;
+
+      content.style.marginTop = top + 'px';
+      content.style.marginBottom = 'auto';
+    });
   }
 
-  function getPanelBody() {
-    const p = document.querySelector('.popup.service-panel.active .service-panel__body');
-    return p || null;
-  }
-
-  // --- открыть/закрыть панель (без фиксации body) ---
+  // --- открыть/закрыть панель ---
   function openPanel($panel) {
     if (!$panel.length || $panel.hasClass('active')) return;
+
     $panel.addClass('active').attr('aria-hidden', 'false');
-  }
-  function closePanel($panel) {
-    if (!$panel.length || !$panel.hasClass('active')) return;
-    $panel.removeClass('active').attr('aria-hidden', 'true');
+
+    // ЦЕНТРОВКА
+    centerPanel($panel);
+
+    // ЛОК СКРОЛЛА СТРАНИЦЫ
+    if (typeof lockScroll === 'function') {
+      lockScroll();
+    }
   }
 
-  // открыть по клику
+  function closePanel($panel, options) {
+    if (!$panel.length || !$panel.hasClass('active')) return;
+
+    options = options || {};
+
+    $panel.removeClass('active').attr('aria-hidden', 'true');
+
+    const anyServiceOpen = !!document.querySelector('.popup.service-panel.active');
+    const anyMapOpen     = !!document.querySelector('.map-panel.is-open');
+
+    if (!options.keepLock && !anyServiceOpen && !anyMapOpen && typeof unlockScroll === 'function') {
+      unlockScroll();
+    }
+  }
+
+
+  // открыть по клику с учётом модалок и блюра
   $(document).on('click', '.js-open-panel', function (e) {
     e.preventDefault();
-    openPanel($($(this).data('panel')));
+
+    var targetSel = $(this).data('panel');
+    var $target   = $(targetSel);
+    if (!$target.length) return;
+
+    // 1) модалка: если открыта — закрываем её её же анимацией
+    var openedModal = document.querySelector('.modal.is-open, .review-modal.is-open');
+    if (openedModal) {
+      var closeBtn = openedModal.querySelector('[data-close], .popup-close');
+      if (closeBtn) {
+        closeBtn.click();
+      } else {
+        openedModal.classList.remove('is-open', 'is-closing');
+        openedModal.setAttribute('aria-hidden', 'true');
+      }
+    }
+
+    // 2) панель → панель
+    var $currentPanel = $('.popup.service-panel.active').not($target).first();
+
+    if ($currentPanel.length) {
+      // сначала включаем новую
+      openPanel($target);
+      // старую закрываем, но лок не трогаем
+      closePanel($currentPanel, { keepLock: true });
+    } else {
+      // другой панели нет — обычное открытие
+      openPanel($target);
+    }
   });
 
-  // закрыть
+
+  // закрыть по крестику
   $(document).on('click', '.popup.service-panel .popup-close', function () {
     closePanel($(this).closest('.popup.service-panel'));
   });
+
+  // закрыть по клику на фон
   $(document).on('click', '.popup.service-panel', function (e) {
     if (e.target === this) closePanel($(this));
   });
+
+  // закрыть по Esc
   $(document).on('keydown', function (e) {
-    if (e.key === 'Escape') closePanel($('.popup.service-panel.active'));
+    if (e.key === 'Escape') {
+      closePanel($('.popup.service-panel.active'));
+    }
   });
 
-  
-
-	// === Блокируем прокрутку фона, разрешаем скролл только внутри .service-panel__body ===
-(function () {
-  let touchStartY = 0;
-
-  function getPanelBody() {
-    return document.querySelector('.popup.service-panel.active .service-panel__body');
-  }
-
-  // можно ли прокручивать текущий контейнер в сторону deltaY
-  function canScroll(el, deltaY) {
-    if (!el) return false;
-    const top = el.scrollTop;
-    const max = el.scrollHeight - el.clientHeight;
-
-    if (deltaY > 0) {            // вниз
-      return top < max - 1;      // оставляем ~1px на неточность
-    } else if (deltaY < 0) {     // вверх
-      return top > 0;
+  // при ресайзе окна — пересчитать центрирование для открытой панели
+  $(window).on('resize', function () {
+    const $active = $('.popup.service-panel.active');
+    if ($active.length) {
+      centerPanel($active);
     }
-    return false;
-  }
-
-  // колесо мыши / трекпад
-  window.addEventListener('wheel', function (e) {
-    const bodyEl = getPanelBody();
-    if (!bodyEl) return; // панель закрыта — ничего не трогаем
-
-    // если крутим НЕ над .service-panel__body — запрещаем
-    if (!e.target.closest('.service-panel__body')) {
-      e.preventDefault();
-      return;
-    }
-
-    // крутим над .service-panel__body — проверяем края
-    const dy = e.deltaY || 0;
-    if (!canScroll(bodyEl, dy)) {
-      e.preventDefault(); // на краях не отдаём скролл фону
-    }
-  }, { passive: false });
-
-  // тач (мобилки/тачпады)
-  window.addEventListener('touchstart', function (e) {
-    if (!getPanelBody()) return;
-    touchStartY = e.touches && e.touches.length ? e.touches[0].clientY : 0;
-  }, { passive: true });
-
-  window.addEventListener('touchmove', function (e) {
-    const bodyEl = getPanelBody();
-    if (!bodyEl) return;
-
-    if (!e.target.closest('.service-panel__body')) {
-      e.preventDefault();
-      return;
-    }
-
-    const y = e.touches && e.touches.length ? e.touches[0].clientY : touchStartY;
-    const dy = touchStartY ? (touchStartY - y) : 0; // >0 вниз, <0 вверх
-    if (!canScroll(bodyEl, dy)) {
-      e.preventDefault();
-    }
-  }, { passive: false });
-
-  // клавиатурная прокрутка (стрелки/Space/PageUp/PageDown/Home/End)
-  window.addEventListener('keydown', function (e) {
-    const bodyEl = getPanelBody();
-    if (!bodyEl) return;
-
-    const tag = (e.target.tagName || '').toLowerCase();
-    if (/(input|textarea|select)/.test(tag) || e.target.isContentEditable) return;
-
-    const keys = ['ArrowUp','ArrowDown','PageUp','PageDown','Home','End',' ','Spacebar'];
-    if (!keys.includes(e.key)) return;
-
-    // если фокус не внутри .service-panel__body — блокируем
-    if (!e.target.closest('.service-panel__body')) {
-      e.preventDefault();
-      return;
-    }
-
-    // внутри контейнера — дополнительно защищаемся на краях
-    const dyMap = {
-      ArrowDown: 40, PageDown: 200, ' ': 200, Spacebar: 200,
-      ArrowUp: -40, PageUp: -200, Home: -99999, End: 99999
-    };
-    const dy = dyMap[e.key] ?? 0;
-    if (!canScroll(bodyEl, dy)) {
-      e.preventDefault();
-    }
-  }, { passive: false });
-})();
-
-
-
-
-  // клавиши (стрелки, PgUp/Dn, пробел, Home/End)
-  window.addEventListener('keydown', function (e) {
-    const bodyEl = getPanelBody();
-    if (!bodyEl) return;
-
-    const keys = [' ', 'PageDown', 'PageUp', 'End', 'Home', 'ArrowDown', 'ArrowUp'];
-    if (!keys.includes(e.key)) return;
-
-    // если фокус не внутри .service-panel__body — блокируем
-    if (!document.activeElement || !document.activeElement.closest('.service-panel__body')) {
-      e.preventDefault();
-      return;
-    }
-
-    // внутри тела панели — проверяем можно ли скроллить
-    const dy = (e.key === 'ArrowDown' || e.key === 'PageDown' || e.key === 'End' || e.key === ' ')
-      ? 1 : -1;
-    if (!canScroll(bodyEl, dy)) {
-      e.preventDefault();
-    }
-  }, true);
-});
-
-
-
-// Галерея: плавная, но быстрая смена главного фото по клику на превью
-jQuery(function ($) {
-  $(document).on('click', '.gallery__thumbs img', function () {
-    var $thumb = $(this);
-    var full = $thumb.data('full') || $thumb.attr('src');
-    var $gallery = $thumb.closest('.gallery');
-    var $mainWrap = $gallery.find('.gallery__main');
-    var $current = $mainWrap.find('img');
-
-    if ($current.attr('src') === full) return;
-
-    // обновляем активную миниатюру
-    $thumb.addClass('is-active').siblings().removeClass('is-active');
-
-    // создаём новое изображение поверх старого
-    var $next = $('<img>', {
-      src: full,
-      alt: $current.attr('alt'),
-      css: {
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        width: '100%',
-        height: '100%',
-        objectFit: 'cover',
-        opacity: 0
-      }
-    });
-
-    $mainWrap.append($next);
-
-    // ускоренный fade-переход
-    $next.animate({ opacity: 1 }, 350, 'swing', function () {
-      $current.remove();
-      $next.css({ position: '', top: '', left: '', objectFit: '' });
-    });
-
   });
 });
+
+
 
 
 // Если фото одно - нет ни превью, ни стрелок
@@ -1196,8 +1128,130 @@ function updatePanelTextFromThumb($thumb) {
       });
     });
   }
+  
 
-  // Инициализация: по одной активной фотке на галерею
+  // Окно превью: максимум 6
+  var MAX_VISIBLE_THUMBS = 6;
+  // отрисовать окно превью с учётом startIndex
+  function renderThumbWindow($gallery) {
+    var $thumbsBox = $gallery.find('.gallery__thumbs');
+    var $thumbs    = $thumbsBox.find('img');
+    var total      = $thumbs.length;
+    if (!total) return;
+
+    // если превью 6 или меньше — всё показываем
+    if (total <= MAX_VISIBLE_THUMBS) {
+      $thumbs.css('display', '');
+      $gallery.data('thumbStart', 0);
+      return;
+    }
+
+    // текущий старт окна
+    var start = $gallery.data('thumbStart');
+    if (start == null || isNaN(start)) start = 0;
+
+    var maxStart = Math.max(total - MAX_VISIBLE_THUMBS, 0);
+
+    if (start < 0)       start = 0;
+    if (start > maxStart) start = maxStart;
+
+    $gallery.data('thumbStart', start);
+
+    // показываем подряд 6 штук: [start; start+5], остальные скрываем
+    $thumbs.each(function (i) {
+      if (i >= start && i < start + MAX_VISIBLE_THUMBS) {
+        $(this).css('display', '');
+      } else {
+        $(this).css('display', 'none');
+      }
+    });
+  }
+
+    // Плавная смена окна превью: лёгкий fade во время перестройки
+  function fadeThumbWindowChange($gallery, newStart) {
+    var $thumbsBox = $gallery.find('.gallery__thumbs');
+    if (!$thumbsBox.length) {
+      $gallery.data('thumbStart', newStart);
+      renderThumbWindow($gallery);
+      return;
+    }
+
+    var prevStart = $gallery.data('thumbStart');
+    if (prevStart == null) prevStart = 0;
+
+    if (prevStart === newStart) {
+      $gallery.data('thumbStart', newStart);
+      renderThumbWindow($gallery);
+      return;
+    }
+
+    $gallery.data('thumbStart', newStart);
+
+    $thumbsBox.addClass('is-fading');
+
+    setTimeout(function () {
+      renderThumbWindow($gallery);
+
+      $thumbsBox.removeClass('is-fading');
+    }, 120);
+  }
+
+
+  function animateThumbsSlide($gallery, direction) {
+    var $thumbsBox = $gallery.find('.gallery__thumbs');
+    if (!$thumbsBox.length) return;
+
+    var cls = (direction === 'next')
+      ? 'is-sliding-left'
+      : 'is-sliding-right';
+
+    $thumbsBox
+      .removeClass('is-sliding-left is-sliding-right')
+      .addClass(cls);
+
+    setTimeout(function () {
+      $thumbsBox.removeClass(cls);
+    }, 260);
+  }
+
+  // гарантируем, что активная превью попадает в окно из 6 штук
+  function ensureActiveThumbVisible($gallery, activeIndex) {
+    var $thumbs = $gallery.find('.gallery__thumbs img');
+    var total   = $thumbs.length;
+
+    // если превью до 6 — ничего сложного не делаем
+    if (!total || total <= MAX_VISIBLE_THUMBS) {
+      renderThumbWindow($gallery);
+      return;
+    }
+
+    var start    = $gallery.data('thumbStart') || 0;
+    var maxStart = total - MAX_VISIBLE_THUMBS;
+
+    var newStart = start;
+
+    if (activeIndex < start) {
+      newStart = activeIndex;
+    } else if (activeIndex > start + MAX_VISIBLE_THUMBS - 1) {
+      newStart = activeIndex - MAX_VISIBLE_THUMBS + 1;
+    }
+
+    if (newStart < 0) newStart = 0;
+    if (newStart > maxStart) newStart = maxStart;
+
+    fadeThumbWindowChange($gallery, newStart);
+  }
+
+    function initThumbWindow($gallery) {
+    var $thumbs = $gallery.find('.gallery__thumbs img');
+    var total   = $thumbs.length;
+    if (!total) return;
+
+    $gallery.data('thumbStart', 0);
+    renderThumbWindow($gallery);
+  }
+
+  // Инициализация: активная фотка + окно превью (максимум 6)
   $('.gallery').each(function () {
     var $gallery = $(this);
     var $thumbs  = $gallery.find('.gallery__thumbs img');
@@ -1207,17 +1261,26 @@ function updatePanelTextFromThumb($thumb) {
     if (!$active.length) $active = $thumbs.first();
 
     setMainFromThumb($active, false);
+
+    initThumbWindow($gallery);
   });
 
-  // Клик по превью — смена главного кадра и текста (без лайтбокса)
+  // Клик по превью — смена главного кадра и текста + окно, если нужно
   $(document).on('click', '.gallery__thumbs img', function () {
-    var $thumb = $(this);
+    var $thumb   = $(this);
+    var $gallery = $thumb.closest('.gallery');
+
     setMainFromThumb($thumb, true);
+
+    var $thumbs = $gallery.find('.gallery__thumbs img');
+    var idx     = $thumbs.index($thumb);
+
+    ensureActiveThumbVisible($gallery, idx);
   });
 
-    // Стрелки справа от фото в панели "Кузовной ремонт"
+   // Стрелки фото в панели "Кузовной ремонт"
   $(document).on('click', '.gallery__nav-btn', function () {
-    var $btn = $(this);
+    var $btn     = $(this);
     var $gallery = $btn.closest('.gallery');
     if (!$gallery.length) return;
 
@@ -1238,13 +1301,17 @@ function updatePanelTextFromThumb($thumb) {
       index--;
     }
 
-    // зацикливаем
+    // зацикливаем индекс
     if (index < 0) index = $thumbs.length - 1;
     if (index >= $thumbs.length) index = 0;
 
     var $nextThumb = $thumbs.eq(index);
     setMainFromThumb($nextThumb, true);
+
+    // подвинуть окно превью (и, если оно поехало, тут же срабатывает анимация)
+    ensureActiveThumbVisible($gallery, index);
   });
+
 
 
   // ===== ЛАЙТБОКС В СТИЛЕ НОМЕРОВ (ИДЕАЛЬНЫЙ) =====
@@ -1566,55 +1633,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
 
-
-
-
-
-// Переброс с модалки на панель
-$(document).off('click', '.js-open-panel');
-
-$(document).on('click', '.js-open-panel', function (e) {
-  e.preventDefault();
-
-  var target = $(this).data('panel');
-  if (!target) return;
-
-  // Берём любую открытую штуку: сервис-панель, модалку с отзывами, карту
-  var $open = $('.service-panel.is-open, .review-modal.is-open, .map-panel.is-open').first();
-
-  // Если сейчас что-то открыто — закрываем его "по правилам"
-  if ($open.length) {
-    // ищем её кнопку закрытия
-    var $closeBtn = $open.find('[data-close], .popup-close').first();
-
-    if ($closeBtn.length) {
-      // триггерим её родной код закрытия (там уже есть анимации)
-      $closeBtn.trigger('click');
-
-      // ждём, пока анимация закрытия визуально отыграет
-      setTimeout(function () {
-        var $panel = $(target);
-        if ($panel.length) {
-          $panel.addClass('is-open').attr('aria-hidden', 'false');
-        }
-      }, 250); // можешь 200–300 подогнать по ощущениям
-    } else {
-      // если вдруг нет кнопки — жёстко закрываем и открываем новую
-      $open.removeClass('is-open').attr('aria-hidden', 'true');
-
-      var $panel = $(target);
-      if ($panel.length) {
-        $panel.addClass('is-open').attr('aria-hidden', 'false');
-      }
-    }
-  } else {
-    // если ничего не открыто — просто открываем цель
-    var $panel = $(target);
-    if ($panel.length) {
-      $panel.addClass('is-open').attr('aria-hidden', 'false');
-    }
-  }
-});
 
 
 
@@ -2680,6 +2698,196 @@ jQuery(function ($) {
 
 
 
+
+// Переброс с панели на панель или с модалки на панель по кнопке
+jQuery(function ($) {
+
+  const SWITCH_DELAY = 500; // не работает почему-то, но оставлю на всякий
+
+  // ПАНЕЛИ
+
+  function openPanel($panel) {
+    if (!$panel.length || $panel.hasClass('active')) return;
+    $panel.addClass('active').attr('aria-hidden', 'false');
+  }
+
+  function closePanel($panel) {
+    if (!$panel.length || !$panel.hasClass('active')) return;
+    $panel.removeClass('active').attr('aria-hidden', 'true');
+  }
+
+  // МОДАЛКИ
+
+  function getOpenedModal() {
+    return document.querySelector('.modal.is-open');
+  }
+
+  function openModal(sel) {
+    const modal = document.querySelector(sel);
+    if (!modal) return;
+    modal.classList.add('is-open');
+    modal.setAttribute('aria-hidden', 'false');
+  }
+
+  function closeModal(modal) {
+    if (!modal) return;
+    modal.classList.remove('is-open', 'is-closing');
+    modal.setAttribute('aria-hidden', 'true');
+  }
+
+  /* (панель → панель, модалка → панель) */
+  $(document).on('click', '.js-open-panel', function (e) {
+    e.preventDefault();
+
+    var targetSel = $(this).data('panel');
+    var $target   = $(targetSel);
+    if (!$target.length) return;
+
+    // уже открытая панель (если это не сама же цель)
+    var $openedPanel = $('.popup.service-panel.active').not($target);
+    // уже открытая модалка
+    var openedModal = getOpenedModal();
+
+    // 1) Сначала открываем НУЖНУЮ панель
+    openPanel($target);
+
+    // 2) Чуть позже мягко закрываем то, что было до этого
+    if ($openedPanel.length || openedModal) {
+      setTimeout(function () {
+        if ($openedPanel.length) {
+          closePanel($openedPanel);
+        }
+        if (openedModal) {
+          closeModal(openedModal);
+        }
+      }, SWITCH_DELAY);
+    }
+  });
+
+  /* (панель → модалка, модалка → модалка) */
+  $(document).on('click', '[data-open-modal]', function (e) {
+    e.preventDefault();
+
+    const targetSel = this.getAttribute('data-open-modal');
+    if (!targetSel) return;
+
+    var $openedPanel = $('.popup.service-panel.active');
+    var openedModal  = getOpenedModal();
+
+    // 1) Открываем целевую модалку
+    openModal(targetSel);
+    const newModal = document.querySelector(targetSel);
+
+    // 2) Чуть позже закрываем то, что было
+    if ($openedPanel.length || (openedModal && openedModal !== newModal)) {
+      setTimeout(function () {
+        if ($openedPanel.length) {
+          closePanel($openedPanel);
+        }
+        if (openedModal && openedModal !== newModal) {
+          closeModal(openedModal);
+        }
+      }, SWITCH_DELAY);
+    }
+  });
+
+});
+
+
+// Логика переброса с сохранением предыдущего местоположения пользователя
+jQuery(function ($) {
+
+  // откуда пришли в панель с контактами / конфиденциальностью
+  var lastPanelId = null;
+  var lastModalId = null;
+
+  // запоминаем, ОТКУДА нажали
+  $(document).on('click', '.js-open-panel[data-panel="#panel-kontakti"], .js-open-panel[data-panel="#panel-privacy"]', function () {
+    var $fromPanel = $(this).closest('.popup.service-panel');
+
+    if ($fromPanel.length) {
+      var id = $fromPanel.attr('id');
+      if (id && id !== 'panel-kontakti' && id !== 'panel-privacy') {
+        lastPanelId = id;
+      } else {
+        lastPanelId = null;
+      }
+    } else {
+      lastPanelId = null;
+    }
+
+    var fromModal = this.closest('.review-modal');
+    if (fromModal && fromModal.id) {
+      lastModalId = fromModal.id;
+    } else {
+      lastModalId = null;
+    }
+
+  });
+
+  function restoreAfterInfoPanel() {
+  if (lastPanelId) {
+    var $panel = $('#' + lastPanelId);
+    if ($panel.length) {
+      $panel.addClass('active').attr('aria-hidden', 'false');
+    }
+    lastPanelId = null;
+    lastModalId = null;
+    return;
+  }
+
+  // если панели нет, но есть модалка — вернуть модалку (review-modal)
+  if (lastModalId) {
+    var modal = document.getElementById(lastModalId);
+    if (modal) {
+      modal.classList.add('is-open');
+      modal.classList.remove('is-closing');
+      modal.setAttribute('aria-hidden', 'false');
+
+      // ЧИСТИМ КРАСНЫЕ ОШИБКИ, но НЕ значения
+      var form = modal.querySelector('#questionForm');
+      if (form) {
+        form.querySelectorAll('.is-error').forEach(function (el) {
+          el.classList.remove('is-error');
+        });
+
+        form.querySelectorAll('.question-form__error').forEach(function (el) {
+          el.textContent = '';
+        });
+
+        var consent = form.querySelector('input[name="consent"]');
+        if (consent && consent.nextElementSibling) {
+          consent.nextElementSibling.classList.remove('checkbox-error');
+        }
+      }
+    }
+    lastModalId = null;
+  }
+}
+
+  // 3) Закрытие по крестику
+  $(document).on('click', '#panel-kontakti .popup-close, #panel-privacy .popup-close', function () {
+    setTimeout(restoreAfterInfoPanel, 10);
+  });
+
+  // 4) Закрытие по клику на фон
+  $(document).on('click', '#panel-kontakti, #panel-privacy', function (e) {
+    if (e.target !== this) return;
+    setTimeout(restoreAfterInfoPanel, 10);
+  });
+
+  // 5) Закрытие этих панелей по ESC
+ $(document).on('keydown', function (e) {
+    if (e.key !== 'Escape' && e.key !== 'Esc') return;
+    setTimeout(restoreAfterInfoPanel, 10);
+  });
+});
+
+
+
+
+
+
 // Универсальная шапка с двумя вкладками
 jQuery(function ($) {
   function initSplitHeader($scope) {
@@ -2864,10 +3072,16 @@ document.addEventListener('DOMContentLoaded', function () {
   const closeBtn  = widget.querySelector('[data-news-widget-close]');
   const toggleBtn = document.querySelector('[data-news-widget-toggle]');
 
+  // --- флаги для таймеров/состояний ---
+  let initialDelayPassed      = false;  // прошли ли уже 10 секунд
+  let pendingShowAfterOverlay = false;  // нужно ли показать виджет после закрытия оверлея
+  let delayedShowTimer        = null;   // таймер на 3 сек. после закрытия оверлея
+  let lastOverlayVisible      = false;  // было ли оверлей окно открыто на предыдущем тике
+
   // Инициализируем кнопку "Новости": она существует, но скрыта анимацией
   if (toggleBtn) {
-    toggleBtn.style.display = 'inline-flex';  
-    toggleBtn.classList.add('is-hidden');    
+    toggleBtn.style.display = 'inline-flex';
+    toggleBtn.classList.add('is-hidden');
   }
 
   function isOverlayOpen() {
@@ -2875,6 +3089,10 @@ document.addEventListener('DOMContentLoaded', function () {
       '.popup.service-panel.active,' +
       '.review-modal.is-open'
     );
+  }
+
+  function isManuallyHidden() {
+    return widget.dataset.manualHide === '1';
   }
 
   // --- закрыть виджет ---
@@ -2887,12 +3105,46 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   }
 
+  function showWidget() {
+    // на всякий случай: не показываем, если открыт оверлей
+    if (isOverlayOpen()) return;
+
+    widget.classList.add('is-visible');
+    if (toggleBtn) {
+      toggleBtn.classList.add('is-hidden');
+    }
+  }
+
   function updateToggleVisibility() {
     if (!toggleBtn) return;
 
     const widgetVisible  = widget.classList.contains('is-visible');
     const overlayVisible = isOverlayOpen();
-    const manuallyHidden = widget.dataset.manualHide === '1';
+    const manuallyHidden = isManuallyHidden();
+
+    // --- отследить момент закрытия оверлея ---
+    if (lastOverlayVisible && !overlayVisible) {
+      // оверлей только что закрылся
+      if (initialDelayPassed && pendingShowAfterOverlay && !widgetVisible && !manuallyHidden) {
+        // запускаем таймер на 3 секунды
+        if (delayedShowTimer) {
+          clearTimeout(delayedShowTimer);
+        }
+        delayedShowTimer = setTimeout(function () {
+          // перед показом ещё раз проверим условия
+          if (!isOverlayOpen() &&
+              !widget.classList.contains('is-visible') &&
+              !isManuallyHidden()) {
+            showWidget();
+          }
+          pendingShowAfterOverlay = false;
+          delayedShowTimer = null;
+        }, 3000);
+      }
+    }
+    lastOverlayVisible = overlayVisible;
+
+    // --- старая логика отображения кнопки ---
 
     // Если открыт оверлей (панель/модалка)
     if (overlayVisible) {
@@ -2904,13 +3156,13 @@ document.addEventListener('DOMContentLoaded', function () {
       return;
     }
 
-    // Оверлеев нет, но виджет открыт кнопки тоже не должно быть
+    // Оверлеев нет, но виджет открыт — кнопки тоже не должно быть
     if (widgetVisible) {
       toggleBtn.classList.add('is-hidden');
       return;
     }
 
-    // Если виджет когда-то закрывали вручную можно показывать кнопку
+    // Если виджет когда-то закрывали вручную — можно показывать кнопку
     if (manuallyHidden) {
       toggleBtn.classList.remove('is-hidden');
     } else {
@@ -2918,16 +3170,19 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   }
 
-  function showWidget() {
-    widget.classList.add('is-visible');
-    if (toggleBtn) {
-      toggleBtn.classList.add('is-hidden');
-    }
-  }
-
+  // --- стартовый таймер 10 секунд ---
   setTimeout(function () {
-    if (!widget.dataset.manualHide) {
-      showWidget();
+    initialDelayPassed = true;
+
+    // если пользователь сам не закрывал виджет
+    if (!isManuallyHidden()) {
+      if (!isOverlayOpen()) {
+        // оверлеев нет — показываем сразу
+        showWidget();
+      } else {
+        // оверлей открыт — запоминаем, что надо показать после закрытия
+        pendingShowAfterOverlay = true;
+      }
     }
   }, 10000);
 
@@ -2957,7 +3212,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // если в момент клика виджет открыт - закрываем
     if (widget.classList.contains('is-visible')) {
-      closeWidget(true); // silent=true кнопку не дёргаем
+      closeWidget(true); // silent=true — кнопку не дёргаем
     }
   });
 

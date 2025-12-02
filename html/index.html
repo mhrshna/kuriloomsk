@@ -269,7 +269,7 @@
                     <li><a data-panel="#panel-raboti" class="js-open-panel">Наши работы</a></li>
                     <li><a data-panel="#panel-partners" class="js-open-panel">Партнеры</a></li>
                     <li><a data-panel="#panel-novosti" class="js-open-panel">Новости</a></li>
-                    <li><a href="/gallery/">Фотогалерея</a></li>
+                    <li><a data-panel="#panel-gallery" class="js-open-panel">Фотогалерея</a></li>
                     <li><a data-panel="#panel-kontakti" class="js-open-panel">Контакты</a></li>
                 </ul>
             </li>
@@ -636,8 +636,8 @@
             <li>Поставка под заказ</li>
             <li>Гарантия на установленные детали</li>
           </ul>
-          <button class="button button--ghost cost-card__btn"
-                  type="button" data-panel="#panel-parts">
+          <button class="button button--ghost cost-card__btn js-open-panel"
+                  type="button" data-panel="#panel-shop"> 
             Подробнее
           </button>
         </article>
@@ -1882,25 +1882,25 @@
 
     
     <!-- Полноэкранная панель "Стоянка" -->
-<div id="panel-stoyanka" class="popup service-panel" role="dialog" aria-modal="true" aria-hidden="true">
-  <div class="popup__content service-panel__content">
-    <button type="button" class="popup-close" aria-label="Закрыть">✕</button>
+    <div id="panel-stoyanka" class="popup service-panel" role="dialog" aria-modal="true" aria-hidden="true">
+      <div class="popup__content service-panel__content">
+        <button type="button" class="popup-close" aria-label="Закрыть">✕</button>
 
-    <!-- ЦЕЛЬНАЯ ЧЁРНАЯ ПАНЕЛЬ -->
-    <header class="service-panel__header split-header" data-active="left">
-      <div class="split-half left" role="tab" aria-selected="true">
-        <h2>Стоянка</h2>
-        <p>Красный Яр</p>
-      </div>
+        <!-- ЦЕЛЬНАЯ ЧЁРНАЯ ПАНЕЛЬ -->
+        <header class="service-panel__header split-header" data-active="left">
+          <div class="split-half left" role="tab" aria-selected="true">
+            <h2>Стоянка</h2>
+            <p>Красный Яр</p>
+          </div>
 
-      <div class="split-half right" role="tab" aria-selected="false">
-        <h2>Стоянка</h2>
-        <p>Троицкое</p>
-      </div>
+          <div class="split-half right" role="tab" aria-selected="false">
+            <h2>Стоянка</h2>
+            <p>Троицкое</p>
+          </div>
 
-      <!-- золотая линия-индикатор -->
-      <span class="indicator"></span>
-    </header>
+          <!-- золотая линия-индикатор -->
+          <span class="indicator"></span>
+        </header>
 
 
 
@@ -2399,7 +2399,7 @@
 
         <p class="question-form__hint">
           Вы можете найти все доступные контакты в разделе
-          <a href="../o-nas/kontakti.html" class="question-form__hint-link js-open-panel" data-panel="#panel-kontakti">
+          <a class="question-form__hint-link js-open-panel" data-panel="#panel-kontakti">
             «Контактная информация»
           </a>.
         </p>
@@ -3825,6 +3825,212 @@
 
 
 
+
+
+
+<!-- Полноэкранная панель "Кузовной ремонт" -->
+    <div id="panel-gallery" class="popup service-panel" role="dialog" aria-modal="true" aria-hidden="true">
+        <div class="popup__content service-panel__content">
+            <button type="button" class="popup-close" aria-label="Закрыть">✕</button>
+
+            <header class="service-panel__header">
+                <h2>Фотогалерея</h2>
+                <p class="service-panel__lead">Полный цикл работ: дефектовка, геометрия, покраска, полировка и т.д.</p>
+            </header>
+                
+              <!-- Галерея: большое фото + снизу миниатюры -->
+              <section class="service-section">
+                <!-- подпись к текущему фото -->
+                <div class="gallery-caption">
+                  <h3 data-role="gtitle">Малярный цех</h3>
+                  <p data-role="gdesc">
+                    Окраска деталей в профессиональной камере с фильтрацией и контролем температуры. 
+                    Используем сертифицированные материалы для стойкого блеска и защиты.
+                  </p>
+                </div>
+              
+              <div class="gallery gallery--bodyshop">
+
+                <!-- Левая колонка со стрелкой -->
+                <div class="gallery__side-nav gallery__side-nav--left">
+                  <button class="gallery__nav-btn gallery__nav-btn--prev"
+                          type="button" aria-label="Предыдущее фото">‹</button>
+                </div>
+
+                <!-- Центральная колонка — фотка -->
+                <div class="gallery__main">
+                  <img src="./KuriloOmsk_files/kuzovnoy-remont3.jpg"
+                      alt="Кузовной ремонт" id="galleryMain">
+                </div>
+
+                <!-- Правая колонка со стрелкой -->
+                <div class="gallery__side-nav gallery__side-nav--right">
+                  <button class="gallery__nav-btn gallery__nav-btn--next"
+                          type="button" aria-label="Следующее фото">›</button>
+                </div>
+
+                  <!-- Миниатюры -->
+              <!-- миниатюры под всей шириной -->
+                  <div class="gallery__thumbs">
+                    <img src="./KuriloOmsk_files/kuzovnoy-remont1.jpg"
+                        class="is-active"
+                        data-full="./KuriloOmsk_files/kuzovnoy-remont1.jpg"
+                        data-title="Малярный цех"
+                        data-desc="Окраска деталей в профессиональной камере с фильтрацией и контролем температуры. Используем сертифицированные материалы для стойкого блеска и защиты.">
+
+                    <img src="./KuriloOmsk_files/kuzovnoy-remont2.jpg"
+                        data-full="./KuriloOmsk_files/kuzovnoy-remont2.jpg"
+                        data-title="Подготовка к окраске"
+                        data-desc="Окраска деталей в профессиональной камере с фильтрацией и контролем температуры. Используем сертифицированные материалы для стойкого блеска и защиты.">
+
+                    <img src="./KuriloOmsk_files/kuzovnoy-remont3.jpg"
+                        data-full="./KuriloOmsk_files/kuzovnoy-remont3.jpg"
+                        data-title="Геометрия кузова"
+                        data-desc="Окраска деталей в профессиональной камере с фильтрацией и контролем температуры. Используем сертифицированные материалы для стойкого блеска и защиты.">
+
+                    <img src="./KuriloOmsk_files/kuzovnoy-remont3.jpg"
+                        data-full="./KuriloOmsk_files/kuzovnoy-remont3.jpg"
+                        data-title="Полировка и защита ЛКП"
+                        data-desc="Окраска деталей в профессиональной камере с фильтрацией и контролем температуры. Используем сертифицированные материалы для стойкого блеска и защиты.">
+
+                    <img src="./KuriloOmsk_files/kuzovnoy-remont1.jpg"
+                        class="is-active"
+                        data-full="./KuriloOmsk_files/kuzovnoy-remont1.jpg"
+                        data-title="Малярный цех"
+                        data-desc="Окраска деталей в профессиональной камере с фильтрацией и контролем температуры. Используем сертифицированные материалы для стойкого блеска и защиты.">
+
+                    <img src="./KuriloOmsk_files/kuzovnoy-remont2.jpg"
+                        data-full="./KuriloOmsk_files/kuzovnoy-remont2.jpg"
+                        data-title="Подготовка к окраске"
+                        data-desc="Окраска деталей в профессиональной камере с фильтрацией и контролем температуры. Используем сертифицированные материалы для стойкого блеска и защиты.">
+
+                    <img src="./KuriloOmsk_files/kuzovnoy-remont2.jpg"
+                        data-full="./KuriloOmsk_files/kuzovnoy-remont2.jpg"
+                        data-title="Подготовка к окраске"
+                        data-desc="Окраска деталей в профессиональной камере с фильтрацией и контролем температуры. Используем сертифицированные материалы для стойкого блеска и защиты.">
+                  </div>
+              </div>
+
+             <!-- Контакты (две колонки: слева Красный Яр, справа Троицкое) -->
+            <div class="contact-note">
+
+              <div class="contact-note__item contact-note__item--left">
+                <div class="contact-note__title">Красный Яр, ул. Дорожная, 19</div>
+                <a class="contact-note__phone" href="tel:+70000000000">8 913 676-55-55</a>
+              </div>
+
+              <div class="contact-note__center">
+                <a class="button button--secondary js-open-panel"
+                  data-panel="#panel-kontakti">
+                  Контакты
+                </a>
+              </div>
+
+              <div class="contact-note__item contact-note__item--right">
+                <div class="contact-note__title">Троицкое, ул. Омская, 14</div>
+                <a class="contact-note__phone" href="tel:+70000000001">8 913 669-55-55</a>
+              </div>
+
+            </div>
+            </section>
+            </div>
+        </div>
+    </div>
+
+
+
+
+<!-- Полноэкранная панель "Контакты" -->
+<div id="panel-kontakti" class="popup service-panel" role="dialog" aria-modal="true" aria-hidden="true">
+  <div class="popup__content service-panel__content">
+    <button type="button" class="popup-close" aria-label="Закрыть">✕</button>
+
+    <!-- ЧЁРНАЯ ШАПКА С ПЕРЕКЛЮЧЕНИЕМ -->
+    <header class="service-panel__header split-header" data-active="left">
+      <div class="split-half left" role="tab" aria-selected="true">
+        <h2>Контакты</h2>
+        <p>Красный Яр</p>
+      </div>
+
+      <div class="split-half right" role="tab" aria-selected="false">
+        <h2>Контакты</h2>
+        <p>Троицкое</p>
+      </div>
+
+      <span class="indicator"></span>
+    </header>
+
+    <div class="service-panel__body">
+
+      <!-- === КРАСНЫЙ ЯР === -->
+      <section id="pane-kontakty-krasny" class="tab-pane is-active">
+        
+        <!-- Общие контакты -->
+        <section class="service-section service-desc">
+          <h3>Основные контакты — Красный Яр</h3>
+          <p>Заглушка: здесь будет полный список контактов площадки Курилотрансавто в Красном Яру — администрация, диспетчерская, охрана и дополнительные службы.</p>
+
+          <ul class="service-bullets">
+            <li><strong>Администрация:</strong> номер заглушка</li>
+            <li><strong>Диспетчер стоянки:</strong> номер заглушка</li>
+            <li><strong>Охрана КПП:</strong> номер заглушка</li>
+            <li><strong>Мойка грузовая:</strong> номер заглушка</li>
+            <li><strong>Шиномонтаж:</strong> номер заглушка</li>
+            <li><strong>Гостиница для водителей:</strong> номер заглушка</li>
+            <li><strong>Кафе / столовая:</strong> номер заглушка</li>
+            <li><strong>Администрация:</strong> номер заглушка</li>
+            <li><strong>Диспетчер стоянки:</strong> номер заглушка</li>
+            <li><strong>Охрана КПП:</strong> номер заглушка</li>
+            <li><strong>Мойка грузовая:</strong> номер заглушка</li>
+            <li><strong>Шиномонтаж:</strong> номер заглушка</li>
+            <li><strong>Гостиница для водителей:</strong> номер заглушка</li>
+            <li><strong>Кафе / столовая:</strong> номер заглушка</li>
+          </ul>
+        </section>
+
+        <!-- Реквизиты -->
+        <section class="service-section">
+          <h3>Реквизиты</h3>
+          <p>Заглушка: здесь будут юридические данные компании, ИНН, КПП, расчетный счёт, а также контакт бухгалтерии для выставления счетов.</p>
+        </section>
+
+      </section>
+
+      <!-- === ТРОИЦКОЕ === -->
+      <section id="pane-kontakty-troitskoe" class="tab-pane" hidden>
+
+        <!-- Общие контакты -->
+        <section class="service-section service-desc">
+          <h3>Основные контакты — Троицкое</h3>
+          <p>Заглушка: блок с контактами подразделений Курилотрансавто на площадке в Троицком. Список структур аналогичен Красному Яру, но с отдельными телефонами и ответственными.</p>
+
+          <ul class="service-bullets">
+            <li><strong>Администрация площадки:</strong> номер заглушка</li>
+            <li><strong>Диспетчер:</strong> номер заглушка</li>
+            <li><strong>Охрана / пропускной пункт:</strong> номер заглушка</li>
+            <li><strong>Мойка:</strong> номер заглушка</li>
+            <li><strong>Шиномонтаж:</strong> номер заглушка</li>
+            <li><strong>Гостиница:</strong> номер заглушка</li>
+            <li><strong>Кафе:</strong> номер заглушка</li>
+          </ul>
+        </section>
+
+        <!-- Реквизиты -->
+        <section class="service-section">
+          <h3>Реквизиты</h3>
+          <p>Заглушка: юридические данные для площадки в Троицком или контакт бухгалтерии — будут добавлены позже.</p>
+        </section>
+
+      </section>
+
+    </div>
+  </div>
+</div>
+
+
+
+
+    
  </body>
 </html>
 
