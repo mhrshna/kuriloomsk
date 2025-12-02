@@ -1,0 +1,19 @@
+ /* классы актуальны для ветки 2.1.7x–2.1.8x */
+ .ymaps-2-1-79-cursor-grab,
+ .ymaps-2-1-79-map {
+     cursor: grab !important;
+ }
+
+ .ymaps-2-1-79-cursor-grabbing {
+     cursor: grabbing !important;
+ }
+
+ .ymaps-2-1-79-cursor-help {
+     cursor: help !important;
+ }
+
+ /* запасной вариант — если версия классов другая,
+       вырезал любые url-курсоры от Яндекса */
+ [class*="ymaps-"][style*="cursor: url"] {
+     cursor: auto !important;
+ }
