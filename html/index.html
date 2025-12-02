@@ -1,9 +1,8 @@
 <!DOCTYPE html>
 <html class="bx-core bx-no-touch bx-no-retina bx-chrome" lang="ru" xml:lang="ru">
  <head>
-  <meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
-  <meta charset="UTF-8"/>
-  <script async="" src="./js/globalFIX.js" type="text/javascript"></script>
+  <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+  <script async="" src="./js/globalFIX.js"></script>
   <link href="./css/globalFIX.css" rel="stylesheet"/>
   <script async="" src="./KuriloOmsk_files/ba.js.загрузка" type="text/javascript">
   </script>
@@ -50,7 +49,7 @@
   </script>
  </head>
 
- 
+
  <body>
    <!-- Топ Бар -->
 <div class="topbar">
@@ -161,7 +160,6 @@
     </div>
 </div>
 
-  </header>
 
 
 
@@ -2290,7 +2288,6 @@
       </div>
 
 
-      </div>
     </form>
   </div>
 </div>
@@ -2406,8 +2403,9 @@
                 <div class="room-item__name">Семейный 3-местный</div>
                 <div class="room-item__meta">Три отдельных спальных места, 22–24 м²</div>
               </div class="room-item__side">
-              <div class="room-item__price">от 4 500 ₽/сутки</div>
-              <div class="room-item__chevron" aria-hidden="true"></div>
+                <div class="room-item__price">от 5 500 ₽/сутки</div>
+                <div class="room-item__chevron" aria-hidden="true"></div>
+              </div>
             </button>
 
             <div class="room-item__body" data-room-body>
@@ -2442,8 +2440,9 @@
                 <div class="room-item__name">Двухместный стандарт</div>
                 <div class="room-item__meta">Две кровати или одна большая, 18–20 м²</div>
               </div class="room-item__side">
-              <div class="room-item__price">от 3 500 ₽/сутки</div>
-              <div class="room-item__chevron" aria-hidden="true"></div>
+                <div class="room-item__price">от 5 500 ₽/сутки</div>
+                <div class="room-item__chevron" aria-hidden="true"></div>
+              </div>
             </button>
 
             <div class="room-item__body" data-room-body>
@@ -2479,8 +2478,9 @@
                 <div class="room-item__name">Одноместный</div>
                 <div class="room-item__meta">Компактный номер для одного гостя, 12–14 м²</div>
               </div class="room-item__side">
-              <div class="room-item__price">от 5 500 ₽/сутки</div>
-              <div class="room-item__chevron" aria-hidden="true"></div>
+                <div class="room-item__price">от 5 500 ₽/сутки</div>
+                <div class="room-item__chevron" aria-hidden="true"></div>
+              </div>
             </button>
 
             <div class="room-item__body" data-room-body>
@@ -2515,8 +2515,9 @@
                 <div class="room-item__name">Улучшенный (люкс)</div>
                 <div class="room-item__meta">Расширенная зона отдыха, 28–32 м²</div>
               </div class="room-item__side">
-              <div class="room-item__price">от 5 500 ₽/сутки</div>
-              <div class="room-item__chevron" aria-hidden="true"></div>
+                <div class="room-item__price">от 5 500 ₽/сутки</div>
+                <div class="room-item__chevron" aria-hidden="true"></div>
+              </div>
             </button>
 
             <div class="room-item__body" data-room-body>
@@ -2550,9 +2551,10 @@
               <div class="room-item__main">
                 <div class="room-item__name">Эконом</div>
                 <div class="room-item__meta">Простой и недорогой вариант, 10–12 м²</div>
-              </div class="room-item__side">
-              <div class="room-item__price">от 1 800 ₽/сутки</div>
-              <div class="room-item__chevron" aria-hidden="true"></div>
+              <div class="room-item__side">
+                <div class="room-item__price">от 1 800 ₽/сутки</div>
+                <div class="room-item__chevron" aria-hidden="true"></div>
+              </div>
             </button>
 
             <div class="room-item__body" data-room-body>
@@ -2576,6 +2578,7 @@
                   </div>
                   <button class="room-item__photos-arrow room-item__photos-arrow--next"
                     type="button" aria-label="Следующее фото">›</button>
+                </div>
               </div>
             </div>
           </article>
@@ -3708,113 +3711,100 @@
 
 
 <!-- Полноэкранная панель "Кузовной ремонт" -->
-    <div id="panel-gallery" class="popup service-panel" role="dialog" aria-modal="true" aria-hidden="true">
-        <div class="popup__content service-panel__content">
-            <button type="button" class="popup-close" aria-label="Закрыть">✕</button>
+<div id="panel-gallery" class="popup service-panel" role="dialog" aria-modal="true" aria-hidden="true">
+  <div class="popup__content service-panel__content">
+    <button type="button" class="popup-close" aria-label="Закрыть">✕</button>
 
-            <header class="service-panel__header">
-                <h2>Фотогалерея</h2>
-                <p class="service-panel__lead">Полный цикл работ: дефектовка, геометрия, покраска, полировка и т.д.</p>
-            </header>
-                
-              <!-- Галерея: большое фото + снизу миниатюры -->
-              <section class="service-section">
-                <!-- подпись к текущему фото -->
-                <div class="gallery-caption">
-                  <h3 data-role="gtitle">Малярный цех</h3>
-                  <p data-role="gdesc">
-                    Окраска деталей в профессиональной камере с фильтрацией и контролем температуры. 
-                    Используем сертифицированные материалы для стойкого блеска и защиты.
-                  </p>
-                </div>
-              
-              <div class="gallery gallery--bodyshop">
+    <header class="service-panel__header">
+      <h2>Фотогалерея</h2>
+      <p class="service-panel__lead">Полный цикл работ: дефектовка, геометрия, покраска, полировка и т.д.</p>
+    </header>
 
-                <!-- Левая колонка со стрелкой -->
-                <div class="gallery__side-nav gallery__side-nav--left">
-                  <button class="gallery__nav-btn gallery__nav-btn--prev"
-                          type="button" aria-label="Предыдущее фото">‹</button>
-                </div>
+    <!-- Галерея: большое фото + снизу миниатюры -->
+    <section class="service-section">
+      <!-- подпись к текущему фото -->
+      <div class="gallery-caption">
+        <h3 data-role="gtitle">Малярный цех</h3>
+        <p data-role="gdesc">
+          Окраска деталей в профессиональной камере с фильтрацией и контролем температуры.
+          Используем сертифицированные материалы для стойкого блеска и защиты.
+        </p>
+      </div>
 
-                <!-- Центральная колонка — фотка -->
-                <div class="gallery__main">
-                  <img src="./KuriloOmsk_files/kuzovnoy-remont3.jpg"
-                      alt="Кузовной ремонт" id="galleryMain">
-                </div>
+      <div class="gallery gallery--bodyshop">
 
-                <!-- Правая колонка со стрелкой -->
-                <div class="gallery__side-nav gallery__side-nav--right">
-                  <button class="gallery__nav-btn gallery__nav-btn--next"
-                          type="button" aria-label="Следующее фото">›</button>
-                </div>
-
-                  <!-- Миниатюры -->
-              <!-- миниатюры под всей шириной -->
-                  <div class="gallery__thumbs">
-                    <img src="./KuriloOmsk_files/kuzovnoy-remont1.jpg"
-                        class="is-active"
-                        data-full="./KuriloOmsk_files/kuzovnoy-remont1.jpg"
-                        data-title="Малярный цех"
-                        data-desc="Окраска деталей в профессиональной камере с фильтрацией и контролем температуры. Используем сертифицированные материалы для стойкого блеска и защиты.">
-
-                    <img src="./KuriloOmsk_files/kuzovnoy-remont2.jpg"
-                        data-full="./KuriloOmsk_files/kuzovnoy-remont2.jpg"
-                        data-title="Подготовка к окраске"
-                        data-desc="Окраска деталей в профессиональной камере с фильтрацией и контролем температуры. Используем сертифицированные материалы для стойкого блеска и защиты.">
-
-                    <img src="./KuriloOmsk_files/kuzovnoy-remont3.jpg"
-                        data-full="./KuriloOmsk_files/kuzovnoy-remont3.jpg"
-                        data-title="Геометрия кузова"
-                        data-desc="Окраска деталей в профессиональной камере с фильтрацией и контролем температуры. Используем сертифицированные материалы для стойкого блеска и защиты.">
-
-                    <img src="./KuriloOmsk_files/kuzovnoy-remont3.jpg"
-                        data-full="./KuriloOmsk_files/kuzovnoy-remont3.jpg"
-                        data-title="Полировка и защита ЛКП"
-                        data-desc="Окраска деталей в профессиональной камере с фильтрацией и контролем температуры. Используем сертифицированные материалы для стойкого блеска и защиты.">
-
-                    <img src="./KuriloOmsk_files/kuzovnoy-remont1.jpg"
-                        class="is-active"
-                        data-full="./KuriloOmsk_files/kuzovnoy-remont1.jpg"
-                        data-title="Малярный цех"
-                        data-desc="Окраска деталей в профессиональной камере с фильтрацией и контролем температуры. Используем сертифицированные материалы для стойкого блеска и защиты.">
-
-                    <img src="./KuriloOmsk_files/kuzovnoy-remont2.jpg"
-                        data-full="./KuriloOmsk_files/kuzovnoy-remont2.jpg"
-                        data-title="Подготовка к окраске"
-                        data-desc="Окраска деталей в профессиональной камере с фильтрацией и контролем температуры. Используем сертифицированные материалы для стойкого блеска и защиты.">
-
-                    <img src="./KuriloOmsk_files/kuzovnoy-remont2.jpg"
-                        data-full="./KuriloOmsk_files/kuzovnoy-remont2.jpg"
-                        data-title="Подготовка к окраске"
-                        data-desc="Окраска деталей в профессиональной камере с фильтрацией и контролем температуры. Используем сертифицированные материалы для стойкого блеска и защиты.">
-                  </div>
-              </div>
-
-             <!-- Контакты (две колонки: слева Красный Яр, справа Троицкое) -->
-            <div class="contact-note">
-
-              <div class="contact-note__item contact-note__item--left">
-                <div class="contact-note__title">Красный Яр, ул. Дорожная, 19</div>
-                <a class="contact-note__phone" href="tel:+70000000000">8 913 676-55-55</a>
-              </div>
-
-              <div class="contact-note__center">
-                <a class="button button--secondary js-open-panel"
-                  data-panel="#panel-kontakti">
-                  Контакты
-                </a>
-              </div>
-
-              <div class="contact-note__item contact-note__item--right">
-                <div class="contact-note__title">Троицкое, ул. Омская, 14</div>
-                <a class="contact-note__phone" href="tel:+70000000001">8 913 669-55-55</a>
-              </div>
-
-            </div>
-            </section>
-            </div>
+        <!-- Левая колонка со стрелкой -->
+        <div class="gallery__side-nav gallery__side-nav--left">
+          <button class="gallery__nav-btn gallery__nav-btn--prev" type="button" aria-label="Предыдущее фото">‹</button>
         </div>
-    </div>
+
+        <!-- Центральная колонка — фотка -->
+        <div class="gallery__main">
+          <img src="./KuriloOmsk_files/kuzovnoy-remont3.jpg" alt="Кузовной ремонт" id="galleryMain">
+        </div>
+
+        <!-- Правая колонка со стрелкой -->
+        <div class="gallery__side-nav gallery__side-nav--right">
+          <button class="gallery__nav-btn gallery__nav-btn--next" type="button" aria-label="Следующее фото">›</button>
+        </div>
+
+        <!-- Миниатюры -->
+        <!-- миниатюры под всей шириной -->
+        <div class="gallery__thumbs">
+          <img src="./KuriloOmsk_files/kuzovnoy-remont1.jpg" class="is-active"
+            data-full="./KuriloOmsk_files/kuzovnoy-remont1.jpg" data-title="Малярный цех"
+            data-desc="Окраска деталей в профессиональной камере с фильтрацией и контролем температуры. Используем сертифицированные материалы для стойкого блеска и защиты.">
+
+          <img src="./KuriloOmsk_files/kuzovnoy-remont2.jpg" data-full="./KuriloOmsk_files/kuzovnoy-remont2.jpg"
+            data-title="Подготовка к окраске"
+            data-desc="Окраска деталей в профессиональной камере с фильтрацией и контролем температуры. Используем сертифицированные материалы для стойкого блеска и защиты.">
+
+          <img src="./KuriloOmsk_files/kuzovnoy-remont3.jpg" data-full="./KuriloOmsk_files/kuzovnoy-remont3.jpg"
+            data-title="Геометрия кузова"
+            data-desc="Окраска деталей в профессиональной камере с фильтрацией и контролем температуры. Используем сертифицированные материалы для стойкого блеска и защиты.">
+
+          <img src="./KuriloOmsk_files/kuzovnoy-remont3.jpg" data-full="./KuriloOmsk_files/kuzovnoy-remont3.jpg"
+            data-title="Полировка и защита ЛКП"
+            data-desc="Окраска деталей в профессиональной камере с фильтрацией и контролем температуры. Используем сертифицированные материалы для стойкого блеска и защиты.">
+
+          <img src="./KuriloOmsk_files/kuzovnoy-remont1.jpg" class="is-active"
+            data-full="./KuriloOmsk_files/kuzovnoy-remont1.jpg" data-title="Малярный цех"
+            data-desc="Окраска деталей в профессиональной камере с фильтрацией и контролем температуры. Используем сертифицированные материалы для стойкого блеска и защиты.">
+
+          <img src="./KuriloOmsk_files/kuzovnoy-remont2.jpg" data-full="./KuriloOmsk_files/kuzovnoy-remont2.jpg"
+            data-title="Подготовка к окраске"
+            data-desc="Окраска деталей в профессиональной камере с фильтрацией и контролем температуры. Используем сертифицированные материалы для стойкого блеска и защиты.">
+
+          <img src="./KuriloOmsk_files/kuzovnoy-remont2.jpg" data-full="./KuriloOmsk_files/kuzovnoy-remont2.jpg"
+            data-title="Подготовка к окраске"
+            data-desc="Окраска деталей в профессиональной камере с фильтрацией и контролем температуры. Используем сертифицированные материалы для стойкого блеска и защиты.">
+        </div>
+      </div>
+
+      <!-- Контакты (две колонки: слева Красный Яр, справа Троицкое) -->
+      <div class="contact-note">
+
+        <div class="contact-note__item contact-note__item--left">
+          <div class="contact-note__title">Красный Яр, ул. Дорожная, 19</div>
+          <a class="contact-note__phone" href="tel:+70000000000">8 913 676-55-55</a>
+        </div>
+
+        <div class="contact-note__center">
+          <a class="button button--secondary js-open-panel" data-panel="#panel-kontakti">
+            Контакты
+          </a>
+        </div>
+
+        <div class="contact-note__item contact-note__item--right">
+          <div class="contact-note__title">Троицкое, ул. Омская, 14</div>
+          <a class="contact-note__phone" href="tel:+70000000001">8 913 669-55-55</a>
+        </div>
+
+      </div>
+    </section>
+  </div>
+</div>
+
 
 
 
